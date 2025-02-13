@@ -1,0 +1,93 @@
+@font-face {
+    font-family: 'Roboto';
+    src: url('fonts/Roboto/Roboto-VariableFont_wdth,wght.ttf') format('truetype');
+    font-weight: 100 900;
+    font-stretch: 75% 100%;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('fonts/Roboto/Roboto-Italic-VariableFont_wdth,wght.ttf') format('truetype');
+    font-weight: 100 900;
+    font-stretch: 75% 100%;
+    font-style: italic;
+    font-display: swap;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f4f4f4;
+    height: 100vh;
+    margin: 0;
+
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+}
+
+h1 {
+    font-weight: 900; /* Bold */
+}
+
+.container {
+    /*width: 210mm; !* A4 width *!*/
+    width: 774px;
+    height: auto;
+    /*min-height: 297mm; !* Ensure it has A4 height *!*/
+    background-color: white;
+    padding: 20px;
+    /*box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);*/
+    /*border-radius: 5px;*/
+    position: absolute;
+    top: 0;
+}
+
+@media print {
+    @page {
+        size: A4 portrait;
+        margin: 0;
+    }
+
+    body {
+        background: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .container {
+        width: 100%;
+        height: 100%;
+        box-shadow: none; /* Remove shadow for print */
+        background: white;
+        margin: 0;
+        padding: 0;
+    }
+
+    body * {
+        visibility: hidden;
+    }
+
+    .container, .container * {
+        visibility: visible;
+    }
+}
+
+.header {
+    text-align: center;
+    height: 2.47cm;
+}
+
+.background {
+    height: 2.47cm;
+    background-color: #FAF8F8;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+}

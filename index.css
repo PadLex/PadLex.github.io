@@ -16,6 +16,30 @@
     font-display: swap;
 }
 
+@font-face {
+    font-family: 'Raleway';
+    src: url('fonts/Raleway/Raleway-VariableFont_wght.ttf') format('truetype');
+    font-weight: 100 900;
+    font-stretch: 75% 100%;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Raleway';
+    src: url('fonts/Raleway/Raleway-Italic-VariableFont_wght.ttf') format('truetype');
+    font-weight: 100 900;
+    font-stretch: 75% 100%;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Lato';
+    src: url('fonts/Lato/Lato-Bold.ttf') format('truetype');
+    font-style: normal;
+}
+
 body {
     display: flex;
     justify-content: center;
@@ -24,21 +48,31 @@ body {
     height: 100vh;
     margin: 0;
 
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Raleway', 'Roboto', sans-serif;
     font-weight: 400;
+    font-size: 0.75rem;
 }
 
 h1 {
-    font-weight: 900; /* Bold */
+    font-family: 'Lato', sans-serif;
+    font-size: 24px;
+    letter-spacing: 0.289rem;
+    text-transform: uppercase;
+    margin: 0;
+}
+
+h2 {
+    font-family: 'Lato', sans-serif;
+    font-size: 16px;
+    margin: 0;
 }
 
 .container {
-    /*width: 210mm; !* A4 width *!*/
-    width: 774px;
+    width: 210mm; /* A4 width */
+    /*width: 774px;*/
     height: auto;
     /*min-height: 297mm; !* Ensure it has A4 height *!*/
     background-color: white;
-    padding: 20px;
     /*box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);*/
     /*border-radius: 5px;*/
     position: absolute;
@@ -90,4 +124,20 @@ h1 {
     right: 0;
     bottom: 0;
     z-index: -1;
+}
+
+.horizontal {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    height: fit-content;
+    gap: 2em;
+}
+
+
+.vertical {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: fit-content;
 }

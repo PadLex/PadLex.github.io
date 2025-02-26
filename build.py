@@ -1,5 +1,11 @@
 import os
 import json
+import re
+
+## TODOS:
+# - Underline animations for highlighted elements in a pastel color that looks good in grayscale
+# - Custom highlights for each skill in a unique pastel color
+# - Expandable descriptions upon hovering
 
 ## Load the resume data
 with open("./resume.json", "r") as file:
@@ -38,6 +44,12 @@ for component_name, component in zip(component_names, components):
         infilled_components.append(infill(component, value))
 
     index = index.replace(f"%%{component_name}%%", "\n".join(infilled_components))
+
+## Highlight any text between **text** by nesting it in <span class='highlight'>
+index = re.sub(r"\*\*(.*?)\*\*", r"<span class='highlight'>\1</span>", index)
+
+## Replace any links in format [text](url) with <a href="$$url$$" target="_blank">text</a>
+index = re.sub(r"\[(.*?)\]\((.*?)\)", r"<a href='\2' target='_blank'>\1</a>", index)
 
 ## Save the complete index file
 with open("./index.html", "w") as file:

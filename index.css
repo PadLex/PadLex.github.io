@@ -36,47 +36,20 @@
 
 @font-face {
     font-family: 'Lato';
-    src: url('fonts/Lato/Lato-Bold.ttf') format('truetype');
-    font-style: normal;
+    src: url('fonts/Lato/Lato-Light.ttf') format('truetype');
+    font-weight: 300;
 }
 
-body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #f4f4f4;
-    height: 100vh;
-    margin: 0;
-
-    font-family: 'Raleway', 'Roboto', sans-serif;
+@font-face {
+    font-family: 'Lato';
+    src: url('fonts/Lato/Lato-Regular.ttf') format('truetype');
     font-weight: 400;
-    font-size: 0.75rem;
 }
 
-h1 {
-    font-family: 'Lato', sans-serif;
-    font-size: 24px;
-    letter-spacing: 0.289rem;
-    text-transform: uppercase;
-    margin: 0;
-}
-
-h2 {
-    font-family: 'Lato', sans-serif;
-    font-size: 16px;
-    margin: 0;
-}
-
-.container {
-    width: 210mm; /* A4 width */
-    /*width: 774px;*/
-    height: auto;
-    /*min-height: 297mm; !* Ensure it has A4 height *!*/
-    background-color: white;
-    /*box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);*/
-    /*border-radius: 5px;*/
-    position: absolute;
-    top: 0;
+@font-face {
+    font-family: 'Lato';
+    src: url('fonts/Lato/Lato-Bold.ttf') format('truetype');
+    font-weight: 700;
 }
 
 @media print {
@@ -110,20 +83,79 @@ h2 {
     }
 }
 
-.header {
-    text-align: center;
-    height: 2.47cm;
+* {
+    box-sizing: border-box;
 }
 
-.background {
-    height: 2.47cm;
-    background-color: #FAF8F8;
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f4f4f4;
+    height: 100vh;
+    margin: 0;
+
+    font-family: 'Roboto', sans-serif;
+    font-weight: 350;
+    /*font-size: 0.75rem;*/
+    font-size: 13.5px;
+    color: #706F6F;
+}
+
+h1 {
+    font-family: 'Lato', sans-serif;
+    font-size: 24px;
+    letter-spacing: 2mm;
+    text-transform: uppercase;
+    margin: 0;
+    color: #464A4E;
+}
+
+h2 {
+    font-family: 'Lato', sans-serif;
+    font-size: 16px;
+    margin: 0;
+    letter-spacing: 0.289rem;
+    /*color: #464A4E;*/
+}
+
+a {
+    all: unset;
+    cursor: pointer;
+    text-decoration: underline #706F6F;
+}
+
+.container {
+    width: 210mm; /* A4 width */
+    /*width: 774px;*/
+    height: auto;
+    /*min-height: 297mm; !* Ensure it has A4 height *!*/
+    /*box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);*/
+    /*border-radius: 5px;*/
     position: absolute;
     top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: -1;
+    background-color: #ffffff;
+}
+
+.header {
+    text-align: center;
+    background-color: #FAF8F8;
+    padding-top: 7mm;
+    padding-bottom: 10px;
+}
+
+.middle {
+    font-family: 'Raleway', 'Roboto', sans-serif;
+    letter-spacing: 0.3mm;
+}
+
+.header, .middle, .bottom {
+    padding-left: 50px;
+    padding-right: 50px;
+}
+
+.bottom {
+    padding-bottom: 30px;
 }
 
 .horizontal {
@@ -131,7 +163,7 @@ h2 {
     justify-content: space-between;
     width: 100%;
     height: fit-content;
-    gap: 2em;
+    gap: 1em;
 }
 
 
@@ -141,3 +173,61 @@ h2 {
     width: 100%;
     height: fit-content;
 }
+
+.small_margin {
+    /*font-family: 'Lato', sans-serif;*/
+    margin-top: 1.3mm;
+}
+
+.medium_margin {
+    margin-top: 3mm;
+}
+
+.large_margin {
+    margin-top: 7mm;
+}
+
+.middle .bold {
+    font-weight: 600;
+}
+
+.bottom .bold {
+    /*font-weight: 600;*/
+}
+
+.title {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 600;
+    color: #464A4E;
+}
+
+.highlight {
+    font-weight: 600;
+    /*color: #449b95;*/
+    /*text-decoration: underline #a1a1a1;*/
+    /*text-decoration: underline dashed #449b95 2px;*/
+}
+
+.title > .highlight {
+    /*font-weight: 700;*/
+    /*color: #00948a;*/
+    /*color: #464A4E;*/
+}
+
+
+/* COLLAPSABLE */
+.collapsable {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.1s ease-out;
+}
+
+
+
+
+
+
+
+
+
+

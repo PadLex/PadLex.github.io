@@ -92,7 +92,7 @@ body {
     justify-content: center;
     align-items: center;
     background-color: #f4f4f4;
-    height: 100vh;
+    min-height: 100vh;
     margin: 0;
 
     font-family: 'Roboto', sans-serif;
@@ -145,6 +145,7 @@ a {
 }
 
 .middle {
+    flex-wrap: wrap;
     font-family: 'Raleway', 'Roboto', sans-serif;
     letter-spacing: 0.3mm;
 }
@@ -160,10 +161,11 @@ a {
 
 .horizontal {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     width: 100%;
     height: fit-content;
-    gap: 1em;
+    gap: 0.2em 1em;
 }
 
 
@@ -223,6 +225,33 @@ a {
 }
 
 
+@media only screen and (max-width: 210mm) {
+    /* Adjust container to use full available width */
+    .container {
+        width: auto;
+        height: auto;
+        margin: 10px 10px;
+    }
+
+    /* Scale down the base font size for smaller screens */
+    body {
+        font-size: 12px; /* Adjust as needed */
+    }
+
+    /* Reduce heading sizes */
+    h1 {
+        font-size: 20px;
+    }
+    h2 {
+        font-size: 16px;
+    }
+
+    /* Reduce padding/margins for header, middle, and bottom sections */
+    .header, .middle, .bottom {
+        padding-left: 25px;
+        padding-right: 25px;
+    }
+}
 
 
 

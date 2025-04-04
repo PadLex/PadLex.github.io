@@ -52,37 +52,6 @@
     font-weight: 700;
 }
 
-@media print {
-    @page {
-        size: A4 portrait;
-        margin: 0;
-    }
-
-    body {
-        background: none;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .container {
-        width: 100%;
-        height: 100%;
-        box-shadow: none; /* Remove shadow for print */
-        background: white;
-        margin: 0;
-        padding: 0;
-    }
-
-    body * {
-        visibility: hidden;
-    }
-
-    .container, .container * {
-        visibility: visible;
-    }
-}
-
 * {
     box-sizing: border-box;
 }
@@ -98,7 +67,7 @@ body {
     font-family: 'Roboto', sans-serif;
     font-weight: 350;
     /*font-size: 0.75rem;*/
-    font-size: 13.5px;
+    font-size: 13.4px;
     color: #706F6F;
 }
 
@@ -250,6 +219,42 @@ a {
     .header, .middle, .bottom {
         padding-left: 25px;
         padding-right: 25px;
+    }
+}
+
+
+@media print {
+    @page {
+        size: A4 portrait;
+        margin: 0;
+    }
+
+    body {
+        background: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .container {
+        width: 100%;
+        height: 100%;
+        box-shadow: none; /* Remove shadow for print */
+        background: white;
+        margin: 0;
+        padding: 0;
+    }
+
+    body * {
+        visibility: hidden;
+    }
+
+    .container, .container * {
+        visibility: visible;
+    }
+
+    a {
+        text-decoration: none;
     }
 }
 

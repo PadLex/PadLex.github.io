@@ -5,47 +5,114 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resume</title>
     <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="marker.css">
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>$$name$$</h1>
-            <div class="horizontal medium_margin" style="row-gap: 1em">%%info%%</div>
-            <div class="small_margin"></div>
-        </div>
-        <div class="middle horizontal large_margin" style="row-gap: 1em">
-            <div>
-                <h2>EDUCATION</h2>
-                %%education%%
-            </div>
-            <div>
-                <h2>LANGUAGES</h2>
-                <div class="medium_margin"></div>
-                %%languages%%
-            </div>
-            <div>
-                <h2>SKILLS</h2>
-                <div class="medium_margin"></div>
-                %%skills%%
-            </div>
-        </div>
-        <div class="bottom vertical">
-            <div class="large_margin">
-                <h2>PUBLICATIONS</h2>
-                %%publications%%
-            </div>
-            <div class="large_margin">
-                <h2>PROFESSIONAL EXPERIENCE</h2>
-                %%experience%%
-            </div>
-            <div class="large_margin">
-                <h2>PROJECTS</h2>
-                %%projects%%
-            </div>
-            <div class="horizontal large_margin" style="justify-content: left; align-items: end">
-                <h2>PASSIONATE</h2>
-                <span style="text-align: justify">$$passionate$$</span>
-            </div>
+<div class="container">
+    <div class="header">
+        <h1>$$name$$</h1>
+        <div class="horizontal medium_margin" style="row-gap: 1em">%%info%%</div>
+        <div class="small_margin"></div>
     </div>
+    <div class="middle horizontal large_margin" style="row-gap: 1em">
+        <div>
+            <h2>EDUCATION</h2>
+            %%education%%
+        </div>
+        <div>
+            <h2>LANGUAGES</h2>
+            <div class="medium_margin"></div>
+            %%languages%%
+        </div>
+        <div>
+            <h2>SKILLS</h2>
+            <div class="medium_margin"></div>
+            %%skills%%
+        </div>
+    </div>
+    <div class="bottom vertical">
+        <div class="large_margin">
+            <h2>PUBLICATIONS</h2>
+            %%publications%%
+        </div>
+        <div class="large_margin">
+            <h2>PROFESSIONAL EXPERIENCE</h2>
+            %%experience%%
+        </div>
+        <div class="large_margin">
+            <h2>PROJECTS</h2>
+            %%projects%%
+        </div>
+        <div class="horizontal large_margin" style="justify-content: left; align-items: end">
+            <h2>PASSIONATE</h2>
+            <span style="text-align: justify">$$passionate$$</span>
+        </div>
+    </div>
+</div>
+<script>
+    console.log('Hello, world!');
+
+    async function animateMarkers() {
+        const markers = document.querySelectorAll("mark");
+
+        for (const marker of markers) {
+            marker.classList.add("animate-highlight");
+            await new Promise(resolve => setTimeout(resolve, Math.random() * 500));
+        }
+    }
+
+    function breakMarkers() {
+        let isDone = false;
+        while (!isDone) {
+            isDone = true;
+
+            document.querySelectorAll('mark').forEach(mark => {
+                // Use getClientRects to get a rectangle for each rendered line.
+                const rects = mark.getClientRects();
+
+                if (rects.length > 1) {
+                    isDone = false;
+
+                    let firstChar = -1;
+                    const firstLineTop = rects[0].top;
+                    const text = mark.textContent;
+
+                    // Iterate through each character using Range.
+                    for (let i = 0; i < text.length; i++) {
+                        const range = document.createRange();
+                        // Assume the text is contained in one text node.
+                        range.setStart(mark.firstChild, i);
+                        range.setEnd(mark.firstChild, i + 1);
+                        const charRect = range.getBoundingClientRect();
+
+                        // Check if the character is rendered on the first line.
+                        // Use a tolerance value to account for minor sub-pixel differences.
+                        if (Math.abs(charRect.top - firstLineTop) < 2) {
+                            firstChar = i+1;
+                        }
+                    }
+
+                    // Clone the mark element
+                    const clone = mark.cloneNode(true);
+                    clone.textContent = text.substring(firstChar);
+                    mark.textContent = text.substring(0, firstChar);
+
+                    // Insert the clone after the original mark
+                    mark.parentNode.insertBefore(clone, mark.nextSibling);
+
+                    // Add br
+                    mark.parentNode.insertBefore(document.createElement('br'), clone);
+                }
+            });
+        }
+    }
+
+    // Call the function to break markers after the DOM is fully loaded and then call animateMarkers
+    document.addEventListener("DOMContentLoaded", () => {
+        breakMarkers();
+        animateMarkers();
+    });
+
+</script>
 </body>
 </html>

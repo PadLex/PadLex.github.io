@@ -1,0 +1,40 @@
+
+/* START OF MARKER $$id$$ */
+.$$id$$ {
+    margin: 0 -0.4em;
+    padding: 0.1em 0.4em;
+    border-radius: $$r1$$em $$r2$$em;
+    position: relative;
+    background: transparent;
+    display: inline;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+    z-index: 1;
+}
+
+.$$id$$::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: $$r1$$em $$r2$$em;
+    background-image: linear-gradient(
+    to right,
+    rgba($$color$$, $$a1$$),
+    rgba($$color$$, $$a2$$) $$p1$$%,
+    rgba($$color$$, $$a3$$) $$p2$$%,
+    rgba($$color$$, $$a4$$)
+    );
+    clip-path: inset(0 100% 0 0);
+    transition: clip-path 0s;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.$$id$$.animate-highlight::before {
+  clip-path: inset(0 0 0 0);
+  transition: clip-path $$time$$s ease-in-out;
+}
+/* END OF MARKER $$id$$ */

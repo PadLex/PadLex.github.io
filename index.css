@@ -91,6 +91,10 @@ h2 {
 a {
     all: unset;
     cursor: pointer;
+    /*text-decoration: underline #706F6F;*/
+}
+
+a:hover {
     text-decoration: underline #706F6F;
 }
 
@@ -172,18 +176,39 @@ a {
     color: #464A4E;
 }
 
-.highlight {
-    font-weight: 600;
-    /*color: #449b95;*/
-    /*text-decoration: underline #a1a1a1;*/
-    /*text-decoration: underline dashed #449b95 2px;*/
+mark {
+    all: unset;
 }
 
-.title > .highlight {
-    /*font-weight: 700;*/
-    /*color: #00948a;*/
-    /*color: #464A4E;*/
+mark.underline::before {
+    transform: translateY(0.5em) scaleY(0.3);
 }
+
+/*.highlight {*/
+/*    font-weight: 600;*/
+/*    !*color: #449b95;*!*/
+/*    !*text-decoration: underline #a1a1a1;*!*/
+/*    !*text-decoration: underline dashed #449b95 2px;*!*/
+/*}*/
+
+/*.title > .highlight {*/
+/*    !*font-weight: 700;*!*/
+/*    !*color: #00948a;*!*/
+/*    !*color: #464A4E;*!*/
+/*}*/
+
+/*mark {*/
+/*    font-weight: 600;*/
+/*    !*color: #449b95;*!*/
+/*    !*text-decoration: underline #a1a1a1;*!*/
+/*    !*text-decoration: underline dashed #449b95 2px;*!*/
+/*}*/
+
+/*.title > mark {*/
+/*    font-weight: 700;*/
+/*    !*color: #00948a;*!*/
+/*    !*color: #464A4E;*!*/
+/*}*/
 
 
 /* COLLAPSABLE */
@@ -192,7 +217,6 @@ a {
     overflow: hidden;
     transition: max-height 0.1s ease-out;
 }
-
 
 @media only screen and (max-width: 210mm) {
     /* Adjust container to use full available width */

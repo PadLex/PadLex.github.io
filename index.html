@@ -5,12 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resume</title>
     <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="marker.css">
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>Alexander George Padula</h1>
-            <div class="horizontal medium_margin" style="row-gap: 1em"><div style="display: inline-flex; align-items: center; text-decoration: none;">
+<div class="container">
+    <div class="header">
+        <h1>Alexander George Padula</h1>
+        <div class="horizontal medium_margin" style="row-gap: 1em"><div style="display: inline-flex; align-items: center; text-decoration: none;">
     <img src="/icons/mail.svg" alt="" style="width: 17px; height: 17px; margin-right: 5px;">
     alexander.george.padula@gmail.com
 </div>
@@ -26,18 +27,18 @@
     <img src="/icons/passport.svg" alt="" style="width: 17px; height: 17px; margin-right: 5px;">
     EU & US Citizen
 </div></div>
-            <div class="small_margin"></div>
-        </div>
-        <div class="middle horizontal large_margin" style="row-gap: 1em">
-            <div>
-                <h2>EDUCATION</h2>
-                <div class="vertical medium_margin">
+        <div class="small_margin"></div>
+    </div>
+    <div class="middle horizontal large_margin" style="row-gap: 1em">
+        <div>
+            <h2>EDUCATION</h2>
+            <div class="vertical medium_margin">
     <div class="horizontal">
         <div class="title">MSc Computer Science</div>
         <div>(ML major)</div>
     </div>
     <div class="horizontal">
-        <div><span class='highlight'>ETH Zurich</span></div>
+        <div><mark class='marker0'>ETH Zurich</mark></div>
         <div>2024 - current</div>
     </div>
     <div></div>
@@ -51,13 +52,13 @@
         <div>Maastricht University</div>
         <div>2021 - 2024</div>
     </div>
-    <div><span class='highlight'>Summa Cum Laude</span>, GPA: 9.0 ≈ 4.0 (USA)</div>
+    <div><mark class='marker3 underline'>Summa Cum Laude</mark>, GPA: 9.0 ≈ 4.0 (USA)</div>
 </div>
-            </div>
-            <div>
-                <h2>LANGUAGES</h2>
-                <div class="medium_margin"></div>
-                <div class="horizontal">
+        </div>
+        <div>
+            <h2>LANGUAGES</h2>
+            <div class="medium_margin"></div>
+            <div class="horizontal">
     <div>
         <img src="/icons/dot.svg" alt="" style="width: 4px; height: 4px; margin-bottom: 2.5px; margin-right: 6px;">
         English
@@ -71,16 +72,16 @@
     </div>
     <div>(Native)</div>
 </div>
-            </div>
-            <div>
-                <h2>SKILLS</h2>
-                <div class="medium_margin"></div>
-                <div class="horizontal">
+        </div>
+        <div>
+            <h2>SKILLS</h2>
+            <div class="medium_margin"></div>
+            <div class="horizontal">
     <div>
         <img src="/icons/dot.svg" alt="" style="width: 4px; height: 4px; margin-bottom: 2.5px; margin-right: 6px;">
         Python
     </div>
-    <div>(<span class='highlight'>PyTorch</span>, TF)</div>
+    <div>(<mark class='marker4 underline'>PyTorch</mark>, TF)</div>
 </div>
 <div class="horizontal">
     <div>
@@ -94,14 +95,7 @@
         <img src="/icons/dot.svg" alt="" style="width: 4px; height: 4px; margin-bottom: 2.5px; margin-right: 6px;">
         C
     </div>
-    <div>(<span class='highlight'>CUDA</span>)</div>
-</div>
-<div class="horizontal">
-    <div>
-        <img src="/icons/dot.svg" alt="" style="width: 4px; height: 4px; margin-bottom: 2.5px; margin-right: 6px;">
-        Java
-    </div>
-    <div>(Reflection)</div>
+    <div>(<mark class='marker5 underline'>CUDA</mark>)</div>
 </div>
 <div class="horizontal">
     <div>
@@ -110,24 +104,39 @@
     </div>
     <div>(Unity)</div>
 </div>
-            </div>
+<div class="horizontal">
+    <div>
+        <img src="/icons/dot.svg" alt="" style="width: 4px; height: 4px; margin-bottom: 2.5px; margin-right: 6px;">
+        Java
+    </div>
+    <div></div>
+</div>
         </div>
-        <div class="bottom vertical">
-            <div class="large_margin">
-                <h2>PUBLICATIONS</h2>
-                <div class="vertical medium_margin">
+    </div>
+    <div class="bottom vertical">
+        <div class="large_margin">
+            <h2>PUBLICATIONS</h2>
+            <div class="vertical medium_margin">
     <div class="horizontal">
-        <div class="title"><a href='https://proceedings.neurips.cc/paper_files/paper/2024/file/c7b04e4e13bb77996d3ae2ff667231ac-Paper-Conference.pdf' target='_blank'>GAVEL: Generating Games Via Evolution and Language Models</a></div>
+        <span>
+            <span class="title"><a href='https://proceedings.neurips.cc/paper_files/paper/2024/file/c7b04e4e13bb77996d3ae2ff667231ac-Paper-Conference.pdf' target='_blank'>GAVEL: Generating Games Via Evolution and Language Models</a></span>
+            <span>- Compilers & ML</span>
+        </span>
+
         <div>
             <span style="margin-right: 10px">2nd Author</span>
-            <span><span class='highlight'>NeurIPS 2024</span></span>
+            <span><mark class='marker1'>NeurIPS 2024</mark></span>
         </div>
     </div>
     <div class="small_margin" style="text-align: justify">Designed a system to generate novel board games in a DSL using a LLM as a mutation operator. Automated evaluation through play-through sampling between general game-playing agents, with heuristics to score runs.</div>
 </div>
 <div class="vertical medium_margin">
     <div class="horizontal">
-        <div class="title"><a href='https://bnaic2024.sites.uu.nl/wp-content/uploads/sites/986/2024/10/Exploring-RL-based-LLM-Training-for-Formal-Language-Tasks-with-Programmed-Rewards.pdf' target='_blank'>Exploring RL-based LLM Training for Formal Language Tasks</a></div>
+        <span>
+            <span class="title"><a href='https://bnaic2024.sites.uu.nl/wp-content/uploads/sites/986/2024/10/Exploring-RL-based-LLM-Training-for-Formal-Language-Tasks-with-Programmed-Rewards.pdf' target='_blank'>Exploring RL-based LLM Training for Formal Language Tasks</a></span>
+            <span>- Machine Learning</span>
+        </span>
+
         <div>
             <span style="margin-right: 10px">1st Author</span>
             <span>BNAIC 2024</span>
@@ -135,35 +144,35 @@
     </div>
     <div class="small_margin" style="text-align: justify">For my BSc thesis, I explored whether existing PPO implementations designed for RLHF could instead train LLMs using rewards from explicitly programmed functions - e.g., quantifying if a generated program is efficient and correct.</div>
 </div>
-            </div>
-            <div class="large_margin">
-                <h2>PROFESSIONAL EXPERIENCE</h2>
-                <div class="vertical medium_margin">
+        </div>
+        <div class="large_margin">
+            <h2>PROFESSIONAL EXPERIENCE</h2>
+            <div class="vertical medium_margin">
     <div class="horizontal">
         <span>
-            <span class="title"><img src="icons/apple.svg" alt="" style="width: auto; height: 12px; margin-right: 0px; margin-top: -4px;"> <span class='highlight'>Apple</span></span>
-            <span>- Research Internship - Front-end & Deep Learning</span>
+            <span class="title"><mark class='marker2'><img src="icons/apple.svg" alt="" style="width: auto; height: 13px; margin-right: 3px; margin-top: -4px;"> Apple</mark></span>
+            <span>- Research Internship - Front-end & Machine Learning</span>
         </span>
         <div>
             <span style="margin-right: 10px">Seattle, USA</span>
             <span>July 2024 - Sep 2024</span>
         </div>
     </div>
-    <div class="small_margin" style="text-align: justify">Authored an internal paper and developed a prototype. Presented research to 60+ employees, gaining traction across departments with the potential to impact the next product cycle. Learned how to share complex ideas concisely.</div>
+    <div class="small_margin" style="text-align: justify">Authored an internal paper on code generation. Presented research to 60+ employees, gaining traction across departments with the potential to <mark class='marker6 underline'>impact the next product cycle</mark>. Learned how to share complex ideas concisely.</div>
 <!--    <div class="small_margin collapsable">This is a test</div>-->
 </div>
 <div class="vertical medium_margin">
     <div class="horizontal">
         <span>
             <span class="title">Maastricht University</span>
-            <span>- Honors Program - Deep Learning</span>
+            <span>- Honors Program - Machine Learning</span>
         </span>
         <div>
             <span style="margin-right: 10px">Maastricht, NL</span>
             <span>Sep 2022 - Sep 2023</span>
         </div>
     </div>
-    <div class="small_margin" style="text-align: justify">Developed Game Smith, a coding assistant for the Ludii DSL. Trained a LLM and overcome data scarcity using grammar-contrained decoding; developed compiler for incomplete code that sequentially excludes illegal tokens.</div>
+    <div class="small_margin" style="text-align: justify">Developed Game Smith, a coding assistant for the Ludii DSL. Trained a LLM and <mark class='marker7 underline'>overcame data scarcity using constrained decoding</mark>; developed a compiler for incomplete code that could mask illegal tokens during inference.</div>
 <!--    <div class="small_margin collapsable">$$extended$$</div>-->
 </div>
 <div class="vertical medium_margin">
@@ -198,14 +207,14 @@
     <div class="horizontal">
         <span>
             <span class="title">CELI Language Technology</span>
-            <span>- Internship - Deep Learning</span>
+            <span>- Internship - Machine Learning</span>
         </span>
         <div>
             <span style="margin-right: 10px">Turin, IT</span>
             <span>Nov 2018 - Aug 2019</span>
         </div>
     </div>
-    <div class="small_margin" style="text-align: justify">Built and deployed a content-based image search engine. Mentored by Dr. Bolioli’s team, I trained BERT and Inception V3 to embed images and descriptions in a shared latent space. This project underpinned my high school thesis.</div>
+    <div class="small_margin" style="text-align: justify"><mark class='marker8 underline'>Built and deployed a content-based image search engine.</mark> Mentored by Dr. Bolioli’s team, I trained BERT and Inception V3 to embed images and descriptions in a shared latent space. This project underpinned my high school thesis.</div>
 <!--    <div class="small_margin collapsable">$$extended$$</div>-->
 </div>
 <div class="vertical medium_margin">
@@ -236,10 +245,10 @@
     <div class="small_margin" style="text-align: justify">Debugged vision testing software and developed therapeutic VR game in Unity C# for amblyopia patients.</div>
 <!--    <div class="small_margin collapsable">$$extended$$</div>-->
 </div>
-            </div>
-            <div class="large_margin">
-                <h2>PROJECTS</h2>
-                <div class="vertical medium_margin">
+        </div>
+        <div class="large_margin">
+            <h2>PROJECTS</h2>
+            <div class="vertical medium_margin">
     <div class="horizontal">
         <div class="title">EDMO</div>
         <div>
@@ -257,13 +266,79 @@
             <span>Jan 2020 - Jan 2021</span>
         </div>
     </div>
-    <div class="small_margin" style="text-align: justify">Built 3D printer and transformed it into a DIY laser cutter. Developed the open-source Python library <a href='https://github.com/PadLex/SvgToGcode' target='_blank'>svg-to-gcode</a>. The tool’s GUI has garnered over 13,000 downloads and a community that helps maintain it.</div>
+    <div class="small_margin" style="text-align: justify">Built 3D printer and transformed it into a DIY laser cutter. Developed the open-source Python library <a href='https://github.com/PadLex/SvgToGcode' target='_blank'>svg-to-gcode</a>. The tool’s GUI has <mark class='marker9 underline'>garnered over 13,000 downloads and a community that helps maintain it.</mark></div>
 </div>
-            </div>
-            <div class="horizontal large_margin" style="justify-content: left; align-items: end">
-                <h2>PASSIONATE</h2>
-                <span style="text-align: justify">about hiking, rock climbing, cooking, and robotics. Board member in student association.</span>
-            </div>
+        </div>
+        <div class="horizontal large_margin" style="justify-content: left; align-items: end">
+            <h2>PASSIONATE</h2>
+            <span style="text-align: justify">about hiking, rock climbing, cooking, and robotics. Board member in student association.</span>
+        </div>
     </div>
+</div>
+<script>
+    console.log('Hello, world!');
+
+    async function animateMarkers() {
+        const markers = document.querySelectorAll("mark");
+
+        for (const marker of markers) {
+            marker.classList.add("animate-highlight");
+            await new Promise(resolve => setTimeout(resolve, Math.random() * 500));
+        }
+    }
+
+    function breakMarkers() {
+        let isDone = false;
+        while (!isDone) {
+            isDone = true;
+
+            document.querySelectorAll('mark').forEach(mark => {
+                // Use getClientRects to get a rectangle for each rendered line.
+                const rects = mark.getClientRects();
+
+                if (rects.length > 1) {
+                    isDone = false;
+
+                    let firstChar = -1;
+                    const firstLineTop = rects[0].top;
+                    const text = mark.textContent;
+
+                    // Iterate through each character using Range.
+                    for (let i = 0; i < text.length; i++) {
+                        const range = document.createRange();
+                        // Assume the text is contained in one text node.
+                        range.setStart(mark.firstChild, i);
+                        range.setEnd(mark.firstChild, i + 1);
+                        const charRect = range.getBoundingClientRect();
+
+                        // Check if the character is rendered on the first line.
+                        // Use a tolerance value to account for minor sub-pixel differences.
+                        if (Math.abs(charRect.top - firstLineTop) < 2) {
+                            firstChar = i+1;
+                        }
+                    }
+
+                    // Clone the mark element
+                    const clone = mark.cloneNode(true);
+                    clone.textContent = text.substring(firstChar);
+                    mark.textContent = text.substring(0, firstChar);
+
+                    // Insert the clone after the original mark
+                    mark.parentNode.insertBefore(clone, mark.nextSibling);
+
+                    // Add br
+                    mark.parentNode.insertBefore(document.createElement('br'), clone);
+                }
+            });
+        }
+    }
+
+    // Call the function to break markers after the DOM is fully loaded and then call animateMarkers
+    document.addEventListener("DOMContentLoaded", () => {
+        breakMarkers();
+        animateMarkers();
+    });
+
+</script>
 </body>
 </html>

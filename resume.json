@@ -22,7 +22,7 @@
     {
       "degree": "MSc Computer Science",
       "major": "(ML major)",
-      "institution": "**ETH Zurich**",
+      "institution": "***{c1}(ETH Zurich)***",
       "years": "2024 - current",
       "gpa": ""
     },
@@ -31,7 +31,7 @@
       "major": "",
       "institution": "Maastricht University",
       "years": "2021 - 2024",
-      "gpa": "**Summa Cum Laude**, GPA: 9.0 ≈ 4.0 (USA)"
+      "gpa": "**{c1}(Summa Cum Laude)**, GPA: 9.0 ≈ 4.0 (USA)"
     }
   ],
   "languages": [
@@ -45,21 +45,23 @@
     }
   ],
   "skills": [
-    {"language": "Python", "details": "(**PyTorch**, TF)"},
+    {"language": "Python", "details": "(**{c1}(PyTorch)**, TF)"},
     {"language": "JS", "details": "(React, Node.js)"},
-    {"language": "C", "details": "(**CUDA**)"},
-    {"language": "Java", "details": "(Reflection)"},
-    {"language": "C#", "details": "(Unity)"}
+    {"language": "C", "details": "(**{c1}(CUDA)**)"},
+    {"language": "C#", "details": "(Unity)"},
+    {"language": "Java", "details": ""}
   ],
   "publications": [
     {
       "title": "[GAVEL: Generating Games Via Evolution and Language Models](https://proceedings.neurips.cc/paper_files/paper/2024/file/c7b04e4e13bb77996d3ae2ff667231ac-Paper-Conference.pdf)",
+      "topic": "Compilers & ML",
       "author": "2nd Author",
-      "venue": "**NeurIPS 2024**",
+      "venue": "***{c2}(NeurIPS 2024)***",
       "description": "Designed a system to generate novel board games in a DSL using a LLM as a mutation operator. Automated evaluation through play-through sampling between general game-playing agents, with heuristics to score runs."
     },
     {
       "title": "[Exploring RL-based LLM Training for Formal Language Tasks](https://bnaic2024.sites.uu.nl/wp-content/uploads/sites/986/2024/10/Exploring-RL-based-LLM-Training-for-Formal-Language-Tasks-with-Programmed-Rewards.pdf)",
+      "topic": "Machine Learning",
       "author": "1st Author",
       "venue": "BNAIC 2024",
       "description": "For my BSc thesis, I explored whether existing PPO implementations designed for RLHF could instead train LLMs using rewards from explicitly programmed functions - e.g., quantifying if a generated program is efficient and correct."
@@ -67,21 +69,21 @@
   ],
   "experience": [
     {
-      "company": "<img src=\"icons/apple.svg\" alt=\"\" style=\"width: auto; height: 12px; margin-right: 0px; margin-top: -4px;\"> **Apple**",
+      "company": "***{c3}(<img src=\"icons/apple.svg\" alt=\"\" style=\"width: auto; height: 13px; margin-right: 3px; margin-top: -4px;\"> Apple)***",
       "position": "Research Internship",
-      "topic": "Front-end & Deep Learning",
+      "topic": "Front-end & Machine Learning",
       "location": "Seattle, USA",
       "years": "July 2024 - Sep 2024",
-      "description": "Authored an internal paper and developed a prototype. Presented research to 60+ employees, gaining traction across departments with the potential to impact the next product cycle. Learned how to share complex ideas concisely.",
+      "description": "Authored an internal paper on code generation. Presented research to 60+ employees, gaining traction across departments with the potential to **{c3}(impact the next product cycle)**. Learned how to share complex ideas concisely.",
       "extended": "This is a test"
     },
     {
       "company": "Maastricht University",
       "position": "Honors Program",
-      "topic": "Deep Learning",
+      "topic": "Machine Learning",
       "location": "Maastricht, NL",
       "years": "Sep 2022 - Sep 2023",
-      "description": "Developed Game Smith, a coding assistant for the Ludii DSL. Trained a LLM and overcome data scarcity using grammar-contrained decoding; developed compiler for incomplete code that sequentially excludes illegal tokens."
+      "description": "Developed Game Smith, a coding assistant for the Ludii DSL. Trained a LLM and **{c3}(overcame data scarcity using constrained decoding)**; developed a compiler for incomplete code that could mask illegal tokens during inference."
     },
     {
       "company": "Maastricht University",
@@ -102,10 +104,10 @@
     {
       "company": "CELI Language Technology",
       "position": "Internship",
-      "topic": "Deep Learning",
+      "topic": "Machine Learning",
       "location": "Turin, IT",
       "years": "Nov 2018 - Aug 2019",
-      "description": "Built and deployed a content-based image search engine. Mentored by Dr. Bolioli’s team, I trained BERT and Inception V3 to embed images and descriptions in a shared latent space. This project underpinned my high school thesis."
+      "description": "**{c3}(Built and deployed a content-based image search engine.)** Mentored by Dr. Bolioli’s team, I trained BERT and Inception V3 to embed images and descriptions in a shared latent space. This project underpinned my high school thesis."
     },
     {
       "company": "Programize LLC",
@@ -134,7 +136,7 @@
       "title": "Open-source Laser Cutting Tool",
       "location": "Treviso, IT",
       "years": "Jan 2020 - Jan 2021",
-      "description": "Built 3D printer and transformed it into a DIY laser cutter. Developed the open-source Python library [svg-to-gcode](https://github.com/PadLex/SvgToGcode). The tool’s GUI has garnered over 13,000 downloads and a community that helps maintain it."
+      "description": "Built 3D printer and transformed it into a DIY laser cutter. Developed the open-source Python library [svg-to-gcode](https://github.com/PadLex/SvgToGcode). The tool’s GUI has **{c4}(garnered over 13,000 downloads and a community that helps maintain it.)**"
     }
   ],
   "passionate": "about hiking, rock climbing, cooking, and robotics. Board member in student association."

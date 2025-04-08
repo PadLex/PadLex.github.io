@@ -22,10 +22,10 @@
     border-radius: 0.4em 0.7em;
     background-image: linear-gradient(
     to right,
-    rgba(250, 223, 161, 0.3),
-    rgba(250, 223, 161, 0.5) 2%,
-    rgba(250, 223, 161, 0.1) 95%,
-    rgba(250, 223, 161, 0.7)
+    rgba(242, 198, 223, 0.3),
+    rgba(242, 198, 223, 0.5) 2%,
+    rgba(242, 198, 223, 0.1) 95%,
+    rgba(242, 198, 223, 0.7)
     );
     clip-path: inset(0 100% 0 0);
     transition: clip-path 0s;
@@ -62,10 +62,10 @@
     border-radius: 0.2em 0.7000000000000001em;
     background-image: linear-gradient(
     to right,
-    rgba(242, 198, 223, 0.3),
-    rgba(242, 198, 223, 0.9) 4%,
-    rgba(242, 198, 223, 0.1) 94%,
-    rgba(242, 198, 223, 0.9)
+    rgba(197, 222, 242, 0.3),
+    rgba(197, 222, 242, 0.9) 4%,
+    rgba(197, 222, 242, 0.1) 94%,
+    rgba(197, 222, 242, 0.9)
     );
     clip-path: inset(0 100% 0 0);
     transition: clip-path 0s;
@@ -102,10 +102,10 @@
     border-radius: 0.8em 0.09999999999999995em;
     background-image: linear-gradient(
     to right,
-    rgba(197, 222, 242, 0.1),
-    rgba(197, 222, 242, 0.9) 5%,
-    rgba(197, 222, 242, 0.3) 95%,
-    rgba(197, 222, 242, 0.5)
+    rgba(250, 223, 161, 0.1),
+    rgba(250, 223, 161, 0.9) 5%,
+    rgba(250, 223, 161, 0.3) 95%,
+    rgba(250, 223, 161, 0.5)
     );
     clip-path: inset(0 100% 0 0);
     transition: clip-path 0s;

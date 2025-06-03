@@ -3,15 +3,15 @@
   "info": [
     {
       "icon": "/icons/mail.svg",
-      "text": "alexander.george.padula@gmail.com"
+      "text": "<span>alexander.george.padula</span><span>@</span><span>gmail.com</span>"
     },
     {
       "icon": "/icons/github.svg",
-      "text": "[github.com/PadLex](https://github.com/PadLex)"
+      "text": "[PadLex](https://github.com/PadLex)"
     },
     {
       "icon": "/icons/linkedin.svg",
-      "text": "[Profile](https://www.linkedin.com/in/alexander-padula-8a0a3b138/)"
+      "text": "[alexander-padula-8a0a3b138](https://www.linkedin.com/in/alexander-padula-8a0a3b138/)"
     },
     {
       "icon": "/icons/passport.svg",
@@ -136,7 +136,7 @@
       "title": "Open-source Laser Cutting Tool",
       "location": "Treviso, IT",
       "years": "Jan 2020 - Jan 2021",
-      "description": "Built 3D printer and transformed it into a DIY laser cutter. Developed the open-source Python library [svg-to-gcode](https://github.com/PadLex/SvgToGcode). The tool’s GUI has **{c4}(garnered over 13,000 downloads and a community that helps maintain it.)**"
+      "description": "Built 3D printer and transformed it into a DIY laser cutter. Developed the open-source Python library [svg-to-gcode](https://github.com/PadLex/SvgToGcode). The tool’s GUI has **{c4}(garnered over [13,000 downloads](https://somsubhra.github.io/github-release-stats/?username=JTechPhotonics&repository=J-Tech-Photonics-Laser-Tool) and a community that helps maintain it.)**"
     }
   ],
   "passionate": "about hiking, rock climbing, cooking, and robotics. Board member in student association."

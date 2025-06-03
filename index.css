@@ -286,6 +286,9 @@ mark.underline::before {
 
 
 
-
-
+/*style="unicode-bidi:bidi-override; direction: rtl;"*/
+.rev {
+    unicode-bidi:bidi-override;
+    direction: rtl;
+}
 

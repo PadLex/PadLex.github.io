@@ -1,24 +1,25 @@
 
 /* START OF MARKER marker0 */
 .marker0 {
-    margin: 0 -0.4em;
-    padding: 0.1em 0.4em;
+    margin: 0;
+    padding: 0;
     border-radius: 0.4em 0.7em;
     position: relative;
     background: transparent;
     display: inline;
     -webkit-box-decoration-break: clone;
     box-decoration-break: clone;
-    z-index: 1;
+    z-index: 0;
 }
 
 .marker0::before {
     content: "";
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    inset: -0.1em -0.4em;
+    top: -0.1em;
+    left: -0.4em;
+    right: -0.4em;
+    bottom: -0.1em;
     border-radius: 0.4em 0.7em;
     background-image: linear-gradient(
     to right,
@@ -41,24 +42,25 @@
 
 /* START OF MARKER marker1 */
 .marker1 {
-    margin: 0 -0.4em;
-    padding: 0.1em 0.4em;
+    margin: 0;
+    padding: 0;
     border-radius: 0.2em 0.7000000000000001em;
     position: relative;
     background: transparent;
     display: inline;
     -webkit-box-decoration-break: clone;
     box-decoration-break: clone;
-    z-index: 1;
+    z-index: 0;
 }
 
 .marker1::before {
     content: "";
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    inset: -0.1em -0.4em;
+    top: -0.1em;
+    left: -0.4em;
+    right: -0.4em;
+    bottom: -0.1em;
     border-radius: 0.2em 0.7000000000000001em;
     background-image: linear-gradient(
     to right,
@@ -81,24 +83,25 @@
 
 /* START OF MARKER marker2 */
 .marker2 {
-    margin: 0 -0.4em;
-    padding: 0.1em 0.4em;
+    margin: 0;
+    padding: 0;
     border-radius: 0.8em 0.09999999999999995em;
     position: relative;
     background: transparent;
     display: inline;
     -webkit-box-decoration-break: clone;
     box-decoration-break: clone;
-    z-index: 1;
+    z-index: 0;
 }
 
 .marker2::before {
     content: "";
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    inset: -0.1em -0.4em;
+    top: -0.1em;
+    left: -0.4em;
+    right: -0.4em;
+    bottom: -0.1em;
     border-radius: 0.8em 0.09999999999999995em;
     background-image: linear-gradient(
     to right,
@@ -121,24 +124,25 @@
 
 /* START OF MARKER marker3 */
 .marker3 {
-    margin: 0 -0.4em;
-    padding: 0.1em 0.4em;
+    margin: 0;
+    padding: 0;
     border-radius: 0.7em 0.30000000000000004em;
     position: relative;
     background: transparent;
     display: inline;
     -webkit-box-decoration-break: clone;
     box-decoration-break: clone;
-    z-index: 1;
+    z-index: 0;
 }
 
 .marker3::before {
     content: "";
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    inset: -0.1em -0.4em;
+    top: -0.1em;
+    left: -0.4em;
+    right: -0.4em;
+    bottom: -0.1em;
     border-radius: 0.7em 0.30000000000000004em;
     background-image: linear-gradient(
     to right,
@@ -161,24 +165,25 @@
 
 /* START OF MARKER marker4 */
 .marker4 {
-    margin: 0 -0.4em;
-    padding: 0.1em 0.4em;
+    margin: 0;
+    padding: 0;
     border-radius: 0.7em 0.30000000000000004em;
     position: relative;
     background: transparent;
     display: inline;
     -webkit-box-decoration-break: clone;
     box-decoration-break: clone;
-    z-index: 1;
+    z-index: 0;
 }
 
 .marker4::before {
     content: "";
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    inset: -0.1em -0.4em;
+    top: -0.1em;
+    left: -0.4em;
+    right: -0.4em;
+    bottom: -0.1em;
     border-radius: 0.7em 0.30000000000000004em;
     background-image: linear-gradient(
     to right,
@@ -201,24 +206,25 @@
 
 /* START OF MARKER marker5 */
 .marker5 {
-    margin: 0 -0.4em;
-    padding: 0.1em 0.4em;
+    margin: 0;
+    padding: 0;
     border-radius: 0.6em 0.5em;
     position: relative;
     background: transparent;
     display: inline;
     -webkit-box-decoration-break: clone;
     box-decoration-break: clone;
-    z-index: 1;
+    z-index: 0;
 }
 
 .marker5::before {
     content: "";
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    inset: -0.1em -0.4em;
+    top: -0.1em;
+    left: -0.4em;
+    right: -0.4em;
+    bottom: -0.1em;
     border-radius: 0.6em 0.5em;
     background-image: linear-gradient(
     to right,
@@ -241,24 +247,25 @@
 
 /* START OF MARKER marker6 */
 .marker6 {
-    margin: 0 -0.4em;
-    padding: 0.1em 0.4em;
+    margin: 0;
+    padding: 0;
     border-radius: 0.5em 0.5em;
     position: relative;
     background: transparent;
     display: inline;
     -webkit-box-decoration-break: clone;
     box-decoration-break: clone;
-    z-index: 1;
+    z-index: 0;
 }
 
 .marker6::before {
     content: "";
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    inset: -0.1em -0.4em;
+    top: -0.1em;
+    left: -0.4em;
+    right: -0.4em;
+    bottom: -0.1em;
     border-radius: 0.5em 0.5em;
     background-image: linear-gradient(
     to right,
@@ -281,24 +288,25 @@
 
 /* START OF MARKER marker7 */
 .marker7 {
-    margin: 0 -0.4em;
-    padding: 0.1em 0.4em;
+    margin: 0;
+    padding: 0;
     border-radius: 0.7em 0.20000000000000004em;
     position: relative;
     background: transparent;
     display: inline;
     -webkit-box-decoration-break: clone;
     box-decoration-break: clone;
-    z-index: 1;
+    z-index: 0;
 }
 
 .marker7::before {
     content: "";
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    inset: -0.1em -0.4em;
+    top: -0.1em;
+    left: -0.4em;
+    right: -0.4em;
+    bottom: -0.1em;
     border-radius: 0.7em 0.20000000000000004em;
     background-image: linear-gradient(
     to right,
@@ -321,24 +329,25 @@
 
 /* START OF MARKER marker8 */
 .marker8 {
-    margin: 0 -0.4em;
-    padding: 0.1em 0.4em;
+    margin: 0;
+    padding: 0;
     border-radius: 0.3em 0.7999999999999999em;
     position: relative;
     background: transparent;
     display: inline;
     -webkit-box-decoration-break: clone;
     box-decoration-break: clone;
-    z-index: 1;
+    z-index: 0;
 }
 
 .marker8::before {
     content: "";
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    inset: -0.1em -0.4em;
+    top: -0.1em;
+    left: -0.4em;
+    right: -0.4em;
+    bottom: -0.1em;
     border-radius: 0.3em 0.7999999999999999em;
     background-image: linear-gradient(
     to right,
@@ -361,24 +370,25 @@
 
 /* START OF MARKER marker9 */
 .marker9 {
-    margin: 0 -0.4em;
-    padding: 0.1em 0.4em;
+    margin: 0;
+    padding: 0;
     border-radius: 0.5em 0.6em;
     position: relative;
     background: transparent;
     display: inline;
     -webkit-box-decoration-break: clone;
     box-decoration-break: clone;
-    z-index: 1;
+    z-index: 0;
 }
 
 .marker9::before {
     content: "";
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    inset: -0.1em -0.4em;
+    top: -0.1em;
+    left: -0.4em;
+    right: -0.4em;
+    bottom: -0.1em;
     border-radius: 0.5em 0.6em;
     background-image: linear-gradient(
     to right,

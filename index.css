@@ -250,7 +250,11 @@ mark.underline::before {
 @media print {
     @page {
         size: A4 portrait;
-        margin: 0;
+        margin: 30px 0 0;
+    }
+
+    @page :first {
+        margin-top: 0;
     }
 
     body {

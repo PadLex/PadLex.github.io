@@ -49,29 +49,37 @@
     {"language": "JS", "details": "(React, Node.js)"},
     {"language": "C", "details": "(**{c1}(CUDA)**)"},
     {"language": "C#", "details": "(Unity)"},
-    {"language": "Java", "details": ""}
+    {"language": "Java", "details": "(Reflection API)"},
+    {"language": "HPC", "details": "(SLURM, ALPS cluster)"}
   ],
   "publications": [
     {
       "title": "[Ludax: A GPU-Accelerated Domain Specific Language for Board Games](https://arxiv.org/pdf/2506.22609)",
       "topic": "Compilers & ML",
       "author": "2nd Author",
-      "venue": "NeurIPS 2025 (SEA)",
-      "description": "We implemented a new board-game DSL in JAX. Games compile to XLA, enabling RL training entirely on the GPU. Offers 10-100x speedup against previous SoTA DSL and lays groundwork for training general game-playing models."
+      "venue": "***{c2}(NeurIPS 2025 (SEA))***",
+      "description": "We implemented a new board-game DSL in JAX. **{c2}(Games compile to XLA, enabling RL training entirely on the GPU.)** Offers 10-100x speedup against previous SoTA DSL and lays groundwork for training general game-playing models."
+    },
+    {
+      "title": "[Myndmap: A RAG-Supported Multimodal Study Environment](https://drive.google.com/uc?export=download&id=1Qr80SBEaFthtR--R5vRll_8rc6CL-k1o)",
+      "topic": "Front-end & ML",
+      "author": "1st Author",
+      "venue": "under review",
+      "description": "Only course project selected by [IVIA lab](https://ivia.ch/) for publication. We built a LLM-assisted study environment that syncs slides, recordings, and exercises into a visual knowledge graph to quickly navigate between sources across modalities."
     },
     {
       "title": "[GAVEL: Generating Games Via Evolution and Language Models](https://proceedings.neurips.cc/paper_files/paper/2024/file/c7b04e4e13bb77996d3ae2ff667231ac-Paper-Conference.pdf)",
       "topic": "Compilers & ML",
       "author": "2nd Author",
       "venue": "***{c2}(NeurIPS 2024)***",
-      "description": "We designed a system to generate novel board games in a DSL using a LLM as a mutation operator. Automated evaluation through play-through sampling between general game-playing agents, with heuristics to score runs."
+      "description": "We designed a system to generate novel board games in a DSL using a LLM as a mutation operator. Automated **{c2}(evaluation through play-through sampling between general game-playing agents)**, with heuristics to score runs."
     },
     {
       "title": "[Exploring RL-based LLM Training for Formal Language Tasks](https://bnaic2024.sites.uu.nl/wp-content/uploads/sites/986/2024/10/Exploring-RL-based-LLM-Training-for-Formal-Language-Tasks-with-Programmed-Rewards.pdf)",
       "topic": "Machine Learning",
       "author": "1st Author",
       "venue": "BNAIC 2024",
-      "description": "In my BSc thesis, I explored novel PPO variations to stabilize LLM training with explicit rewards (now known as RLVR), restoring KL-divergence to the classic RL formulation and introducing a batch-entropy exploration bonus."
+      "description": "In my BSc thesis, I explored novel PPO variations to stabilize LLM training with explicit rewards (now known as RLVR). Restored KL-divergence to the classic RL formulation and introduced a novel batch-entropy exploration bonus."
     }
   ],
   "experience": [
@@ -90,7 +98,7 @@
       "topic": "Front-end & Machine Learning",
       "location": "Seattle, USA",
       "years": "July 2024 - Sep 2024",
-      "description": "Authored an internal paper on code generation with LLMs. Presented research to 60+ employees, gaining traction across departments with the potential to **{c3}(impact the next product cycle)**. Learned to share complex ideas concisely.",
+      "description": "Authored an internal paper on code generation with LLMs. **{c3}(Presented research to 60+ employees)**, gaining traction across departments with the potential to impact the next product cycle. Learned to share complex ideas concisely.",
       "extended": "This is a test"
     },
     {

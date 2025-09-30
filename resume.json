@@ -23,7 +23,7 @@
       "degree": "MSc Computer Science",
       "major": "(ML major)",
       "institution": "**{c1}(ETH Zurich)**",
-      "years": "2024 - current",
+      "years": "2024 - 2026 (expected)",
       "gpa": ""
     },
     {
@@ -56,32 +56,41 @@
       "title": "[Ludax: A GPU-Accelerated Domain Specific Language for Board Games](https://arxiv.org/pdf/2506.22609)",
       "topic": "Compilers & ML",
       "author": "2nd Author",
-      "venue": "Under Review",
-      "description": "As a follow up to GAVEL, we designed a GPU-accelerated DSL for board games using JAX. It enables more efficient simulation and training of RL agents entirely on the GPU. Currently under review for NeurIPS 2025."
+      "venue": "NeurIPS 2025 (SEA)",
+      "description": "We implemented a new board-game DSL in JAX. Games compile to XLA, enabling RL training entirely on the GPU. Offers 10-100x speedup against previous SoTA DSL and lays groundwork for training general game-playing models."
     },
     {
       "title": "[GAVEL: Generating Games Via Evolution and Language Models](https://proceedings.neurips.cc/paper_files/paper/2024/file/c7b04e4e13bb77996d3ae2ff667231ac-Paper-Conference.pdf)",
       "topic": "Compilers & ML",
       "author": "2nd Author",
       "venue": "***{c2}(NeurIPS 2024)***",
-      "description": "Designed a system to generate novel board games in a DSL using a LLM as a mutation operator. Automated evaluation through play-through sampling between general game-playing agents, with heuristics to score runs."
+      "description": "We designed a system to generate novel board games in a DSL using a LLM as a mutation operator. Automated evaluation through play-through sampling between general game-playing agents, with heuristics to score runs."
     },
     {
       "title": "[Exploring RL-based LLM Training for Formal Language Tasks](https://bnaic2024.sites.uu.nl/wp-content/uploads/sites/986/2024/10/Exploring-RL-based-LLM-Training-for-Formal-Language-Tasks-with-Programmed-Rewards.pdf)",
       "topic": "Machine Learning",
       "author": "1st Author",
       "venue": "BNAIC 2024",
-      "description": "For my BSc thesis, I explored whether existing PPO implementations designed for RLHF could instead train LLMs using rewards from explicitly programmed functions - e.g., quantifying if a generated program is efficient and correct."
+      "description": "In my BSc thesis, I explored novel PPO variations to stabilize LLM training with explicit rewards (now known as RLVR), restoring KL-divergence to the classic RL formulation and introducing a batch-entropy exploration bonus."
     }
   ],
   "experience": [
+    {
+      "company": "IBM",
+      "position": "Semester Project",
+      "topic": "Machine Learning",
+      "location": "Zurich, CH",
+      "years": "Sep 2025 - current",
+      "description": "Currently developing a post-training method to make LLMs more robust to the noise introduced by analog computations. This is a critical step toward commercializing IBM's [in-memory-compute](https://research.ibm.com/projects/in-memory-computing) devices.",
+      "extended": "This is a test"
+    },
     {
       "company": "***{c3}(<img src=\"icons/apple.svg\" alt=\"\" style=\"width: auto; height: 13px; margin-right: 3px; margin-top: -4px;\"> Apple)***",
       "position": "Research Internship",
       "topic": "Front-end & Machine Learning",
       "location": "Seattle, USA",
       "years": "July 2024 - Sep 2024",
-      "description": "Authored an internal paper on code generation. Presented research to 60+ employees, gaining traction across departments with the potential to **{c3}(impact the next product cycle)**. Learned how to share complex ideas concisely.",
+      "description": "Authored an internal paper on code generation with LLMs. Presented research to 60+ employees, gaining traction across departments with the potential to **{c3}(impact the next product cycle)**. Learned to share complex ideas concisely.",
       "extended": "This is a test"
     },
     {
@@ -90,7 +99,7 @@
       "topic": "Machine Learning",
       "location": "Maastricht, NL",
       "years": "Sep 2022 - Sep 2023",
-      "description": "Developed Game Smith, a coding assistant for the Ludii DSL. Trained a LLM and **{c3}(overcame data scarcity using constrained decoding)**; developed a compiler for incomplete code that could mask illegal tokens during inference."
+      "description": "Developed a coding assistant for the Ludii DSL. Trained a LLM and **{c3}(overcame data scarcity using grammar constrained decoding)**; had to develop a parser for incomplete code that could mask illegal tokens during inference."
     },
     {
       "company": "Maastricht University",
@@ -134,6 +143,12 @@
   ],
   "projects": [
     {
+      "title": "Reinforcement Learning Agent for Diplomacy-style game",
+      "location": "Zurich, CH",
+      "years": "Sep 2025 - current",
+      "description": "Exploring RL for massively multi-agent, mixed-motive games. Developing open-source gym API for [Open Front](https://openfront.io/)."
+    },
+    {
       "title": "EDMO",
       "location": "Maastricht, NL",
       "years": "Sep 2023 - Feb 2024",
@@ -143,7 +158,7 @@
       "title": "Open-source Laser Cutting Tool",
       "location": "Treviso, IT",
       "years": "Jan 2020 - Jan 2021",
-      "description": "Built 3D printer and transformed it into a DIY laser cutter. Developed the open-source Python library [svg-to-gcode](https://github.com/PadLex/SvgToGcode). The tool’s GUI has **{c4}(garnered over [13,000 downloads](https://somsubhra.github.io/github-release-stats/?username=JTechPhotonics&repository=J-Tech-Photonics-Laser-Tool) and a community that helps maintain it.)**"
+      "description": "Built 3D printer and transformed it into a DIY laser cutter. Developed the open-source Python library [svg-to-gcode](https://github.com/PadLex/SvgToGcode). The tool’s GUI has **{c4}(garnered over [20,000 downloads](https://somsubhra.github.io/github-release-stats/?username=JTechPhotonics&repository=J-Tech-Photonics-Laser-Tool) and a community that helps maintain it.)**"
     }
   ],
   "passionate": "about hiking, rock climbing, cooking, and robotics. Board member in student association."

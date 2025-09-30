@@ -39,7 +39,7 @@
     </div>
     <div class="horizontal">
         <div><mark class='marker2 underline'>ETH Zurich</mark></div>
-        <div>2024 - current</div>
+        <div>2024 - 2026 (expected)</div>
     </div>
     <div></div>
 </div>
@@ -125,10 +125,10 @@
 
         <div>
             <span style="margin-right: 10px">2nd Author</span>
-            <span>Under Review</span>
+            <span>NeurIPS 2025 (SEA)</span>
         </div>
     </div>
-    <div class="small_margin" style="text-align: justify">As a follow up to GAVEL, we designed a GPU-accelerated DSL for board games using JAX. It enables more efficient simulation and training of RL agents entirely on the GPU. Currently under review for NeurIPS 2025.</div>
+    <div class="small_margin" style="text-align: justify">We implemented a new board-game DSL in JAX. Games compile to XLA, enabling RL training entirely on the GPU. Offers 10-100x speedup against previous SoTA DSL and lays groundwork for training general game-playing models.</div>
 </div>
 <div class="vertical medium_margin">
     <div class="horizontal">
@@ -142,7 +142,7 @@
             <span><mark class='marker0'>NeurIPS 2024</mark></span>
         </div>
     </div>
-    <div class="small_margin" style="text-align: justify">Designed a system to generate novel board games in a DSL using a LLM as a mutation operator. Automated evaluation through play-through sampling between general game-playing agents, with heuristics to score runs.</div>
+    <div class="small_margin" style="text-align: justify">We designed a system to generate novel board games in a DSL using a LLM as a mutation operator. Automated evaluation through play-through sampling between general game-playing agents, with heuristics to score runs.</div>
 </div>
 <div class="vertical medium_margin">
     <div class="horizontal">
@@ -156,12 +156,26 @@
             <span>BNAIC 2024</span>
         </div>
     </div>
-    <div class="small_margin" style="text-align: justify">For my BSc thesis, I explored whether existing PPO implementations designed for RLHF could instead train LLMs using rewards from explicitly programmed functions - e.g., quantifying if a generated program is efficient and correct.</div>
+    <div class="small_margin" style="text-align: justify">In my BSc thesis, I explored novel PPO variations to stabilize LLM training with explicit rewards (now known as RLVR), restoring KL-divergence to the classic RL formulation and introducing a batch-entropy exploration bonus.</div>
 </div>
         </div>
         <div class="large_margin">
             <h2>PROFESSIONAL EXPERIENCE</h2>
             <div class="vertical medium_margin">
+    <div class="horizontal">
+        <span>
+            <span class="title">IBM</span>
+            <span>- Semester Project - Machine Learning</span>
+        </span>
+        <div>
+            <span style="margin-right: 10px">Zurich, CH</span>
+            <span>Sep 2025 - current</span>
+        </div>
+    </div>
+    <div class="small_margin" style="text-align: justify">Currently developing a post-training method to make LLMs more robust to the noise introduced by analog computations. This is a critical step toward commercializing IBM's <a href='https://research.ibm.com/projects/in-memory-computing' target='_blank'>in-memory-compute</a> devices.</div>
+<!--    <div class="small_margin collapsable">This is a test</div>-->
+</div>
+<div class="vertical medium_margin">
     <div class="horizontal">
         <span>
             <span class="title"><mark class='marker1'><img src="icons/apple.svg" alt="" style="width: auto; height: 13px; margin-right: 3px; margin-top: -4px;"> Apple</mark></span>
@@ -172,7 +186,7 @@
             <span>July 2024 - Sep 2024</span>
         </div>
     </div>
-    <div class="small_margin" style="text-align: justify">Authored an internal paper on code generation. Presented research to 60+ employees, gaining traction across departments with the potential to <mark class='marker6 underline'>impact the next product cycle</mark>. Learned how to share complex ideas concisely.</div>
+    <div class="small_margin" style="text-align: justify">Authored an internal paper on code generation with LLMs. Presented research to 60+ employees, gaining traction across departments with the potential to <mark class='marker6 underline'>impact the next product cycle</mark>. Learned to share complex ideas concisely.</div>
 <!--    <div class="small_margin collapsable">This is a test</div>-->
 </div>
 <div class="vertical medium_margin">
@@ -186,7 +200,7 @@
             <span>Sep 2022 - Sep 2023</span>
         </div>
     </div>
-    <div class="small_margin" style="text-align: justify">Developed Game Smith, a coding assistant for the Ludii DSL. Trained a LLM and <mark class='marker7 underline'>overcame data scarcity using constrained decoding</mark>; developed a compiler for incomplete code that could mask illegal tokens during inference.</div>
+    <div class="small_margin" style="text-align: justify">Developed a coding assistant for the Ludii DSL. Trained a LLM and <mark class='marker7 underline'>overcame data scarcity using grammar constrained decoding</mark>; had to develop a parser for incomplete code that could mask illegal tokens during inference.</div>
 <!--    <div class="small_margin collapsable">$$extended$$</div>-->
 </div>
 <div class="vertical medium_margin">
@@ -264,6 +278,16 @@
             <h2>PROJECTS</h2>
             <div class="vertical medium_margin">
     <div class="horizontal">
+        <div class="title">Reinforcement Learning Agent for Diplomacy-style game</div>
+        <div>
+            <span style="margin-right: 10px">Zurich, CH</span>
+            <span>Sep 2025 - current</span>
+        </div>
+    </div>
+    <div class="small_margin" style="text-align: justify">Exploring RL for massively multi-agent, mixed-motive games. Developing open-source gym API for <a href='https://openfront.io/' target='_blank'>Open Front</a>.</div>
+</div>
+<div class="vertical medium_margin">
+    <div class="horizontal">
         <div class="title">EDMO</div>
         <div>
             <span style="margin-right: 10px">Maastricht, NL</span>
@@ -280,7 +304,7 @@
             <span>Jan 2020 - Jan 2021</span>
         </div>
     </div>
-    <div class="small_margin" style="text-align: justify">Built 3D printer and transformed it into a DIY laser cutter. Developed the open-source Python library <a href='https://github.com/PadLex/SvgToGcode' target='_blank'>svg-to-gcode</a>. The tool’s GUI has <mark class='marker9 underline'>garnered over <a href='https://somsubhra.github.io/github-release-stats/?username=JTechPhotonics&repository=J-Tech-Photonics-Laser-Tool' target='_blank'>13,000 downloads</a> and a community that helps maintain it.</mark></div>
+    <div class="small_margin" style="text-align: justify">Built 3D printer and transformed it into a DIY laser cutter. Developed the open-source Python library <a href='https://github.com/PadLex/SvgToGcode' target='_blank'>svg-to-gcode</a>. The tool’s GUI has <mark class='marker9 underline'>garnered over <a href='https://somsubhra.github.io/github-release-stats/?username=JTechPhotonics&repository=J-Tech-Photonics-Laser-Tool' target='_blank'>20,000 downloads</a> and a community that helps maintain it.</mark></div>
 </div>
         </div>
         <div class="horizontal large_margin" style="justify-content: left; align-items: end">

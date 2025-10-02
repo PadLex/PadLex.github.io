@@ -34,6 +34,14 @@
     pointer-events: none;
 }
 
+/* Fallback for printing */
+@media print {
+    .$$id$$::before {
+        background-image: none;
+        background-color: rgba($$color$$, $$a5$$);
+    }
+}
+
 .$$id$$.animate-highlight::before {
   clip-path: inset(0 0 0 0);
   transition: clip-path $$time$$s ease-in-out;

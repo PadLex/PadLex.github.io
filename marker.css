@@ -3,7 +3,7 @@
 .marker0 {
     margin: 0;
     padding: 0;
-    border-radius: 0.4em 0.7em;
+    border-radius: 0.3em 0.7999999999999999em;
     position: relative;
     background: transparent;
     display: inline;
@@ -20,7 +20,7 @@
     left: -0.4em;
     right: -0.4em;
     bottom: -0.1em;
-    border-radius: 0.4em 0.7em;
+    border-radius: 0.3em 0.7999999999999999em;
     background-image: linear-gradient(
     to right,
     rgba(242, 198, 223, 0.3),
@@ -34,6 +34,14 @@
     pointer-events: none;
 }
 
+/* Fallback for printing */
+@media print {
+    .marker0::before {
+        background-image: none;
+        background-color: rgba(242, 198, 223, 0.4);
+    }
+}
+
 .marker0.animate-highlight::before {
   clip-path: inset(0 0 0 0);
   transition: clip-path 0.4s ease-in-out;
@@ -44,7 +52,7 @@
 .marker1 {
     margin: 0;
     padding: 0;
-    border-radius: 0.2em 0.7000000000000001em;
+    border-radius: 0.2em 0.9em;
     position: relative;
     background: transparent;
     display: inline;
@@ -61,18 +69,26 @@
     left: -0.4em;
     right: -0.4em;
     bottom: -0.1em;
-    border-radius: 0.2em 0.7000000000000001em;
+    border-radius: 0.2em 0.9em;
     background-image: linear-gradient(
     to right,
     rgba(242, 198, 223, 0.3),
-    rgba(242, 198, 223, 0.9) 4%,
-    rgba(242, 198, 223, 0.1) 94%,
-    rgba(242, 198, 223, 0.9)
+    rgba(242, 198, 223, 0.8) 2%,
+    rgba(242, 198, 223, 0.1) 95%,
+    rgba(242, 198, 223, 0.5)
     );
     clip-path: inset(0 100% 0 0);
     transition: clip-path 0s;
     z-index: -1;
     pointer-events: none;
+}
+
+/* Fallback for printing */
+@media print {
+    .marker1::before {
+        background-image: none;
+        background-color: rgba(242, 198, 223, 0.3);
+    }
 }
 
 .marker1.animate-highlight::before {
@@ -85,7 +101,7 @@
 .marker2 {
     margin: 0;
     padding: 0;
-    border-radius: 0.8em 0.09999999999999995em;
+    border-radius: 0.2em 0.7000000000000001em;
     position: relative;
     background: transparent;
     display: inline;
@@ -102,18 +118,26 @@
     left: -0.4em;
     right: -0.4em;
     bottom: -0.1em;
-    border-radius: 0.8em 0.09999999999999995em;
+    border-radius: 0.2em 0.7000000000000001em;
     background-image: linear-gradient(
     to right,
-    rgba(197, 222, 242, 0.1),
+    rgba(197, 222, 242, 0.3),
     rgba(197, 222, 242, 0.9) 5%,
-    rgba(197, 222, 242, 0.3) 95%,
-    rgba(197, 222, 242, 0.5)
+    rgba(197, 222, 242, 0.2) 96%,
+    rgba(197, 222, 242, 0.6)
     );
     clip-path: inset(0 100% 0 0);
     transition: clip-path 0s;
     z-index: -1;
     pointer-events: none;
+}
+
+/* Fallback for printing */
+@media print {
+    .marker2::before {
+        background-image: none;
+        background-color: rgba(197, 222, 242, 0.6);
+    }
 }
 
 .marker2.animate-highlight::before {
@@ -126,7 +150,7 @@
 .marker3 {
     margin: 0;
     padding: 0;
-    border-radius: 0.7em 0.30000000000000004em;
+    border-radius: 0.8em 0.09999999999999995em;
     position: relative;
     background: transparent;
     display: inline;
@@ -143,12 +167,12 @@
     left: -0.4em;
     right: -0.4em;
     bottom: -0.1em;
-    border-radius: 0.7em 0.30000000000000004em;
+    border-radius: 0.8em 0.09999999999999995em;
     background-image: linear-gradient(
     to right,
-    rgba(250, 223, 161, 0.3),
-    rgba(250, 223, 161, 0.7) 6%,
-    rgba(250, 223, 161, 0.1) 97%,
+    rgba(250, 223, 161, 0.2),
+    rgba(250, 223, 161, 0.7) 1%,
+    rgba(250, 223, 161, 0.1) 94%,
     rgba(250, 223, 161, 0.6)
     );
     clip-path: inset(0 100% 0 0);
@@ -157,9 +181,17 @@
     pointer-events: none;
 }
 
+/* Fallback for printing */
+@media print {
+    .marker3::before {
+        background-image: none;
+        background-color: rgba(250, 223, 161, 0.5);
+    }
+}
+
 .marker3.animate-highlight::before {
   clip-path: inset(0 0 0 0);
-  transition: clip-path 0.5s ease-in-out;
+  transition: clip-path 0.6s ease-in-out;
 }
 /* END OF MARKER marker3 */
 
@@ -167,7 +199,7 @@
 .marker4 {
     margin: 0;
     padding: 0;
-    border-radius: 0.7em 0.30000000000000004em;
+    border-radius: 0.8em 0.09999999999999995em;
     position: relative;
     background: transparent;
     display: inline;
@@ -184,18 +216,26 @@
     left: -0.4em;
     right: -0.4em;
     bottom: -0.1em;
-    border-radius: 0.7em 0.30000000000000004em;
+    border-radius: 0.8em 0.09999999999999995em;
     background-image: linear-gradient(
     to right,
-    rgba(250, 223, 161, 0.1),
-    rgba(250, 223, 161, 0.7) 4%,
-    rgba(250, 223, 161, 0.1) 94%,
+    rgba(250, 223, 161, 0.2),
+    rgba(250, 223, 161, 0.9) 5%,
+    rgba(250, 223, 161, 0.2) 94%,
     rgba(250, 223, 161, 0.5)
     );
     clip-path: inset(0 100% 0 0);
     transition: clip-path 0s;
     z-index: -1;
     pointer-events: none;
+}
+
+/* Fallback for printing */
+@media print {
+    .marker4::before {
+        background-image: none;
+        background-color: rgba(250, 223, 161, 0.6);
+    }
 }
 
 .marker4.animate-highlight::before {
@@ -208,7 +248,7 @@
 .marker5 {
     margin: 0;
     padding: 0;
-    border-radius: 0.6em 0.5em;
+    border-radius: 0.2em 0.9em;
     position: relative;
     background: transparent;
     display: inline;
@@ -225,13 +265,13 @@
     left: -0.4em;
     right: -0.4em;
     bottom: -0.1em;
-    border-radius: 0.6em 0.5em;
+    border-radius: 0.2em 0.9em;
     background-image: linear-gradient(
     to right,
-    rgba(250, 223, 161, 0.1),
-    rgba(250, 223, 161, 0.8) 4%,
-    rgba(250, 223, 161, 0.3) 94%,
-    rgba(250, 223, 161, 0.5)
+    rgba(250, 223, 161, 0.3),
+    rgba(250, 223, 161, 0.9) 6%,
+    rgba(250, 223, 161, 0.2) 94%,
+    rgba(250, 223, 161, 0.9)
     );
     clip-path: inset(0 100% 0 0);
     transition: clip-path 0s;
@@ -239,9 +279,17 @@
     pointer-events: none;
 }
 
+/* Fallback for printing */
+@media print {
+    .marker5::before {
+        background-image: none;
+        background-color: rgba(250, 223, 161, 0.4);
+    }
+}
+
 .marker5.animate-highlight::before {
   clip-path: inset(0 0 0 0);
-  transition: clip-path 0.6s ease-in-out;
+  transition: clip-path 0.5s ease-in-out;
 }
 /* END OF MARKER marker5 */
 
@@ -249,7 +297,7 @@
 .marker6 {
     margin: 0;
     padding: 0;
-    border-radius: 0.5em 0.5em;
+    border-radius: 0.7em 0.20000000000000004em;
     position: relative;
     background: transparent;
     display: inline;
@@ -266,12 +314,12 @@
     left: -0.4em;
     right: -0.4em;
     bottom: -0.1em;
-    border-radius: 0.5em 0.5em;
+    border-radius: 0.7em 0.20000000000000004em;
     background-image: linear-gradient(
     to right,
-    rgba(250, 223, 161, 0.3),
-    rgba(250, 223, 161, 0.6) 1%,
-    rgba(250, 223, 161, 0.3) 99%,
+    rgba(250, 223, 161, 0.2),
+    rgba(250, 223, 161, 0.5) 3%,
+    rgba(250, 223, 161, 0.1) 97%,
     rgba(250, 223, 161, 0.5)
     );
     clip-path: inset(0 100% 0 0);
@@ -280,9 +328,17 @@
     pointer-events: none;
 }
 
+/* Fallback for printing */
+@media print {
+    .marker6::before {
+        background-image: none;
+        background-color: rgba(250, 223, 161, 0.6);
+    }
+}
+
 .marker6.animate-highlight::before {
   clip-path: inset(0 0 0 0);
-  transition: clip-path 0.4s ease-in-out;
+  transition: clip-path 0.6s ease-in-out;
 }
 /* END OF MARKER marker6 */
 
@@ -290,7 +346,7 @@
 .marker7 {
     margin: 0;
     padding: 0;
-    border-radius: 0.7em 0.20000000000000004em;
+    border-radius: 0.4em 0.7em;
     position: relative;
     background: transparent;
     display: inline;
@@ -307,12 +363,12 @@
     left: -0.4em;
     right: -0.4em;
     bottom: -0.1em;
-    border-radius: 0.7em 0.20000000000000004em;
+    border-radius: 0.4em 0.7em;
     background-image: linear-gradient(
     to right,
-    rgba(242, 198, 223, 0.1),
-    rgba(242, 198, 223, 0.5) 4%,
-    rgba(242, 198, 223, 0.2) 99%,
+    rgba(242, 198, 223, 0.2),
+    rgba(242, 198, 223, 0.6) 5%,
+    rgba(242, 198, 223, 0.3) 99%,
     rgba(242, 198, 223, 0.7)
     );
     clip-path: inset(0 100% 0 0);
@@ -321,9 +377,17 @@
     pointer-events: none;
 }
 
+/* Fallback for printing */
+@media print {
+    .marker7::before {
+        background-image: none;
+        background-color: rgba(242, 198, 223, 0.3);
+    }
+}
+
 .marker7.animate-highlight::before {
   clip-path: inset(0 0 0 0);
-  transition: clip-path 0.6s ease-in-out;
+  transition: clip-path 0.5s ease-in-out;
 }
 /* END OF MARKER marker7 */
 
@@ -331,7 +395,7 @@
 .marker8 {
     margin: 0;
     padding: 0;
-    border-radius: 0.3em 0.7999999999999999em;
+    border-radius: 0.2em 0.7000000000000001em;
     position: relative;
     background: transparent;
     display: inline;
@@ -348,12 +412,12 @@
     left: -0.4em;
     right: -0.4em;
     bottom: -0.1em;
-    border-radius: 0.3em 0.7999999999999999em;
+    border-radius: 0.2em 0.7000000000000001em;
     background-image: linear-gradient(
     to right,
-    rgba(242, 198, 223, 0.2),
-    rgba(242, 198, 223, 0.6) 6%,
-    rgba(242, 198, 223, 0.3) 99%,
+    rgba(242, 198, 223, 0.1),
+    rgba(242, 198, 223, 0.8) 6%,
+    rgba(242, 198, 223, 0.2) 96%,
     rgba(242, 198, 223, 0.7)
     );
     clip-path: inset(0 100% 0 0);
@@ -362,9 +426,17 @@
     pointer-events: none;
 }
 
+/* Fallback for printing */
+@media print {
+    .marker8::before {
+        background-image: none;
+        background-color: rgba(242, 198, 223, 0.4);
+    }
+}
+
 .marker8.animate-highlight::before {
   clip-path: inset(0 0 0 0);
-  transition: clip-path 0.5s ease-in-out;
+  transition: clip-path 0.4s ease-in-out;
 }
 /* END OF MARKER marker8 */
 
@@ -372,7 +444,7 @@
 .marker9 {
     margin: 0;
     padding: 0;
-    border-radius: 0.5em 0.6em;
+    border-radius: 0.7em 0.20000000000000004em;
     position: relative;
     background: transparent;
     display: inline;
@@ -389,13 +461,13 @@
     left: -0.4em;
     right: -0.4em;
     bottom: -0.1em;
-    border-radius: 0.5em 0.6em;
+    border-radius: 0.7em 0.20000000000000004em;
     background-image: linear-gradient(
     to right,
-    rgba(197, 222, 242, 0.3),
-    rgba(197, 222, 242, 0.6) 4%,
-    rgba(197, 222, 242, 0.1) 96%,
-    rgba(197, 222, 242, 0.8)
+    rgba(197, 222, 242, 0.2),
+    rgba(197, 222, 242, 0.8) 5%,
+    rgba(197, 222, 242, 0.2) 99%,
+    rgba(197, 222, 242, 0.5)
     );
     clip-path: inset(0 100% 0 0);
     transition: clip-path 0s;
@@ -403,9 +475,17 @@
     pointer-events: none;
 }
 
+/* Fallback for printing */
+@media print {
+    .marker9::before {
+        background-image: none;
+        background-color: rgba(197, 222, 242, 0.4);
+    }
+}
+
 .marker9.animate-highlight::before {
   clip-path: inset(0 0 0 0);
-  transition: clip-path 0.6s ease-in-out;
+  transition: clip-path 0.7s ease-in-out;
 }
 /* END OF MARKER marker9 */
 
@@ -413,7 +493,7 @@
 .marker10 {
     margin: 0;
     padding: 0;
-    border-radius: 0.3em 0.6em;
+    border-radius: 0.6em 0.5em;
     position: relative;
     background: transparent;
     display: inline;
@@ -430,12 +510,12 @@
     left: -0.4em;
     right: -0.4em;
     bottom: -0.1em;
-    border-radius: 0.3em 0.6em;
+    border-radius: 0.6em 0.5em;
     background-image: linear-gradient(
     to right,
-    rgba(197, 222, 242, 0.1),
-    rgba(197, 222, 242, 0.6) 4%,
-    rgba(197, 222, 242, 0.1) 96%,
+    rgba(197, 222, 242, 0.2),
+    rgba(197, 222, 242, 0.8) 2%,
+    rgba(197, 222, 242, 0.1) 99%,
     rgba(197, 222, 242, 0.7)
     );
     clip-path: inset(0 100% 0 0);
@@ -444,9 +524,17 @@
     pointer-events: none;
 }
 
+/* Fallback for printing */
+@media print {
+    .marker10::before {
+        background-image: none;
+        background-color: rgba(197, 222, 242, 0.4);
+    }
+}
+
 .marker10.animate-highlight::before {
   clip-path: inset(0 0 0 0);
-  transition: clip-path 0.6s ease-in-out;
+  transition: clip-path 0.7s ease-in-out;
 }
 /* END OF MARKER marker10 */
 
@@ -454,7 +542,7 @@
 .marker11 {
     margin: 0;
     padding: 0;
-    border-radius: 0.4em 0.5em;
+    border-radius: 0.3em 0.6em;
     position: relative;
     background: transparent;
     display: inline;
@@ -471,13 +559,13 @@
     left: -0.4em;
     right: -0.4em;
     bottom: -0.1em;
-    border-radius: 0.4em 0.5em;
+    border-radius: 0.3em 0.6em;
     background-image: linear-gradient(
     to right,
-    rgba(197, 222, 242, 0.1),
-    rgba(197, 222, 242, 0.8) 2%,
-    rgba(197, 222, 242, 0.2) 96%,
-    rgba(197, 222, 242, 0.8)
+    rgba(197, 222, 242, 0.3),
+    rgba(197, 222, 242, 0.8) 5%,
+    rgba(197, 222, 242, 0.2) 97%,
+    rgba(197, 222, 242, 0.6)
     );
     clip-path: inset(0 100% 0 0);
     transition: clip-path 0s;
@@ -485,9 +573,17 @@
     pointer-events: none;
 }
 
+/* Fallback for printing */
+@media print {
+    .marker11::before {
+        background-image: none;
+        background-color: rgba(197, 222, 242, 0.4);
+    }
+}
+
 .marker11.animate-highlight::before {
   clip-path: inset(0 0 0 0);
-  transition: clip-path 0.6s ease-in-out;
+  transition: clip-path 0.4s ease-in-out;
 }
 /* END OF MARKER marker11 */
 
@@ -495,7 +591,7 @@
 .marker12 {
     margin: 0;
     padding: 0;
-    border-radius: 0.5em 0.4em;
+    border-radius: 0.9em 0.19999999999999998em;
     position: relative;
     background: transparent;
     display: inline;
@@ -512,13 +608,13 @@
     left: -0.4em;
     right: -0.4em;
     bottom: -0.1em;
-    border-radius: 0.5em 0.4em;
+    border-radius: 0.9em 0.19999999999999998em;
     background-image: linear-gradient(
     to right,
-    rgba(218, 204, 239, 0.3),
-    rgba(218, 204, 239, 0.9) 4%,
-    rgba(218, 204, 239, 0.2) 96%,
-    rgba(218, 204, 239, 0.9)
+    rgba(218, 204, 239, 0.1),
+    rgba(218, 204, 239, 0.6) 4%,
+    rgba(218, 204, 239, 0.3) 97%,
+    rgba(218, 204, 239, 0.8)
     );
     clip-path: inset(0 100% 0 0);
     transition: clip-path 0s;
@@ -526,8 +622,16 @@
     pointer-events: none;
 }
 
+/* Fallback for printing */
+@media print {
+    .marker12::before {
+        background-image: none;
+        background-color: rgba(218, 204, 239, 0.3);
+    }
+}
+
 .marker12.animate-highlight::before {
   clip-path: inset(0 0 0 0);
-  transition: clip-path 0.7s ease-in-out;
+  transition: clip-path 0.6s ease-in-out;
 }
 /* END OF MARKER marker12 */

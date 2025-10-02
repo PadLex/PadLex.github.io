@@ -246,6 +246,9 @@ mark.underline::before {
     }
 }
 
+.print-pagebreak {
+  display: none; /* hidden by default */
+}
 
 @media print {
     @page {
@@ -284,6 +287,11 @@ mark.underline::before {
     a {
         text-decoration: none;
     }
+
+    .print-pagebreak {
+        display: block;
+        page-break-before: always; /* force a page break */
+      }
 }
 
 

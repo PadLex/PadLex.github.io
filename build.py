@@ -90,6 +90,7 @@ for i in range(len(marker_colors)):
     marker = marker.replace("$$a2$$", str(random.randint(5, 9) / 10))
     marker = marker.replace("$$a3$$", str(random.randint(1, 3) / 10))
     marker = marker.replace("$$a4$$", str(random.randint(5, 9) / 10))
+    marker = marker.replace("$$a5$$", str(random.randint(3, 6) / 10))
 
     marker = marker.replace("$$p1$$", str(random.randint(1, 6)))
     marker = marker.replace("$$p2$$", str(random.randint(94, 100)))

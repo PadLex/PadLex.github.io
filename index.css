@@ -91,7 +91,7 @@ h2 {
 a {
     all: unset;
     cursor: pointer;
-    /*text-decoration: underline #706F6F;*/
+    /*text-decoration: underline #b19f9f;*/
 }
 
 a:hover {
@@ -181,7 +181,7 @@ mark {
 }
 
 mark.underline::before {
-    transform: translateY(0.5em) scaleY(0.3);
+    transform: translateY(0.5em) scaleY(0.25);
 }
 
 /*.highlight {*/

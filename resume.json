@@ -22,7 +22,7 @@
     {
       "degree": "MSc Computer Science",
       "major": "(ML major)",
-      "institution": "**{c1}(ETH Zurich)**",
+      "institution": "ETH Zurich",
       "years": "2024 - 2026",
       "gpa": ""
     },
@@ -31,25 +31,15 @@
       "major": "",
       "institution": "Maastricht University",
       "years": "2021 - 2024",
-      "gpa": "**{c1}(Summa Cum Laude)**, GPA: 9.0 ≈ 4.0 (USA)"
-    }
-  ],
-  "languages": [
-    {
-      "language": "English",
-      "proficiency": "(Native)"
-    },
-    {
-      "language": "Italian",
-      "proficiency": "(Native)"
+      "gpa": "**{c1}(Summa Cum Laude)**"
     }
   ],
   "skills": [
-    {"language": "Python", "details": "(PyTorch, **{c1}(JAX)**)"},
-    {"language": "JS", "details": "(React, Node.js)"},
-    {"language": "C", "details": "(**{c1}(CUDA)**)"},
-    {"language": "C#", "details": "(Unity)"},
+    {"language": "Python", "details": "(PyTorch, JAX, NumPy, TRL)"},
+    {"language": "JS", "details": "(React, Node.js, TypeScript)"},
     {"language": "Java", "details": "(Reflection API)"},
+    {"language": "C", "details": "(CUDA)"},
+    {"language": "C#", "details": "(Unity)"},
     {"language": "HPC", "details": "(SLURM, ALPS cluster)"}
   ],
   "publications": [
@@ -57,7 +47,7 @@
       "title": "[Ludax: A GPU-Accelerated Domain Specific Language for Board Games](https://arxiv.org/pdf/2506.22609)",
       "topic": "Compilers & ML",
       "author": "2nd Author",
-      "venue": "***{c2}(NeurIPS 2025 (SEA))***",
+      "venue": "***{c2}(SEA @ NeurIPS 2025)***",
       "description": "We implemented a new board-game DSL in JAX. **{c2}(Games compile to XLA, enabling RL training entirely on the GPU.)** Offers 10-100x speedup against previous SoTA DSL and lays groundwork for training general game-playing models."
     },
     {
@@ -169,5 +159,5 @@
       "description": "Built 3D printer and transformed it into a DIY laser cutter. Developed the open-source Python library [svg-to-gcode](https://github.com/PadLex/SvgToGcode). The tool’s GUI has **{c4}(garnered over [20,000 downloads](https://somsubhra.github.io/github-release-stats/?username=JTechPhotonics&repository=J-Tech-Photonics-Laser-Tool) and a community that helps maintain it.)**"
     }
   ],
-  "passionate": "about hiking, rock climbing, cooking, and robotics. Board member in student association."
+  "passionate": "about hiking, rock climbing, cooking, and robotics. Native English and Italian speaker."
 }

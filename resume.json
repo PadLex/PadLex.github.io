@@ -35,7 +35,7 @@
     }
   ],
   "skills": [
-    {"language": "Python", "details": "(PyTorch, JAX, NumPy, TRL)"},
+    {"language": "Python", "details": "(PyTorch, JAX, TRL, NumPy)"},
     {"language": "JS", "details": "(React, Node.js, TypeScript)"},
     {"language": "Java", "details": "(Reflection API)"},
     {"language": "C", "details": "(CUDA)"},

@@ -11,7 +11,7 @@
     },
     {
       "icon": "/icons/linkedin.svg",
-      "text": "[alexander-padula-8a0a3b138](https://www.linkedin.com/in/alexander-padula-8a0a3b138/)"
+      "text": "[alex-padula](https://www.linkedin.com/in/alex-padula/)"
     },
     {
       "icon": "/icons/passport.svg",
@@ -35,12 +35,11 @@
     }
   ],
   "skills": [
-    {"language": "Python", "details": "(PyTorch, JAX, TRL, NumPy)"},
+    {"language": "Python", "details": "(PyTorch, JAX, VERL, TensorFlow)"},
+    {"language": "HPC", "details": "(SLURM, Grace-Hopper chips)"},
     {"language": "JS", "details": "(React, Node.js, TypeScript)"},
-    {"language": "Java", "details": "(Reflection API)"},
     {"language": "C", "details": "(CUDA)"},
-    {"language": "C#", "details": "(Unity)"},
-    {"language": "HPC", "details": "(SLURM, ALPS cluster)"}
+    {"language": "Java, C#", "details": ""}
   ],
   "publications": [
     {
@@ -74,12 +73,12 @@
   ],
   "experience": [
     {
-      "company": "IBM",
-      "position": "Semester Project",
+      "company": "Apertus AI",
+      "position": "Research Assistant",
       "topic": "Machine Learning",
       "location": "Zurich, CH",
-      "years": "Sep 2025 - current",
-      "description": "Currently developing a post-training method to make LLMs more robust to the noise introduced by analog computations. This is a critical step toward commercializing IBM's [in-memory-compute](https://research.ibm.com/projects/in-memory-computing) devices.",
+      "years": "Oct 2026 - current",
+      "description": "**{c3}(Working on post-training for [Apertus](https://www.swiss-ai.org/apertus), a fully open-source 70B LLM)**. Contributing to RLVR training pipeline for code generation using GRPO and real-time unit test evaluations. Improved sandbox stability and reduced training time 6x.",
       "extended": "This is a test"
     },
     {
@@ -130,16 +129,22 @@
       "location": "Athens, GR",
       "years": "Aug 2018 - Sep 2018",
       "description": "Worked in the dev team of a mobile digital payment application. Debugged Node.js API and built a prototype in React. Operated in a large codebase and loved working in a team. Received an offer to return and a recommendation letter."
-    },{
-      "company": "Vivid Vision",
-      "position": "Internship",
-      "topic": "Virtual Reality",
-      "location": "San Francisco, USA",
-      "years": "July 2018 - Aug 2018",
-      "description": "Debugged vision testing software and developed therapeutic VR game in Unity C# for amblyopia patients."
     }
   ],
   "projects": [
+    {
+      "title": "IBM Research: Machine Learning on Analog Devices",
+      "location": "Zurich, CH",
+      "years": "Feb 2026 - Jun 2026",
+      "description": "Starting next semester, I will be developing a post-training method to make LLMs more robust to the noise introduced by analog computations. This is a critical step toward commercializing IBM's [in-memory-compute](https://research.ibm.com/projects/in-memory-computing) devices.",
+      "extended": "This is a test"
+    },
+    {
+      "title": "Muon Optimizer Investigation (potential publication)",
+      "location": "Zurich, CH",
+      "years": "Oct 2025 - current",
+      "description": "**{c4}(Exploring [Muon](https://kellerjordan.github.io/posts/muon/) optimizer's implicit bias toward sharpness minimization)**, wider minima, and improved generalization."
+    },
     {
       "title": "Reinforcement Learning Agent for Diplomacy-style game",
       "location": "Zurich, CH",

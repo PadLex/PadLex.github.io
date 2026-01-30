@@ -46,15 +46,8 @@
       "title": "[Ludax: A GPU-Accelerated Domain Specific Language for Board Games](https://arxiv.org/pdf/2506.22609)",
       "topic": "Compilers & ML",
       "author": "2nd Author",
-      "venue": "***{c2}(SEA @ NeurIPS 2025)***",
-      "description": "We implemented a new board-game DSL in JAX. **{c2}(Games compile to XLA, enabling RL training entirely on the GPU.)** Offers 10-100x speedup against previous SoTA DSL and lays groundwork for training general game-playing models."
-    },
-    {
-      "title": "[Myndmap: A RAG-Supported Multimodal Study Environment](https://drive.google.com/uc?export=download&id=1Qr80SBEaFthtR--R5vRll_8rc6CL-k1o)",
-      "topic": "Front-end & ML",
-      "author": "1st Author",
-      "venue": "under review",
-      "description": "Only course project selected by [IVIA lab](https://ivia.ch/) for publication. We built a LLM-assisted study environment that syncs slides, recordings, and exercises into a visual knowledge graph to quickly navigate between multimodal-sources."
+      "venue": "SEA @ NeurIPS 2025",
+      "description": "We implemented a **{c2}(new board-game DSL in JAX: games compile to XLA, enabling RL training entirely on the GPU.)** Offers 10-100x speedup against previous SoTA DSL and lays groundwork for training general game-playing models."
     },
     {
       "title": "[GAVEL: Generating Games Via Evolution and Language Models](https://proceedings.neurips.cc/paper_files/paper/2024/file/c7b04e4e13bb77996d3ae2ff667231ac-Paper-Conference.pdf)",
@@ -96,7 +89,7 @@
       "topic": "Machine Learning",
       "location": "Maastricht, NL",
       "years": "Sep 2022 - Sep 2023",
-      "description": "Developed a coding assistant for the Ludii DSL. Trained a LLM and **{c3}(overcame data scarcity using grammar constrained decoding)**; had to develop a parser for incomplete code that could mask illegal tokens during inference."
+      "description": "Developed a coding assistant for the Ludii DSL. Trained a LLM and overcame data scarcity using grammar constrained decoding; had to develop a parser for incomplete code that could mask illegal tokens during inference."
     },
     {
       "company": "Maastricht University",
@@ -120,7 +113,7 @@
       "topic": "Machine Learning",
       "location": "Turin, IT",
       "years": "Nov 2018 - Aug 2019",
-      "description": "**{c3}(Built and deployed a content-based image search engine.)** Mentored by Dr. Bolioli’s team, I trained BERT and Inception V3 to embed images and descriptions in a shared latent space. This project underpinned my high school thesis."
+      "description": "Built and deployed a content-based image search engine. Mentored by Dr. Bolioli’s team, I trained BERT and Inception V3 to embed images and descriptions in a shared latent space. This project underpinned my high school thesis."
     },
     {
       "company": "Programize LLC",
@@ -140,16 +133,23 @@
       "extended": "This is a test"
     },
     {
-      "title": "Muon Optimizer Investigation (potential publication)",
+      "title": "[Muon Operates Beyond the Edge of Stability](https://drive.google.com/uc?export=download&id=1XWJ-XB_DStsGB63pfO315E1fOjE74P-m) - potential publication",
       "location": "Zurich, CH",
-      "years": "Oct 2025 - current",
-      "description": "**{c4}(Exploring [Muon](https://kellerjordan.github.io/posts/muon/) optimizer's implicit bias toward sharpness minimization)**, wider minima, and improved generalization."
+      "years": "Oct 2025 - Jan 2026",
+      "description": "**{c4}(We derived [Muon](https://kellerjordan.github.io/posts/muon/)'s preconditioner and found that Muon operates beyond the classical edge of stability.)** We also empirically validated that the flat minima hypothesis holds for Muon’s solutions in a realistic setting."
     },
     {
       "title": "Reinforcement Learning Agent for Diplomacy-style game",
       "location": "Zurich, CH",
       "years": "Sep 2025 - current",
       "description": "Exploring RL for massively multi-agent, mixed-motive games. Developing open-source gym API for [Open Front](https://openfront.io/)."
+    },
+    {
+      "title": "[Myndmap: A RAG-Supported Study Environment](https://drive.google.com/uc?export=download&id=1Qr80SBEaFthtR--R5vRll_8rc6CL-k1o) - potential publication",
+      "location": "Zurich, CH",
+      "years": "Apr 2025 - Jun 2025",
+      "description": "Only course project selected by [IVIA lab](https://ivia.ch/) for publication (under review). We built a LLM-assisted study environment that syncs recordings and exercises into a visual knowledge graph to quickly navigate between multimodal-sources.",
+      "extended": "This is a test"
     },
     {
       "title": "EDMO",

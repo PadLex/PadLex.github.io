@@ -37,7 +37,7 @@
   "skills": [
     {"language": "Python", "details": "(PyTorch, JAX, VERL, TensorFlow)"},
     {"language": "HPC", "details": "(SLURM, Grace-Hopper chips)"},
-    {"language": "JS", "details": "(React, Node.js, TypeScript)"},
+    {"language": "JavaScript", "details": "(React, Node.js, TypeScript)"},
     {"language": "C", "details": "(CUDA)"},
     {"language": "Java, C#", "details": ""}
   ],
@@ -129,7 +129,7 @@
       "title": "IBM Research: Machine Learning on Analog Devices",
       "location": "Zurich, CH",
       "years": "Feb 2026 - Jun 2026",
-      "description": "Starting next semester, I will be developing a post-training method to make LLMs more robust to the noise introduced by analog computations. This is a critical step toward commercializing IBM's [in-memory-compute](https://research.ibm.com/projects/in-memory-computing) devices.",
+      "description": "In collaboration with IBM, I'm developing a post-training method to make LLMs more robust to the noise introduced by analog computations. This is a critical step toward commercializing IBM's [in-memory-compute](https://research.ibm.com/projects/in-memory-computing) devices.",
       "extended": "This is a test"
     },
     {

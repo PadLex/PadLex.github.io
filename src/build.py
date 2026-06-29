@@ -11,20 +11,20 @@ random.seed(42)
 # - Expandable descriptions upon hovering
 
 ## Load the resume data
-with open("./resume.json", "r") as file:
+with open("content/resume.json", "r") as file:
     resume = json.load(file)
 
 ## Load the index template
-with open("./index_src.html", "r") as file:
+with open("src/index.html", "r") as file:
     index = file.read()
 
 ## Load the component templates
-component_files = os.listdir("./components")
+component_files = os.listdir("src/components/")
 component_names = [name[:-len(".html")] for name in component_files]
 components = []
 
 for component_file in component_files:
-    with open(f"./components/{component_file}") as file:
+    with open(f"src/components/{component_file}") as file:
         components.append(file.read())
 
 ## Infill a template with the resume data
@@ -71,13 +71,14 @@ def underline(match):
 index = re.sub(r"\*\*\{(" + "|".join(colors) + r")\}\((.*?)\)\*\*", underline, index)
 
 ## Save the complete index file
-with open("./index.html", "w") as file:
+with open("docs/index.html", "w") as file:
     file.write(index)
 
 
 
+
 ## Generate marker.css from marker_src.css so that each marker is unique
-with open("marker_src.txt", "r") as file:
+with open("src/markers.css", "r") as file:
     marker_src = file.read()
 
 marker_styles = ""
@@ -105,6 +106,6 @@ for i in range(len(marker_colors)):
     marker_styles += marker
 
 
-with open("./marker.css", "w") as file:
+# Render markers css
+with open("docs/markers.css", "w") as file:
     file.write(marker_styles)
-

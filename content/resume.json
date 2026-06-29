@@ -2,19 +2,19 @@
   "name": "Alexander George Padula",
   "info": [
     {
-      "icon": "/icons/mail.svg",
+      "icon": "icons/mail.svg",
       "text": "<span>alexander.george.padula</span><span>@</span><span>gmail.com</span>"
     },
     {
-      "icon": "/icons/github.svg",
+      "icon": "icons/github.svg",
       "text": "[PadLex](https://github.com/PadLex)"
     },
     {
-      "icon": "/icons/linkedin.svg",
+      "icon": "icons/linkedin.svg",
       "text": "[alex-padula](https://www.linkedin.com/in/alex-padula/)"
     },
     {
-      "icon": "/icons/passport.svg",
+      "icon": "icons/passport.svg",
       "text": "EU & US Citizen"
     }
   ],
@@ -64,14 +64,39 @@
       "description": "In my BSc thesis, I explored novel PPO variations to stabilize LLM training with explicit rewards (now known as RLVR). Restored KL-divergence to the classic RL formulation and introduced a novel batch-entropy exploration bonus."
     }
   ],
+  "blog": [
+    {
+      "title": "[Blog1](/blog1)",
+      "date": "Jan 2026",
+      "description": "Example blog"
+    }
+  ],
   "experience": [
+    {
+      "company": "Mistral (incoming)",
+      "position": "Research Internship",
+      "topic": "Machine Learning",
+      "location": "Paris, FR",
+      "years": "Sep 2026 - *",
+      "description": "I'll work on reward-based post-training for code at Mistral and could choose to stay for an industry PhD.",
+      "extended": "This is a test"
+    },
+    {
+      "company": "SID.ai",
+      "position": "Research Fellowship",
+      "topic": "Machine Learning",
+      "location": "San Francisco, USA",
+      "years": "Jun 2026 - Aug 2026",
+      "description": "**{c3}(Developing a new Policy Gradient method for agentic search.)**",
+      "extended": "This is a test"
+    },
     {
       "company": "Apertus AI",
       "position": "Research Assistant",
       "topic": "Machine Learning",
       "location": "Zurich, CH",
-      "years": "Oct 2026 - current",
-      "description": "**{c3}(Working on post-training for [Apertus](https://www.swiss-ai.org/apertus), a fully open-source 70B LLM)**. Contributing to RLVR training pipeline for code generation using GRPO and real-time unit test evaluations. Improved sandbox stability and reduced training time 6x.",
+      "years": "Oct 2026 - Jun 2026",
+      "description": "**{c3}(Contributed to the online RL pipeline for [Apertus](https://www.swiss-ai.org/apertus), a fully open-source 70B LLM)**. Improved code sandbox stability and reduced training time 6x.",
       "extended": "This is a test"
     },
     {

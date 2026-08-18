@@ -1,0 +1,2 @@
+# Questioning the Flat Minima Hypothesis
+The Flat Minima Hypothesis states that models that converge to a flatter basin tend to generalize better to unseen data. When I first learned of it, I wondered if it could be a usefull framework for understanding the Muon optimizer. Perhaps it performs so well by implicitly minimizing sharpness. This blog is about why such a question is fundamentally illposed, why existing formualtions of the hypothesis are underspecified, and why the hypothesis still offers a usefull prosective that has withstood the test of time.

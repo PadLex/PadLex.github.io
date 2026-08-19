@@ -1,0 +1,297 @@
+/* Blog article layout — layered on top of theme.css, never replacing it. */
+
+:root {
+    /* Optimizer palette: the site's pastels (c3, c2, c4, c5) + darkened companions
+       for strokes, lines and legend text. Yellow (c1) is skipped: too faint for data. */
+    --opt-0: 175, 211, 240;   /* Normalized Muon — blue   */
+    --opt-1: 242, 198, 223;   /* Decoupled Muon  — pink   */
+    --opt-2: 218, 204, 239;   /* Coupled SGD     — purple */
+    --opt-3: 201, 228, 223;   /* Coupled Adam    — green  */
+    --opt-0-strong: #4a7fb5;
+    --opt-1-strong: #b55a92;
+    --opt-2-strong: #7c5fa8;
+    --opt-3-strong: #3f8a7a;
+    --post-ink: #565B60;
+    --post-muted: #9a9ea3;
+    --post-hairline: #e8e6e3;
+}
+
+/* ---- header ---- */
+
+.post-header {
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-bottom: 24px;
+}
+
+.post-header h1 {
+    letter-spacing: 1mm;
+    font-size: 21px;
+    text-wrap: balance;
+}
+
+.post-home {
+    display: inline-block;
+    font-family: 'Lato', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #9a9ea3;
+    margin-bottom: 14px;
+}
+
+.post-byline {
+    font-family: 'Lato', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: #9a9ea3;
+}
+
+/* ---- article ---- */
+
+.post {
+    display: block;
+    padding: 28px 50px 44px;
+    font-size: 15.5px;
+    line-height: 1.7;
+    color: var(--post-ink);
+}
+
+/* Text measures ~65ch; figures break out to the full card. */
+.post p,
+.post h2,
+.post ol.references {
+    max-width: 620px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.post p {
+    margin-top: 0;
+    margin-bottom: 1.1em;
+    text-align: justify;
+}
+
+.post h2 {
+    margin-top: 2.2em;
+    margin-bottom: 0.9em;
+}
+
+/* ---- math ---- */
+
+.post .katex { font-size: 1.05em; }
+
+.post .katex-display {
+    max-width: 620px;
+    margin: 1.4em auto;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 2px 0;
+    /* the A4 card is shrink-to-fit (position:absolute); without this, wide content's
+       intrinsic width inflates the whole card on narrow screens instead of scrolling */
+    contain: inline-size;
+}
+
+/* ---- citations & references ---- */
+
+.post a.cite {
+    color: inherit;
+    font-size: 0.85em;
+    font-family: 'Lato', sans-serif;
+}
+
+.post a.cite:hover { text-decoration: underline; }
+
+.post .cite-group { color: var(--post-muted); }
+
+.post ol.references {
+    padding-left: 1.4em;
+    font-size: 0.88em;
+    color: var(--post-muted);
+}
+
+.post ol.references li {
+    margin-bottom: 0.5em;
+    text-align: left;
+}
+
+.post ol.references li:target { color: var(--post-ink); }
+
+/* ---- figures ---- */
+
+.post figure.breakout {
+    margin: 2em 0;
+    width: 100%;
+}
+
+.post figcaption {
+    max-width: 620px;
+    margin: 0.8em auto 0;
+    font-size: 0.85em;
+    line-height: 1.55;
+    color: var(--post-muted);
+    text-align: justify;
+}
+
+.post .fig-label {
+    font-family: 'Lato', sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--post-ink);
+}
+
+.post .fig-mount svg {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+/* ---- figure controls (built by figure.js) ---- */
+
+.fig-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 8px 18px;
+    margin-bottom: 10px;
+    font-family: 'Lato', sans-serif;
+    font-size: 11.5px;
+    letter-spacing: 0.05em;
+    color: var(--post-ink);
+    user-select: none;
+}
+
+.fig-controls button {
+    font: inherit;
+    color: inherit;
+    background: none;
+    border: 1px solid var(--post-hairline);
+    border-radius: 999px;
+    padding: 3px 12px;
+    cursor: pointer;
+}
+
+.fig-controls button:hover { border-color: var(--post-muted); }
+
+.fig-controls .seg button.active {
+    background: #f4f2ef;
+    border-color: var(--post-muted);
+    font-weight: 700;
+}
+
+.fig-controls .seg { display: inline-flex; gap: 4px; }
+
+.fig-controls .epoch-wrap { display: inline-flex; align-items: center; gap: 8px; }
+
+.fig-controls input[type="range"] {
+    width: 130px;
+    accent-color: #706F6F;
+}
+
+.fig-controls .epoch-label {
+    font-variant-numeric: tabular-nums;
+    min-width: 62px;
+}
+
+.fig-legend {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4px 10px;
+    margin-top: 6px;
+}
+
+.fig-legend .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Lato', sans-serif;
+    font-size: 11.5px;
+    border: none;
+    background: none;
+    color: var(--post-ink);
+    cursor: pointer;
+    padding: 3px 6px;
+}
+
+.fig-legend .chip .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.fig-legend .chip .r-val {
+    color: var(--post-muted);
+    font-variant-numeric: tabular-nums;
+}
+
+.fig-legend .chip.off { opacity: 0.35; }
+.fig-legend .chip.off .dot { background: transparent !important; box-shadow: inset 0 0 0 1.5px var(--post-muted); }
+
+.fig-tooltip {
+    position: absolute;
+    pointer-events: none;
+    background: #ffffff;
+    border: 1px solid var(--post-hairline);
+    border-radius: 6px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    padding: 6px 9px;
+    font-family: 'Lato', sans-serif;
+    font-size: 11px;
+    line-height: 1.5;
+    color: var(--post-ink);
+    z-index: 10;
+    white-space: nowrap;
+}
+
+/* ---- results table ---- */
+
+.post .table-scroll {
+    overflow-x: auto;
+    contain: inline-size; /* see .katex-display note */
+}
+
+.post table.results {
+    border-collapse: collapse;
+    margin: 0 auto;
+    font-family: 'Lato', sans-serif;
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+    color: var(--post-ink);
+}
+
+.post table.results th {
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-size: 10.5px;
+    color: var(--post-muted);
+    padding: 6px 12px;
+    border-bottom: 1px solid var(--post-muted);
+    text-align: left;
+    white-space: nowrap;
+}
+
+.post table.results td {
+    padding: 5px 12px;
+    white-space: nowrap;
+}
+
+.post table.results tr.block-start td { border-top: 1px solid var(--post-hairline); }
+
+/* ---- mobile (mirrors theme.css breakpoint) ---- */
+
+@media only screen and (max-width: 210mm) {
+    .post-header { padding-left: 25px; padding-right: 25px; }
+    .post { padding: 20px 25px 32px; font-size: 14px; }
+    .post-header h1 { font-size: 18px; }
+}
+
+/* ---- print ---- */
+
+@media print {
+    .fig-controls, .fig-legend { display: none; }
+    .post-home { display: none; }
+}

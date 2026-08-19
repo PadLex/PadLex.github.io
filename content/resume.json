@@ -66,9 +66,9 @@
   ],
   "blog": [
     {
-      "title": "[Blog1](/blog1)",
-      "date": "Jan 2026",
-      "description": "Example blog"
+      "title": "[Questioning the Flat Minima Hypothesis](/blog/flatminima/)",
+      "date": "Aug 2026",
+      "description": "Validating the Flat Minima Hypothesis for Muon: raw vs adaptive sharpness, and an interactive look at 512 CIFAR-10 runs."
     }
   ],
   "experience": [

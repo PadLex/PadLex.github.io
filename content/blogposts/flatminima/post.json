@@ -1,0 +1,8 @@
+{
+    "title": "Questioning the Flat Minima Hypothesis",
+    "slug": "flatminima",
+    "date": "Aug 2026",
+    "seed": 1337,
+    "bib": "../Deep Learning 2025-latex/main.bib",
+    "description": "Validating the Flat Minima Hypothesis for Muon: raw vs adaptive sharpness, and an interactive look at 512 CIFAR-10 runs."
+}

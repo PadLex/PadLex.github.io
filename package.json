@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "python3 src/build.py && python3 src/blog/build.py"
   },
-  "private": true
+  "private": true,
+  "devDependencies": {
+    "katex": "0.18.4"
+  }
 }

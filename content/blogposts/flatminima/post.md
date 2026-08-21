@@ -4,6 +4,10 @@ The Flat Minima Hypothesis states that models that converge to a flatter basin t
 
 ## Flat Minima Hypothesis
 
+The Flat Minima Hypothesis relies on the intuition that the validation loss landscape can be approximated as a stochastically perturbed version of the training landscape. If a model converges to a wider basin in the training-loss landscape, it feels intuitive that it would be more likely to stay within that same basin if the validation-loss landscape where slightly shifted. [TODO: we should add a home made 2D figure to demonstrate this idea: we could have a 2D loss landscape with two valleys and a whole bunch of points converged inside of them, if the validation loss where to shift slightly then it should ].
+
+Measuring the width of a basin, however, is not so straight forward. We could 
+
 The Flat Minima Hypothesis [@hochreiter1997flat; @keskar2017large] predicts that ***{c3}(sharpness should correlate with the model's generalization gap)*** — the difference between training and validation accuracy. It relies on the intuition that the validation loss landscape can be approximated as a stochastically perturbed version of the training landscape. Subsequent work has highlighted the limitations of this hypothesis. Most notably, Dinh et al. [@dinh2017sharp] demonstrated that raw sharpness is not scale-invariant; one can alter it via re-parametrization without changing the model's function. This occurs frequently when comparing models across different optimizers. In response, methods such as Adaptive Sharpness-Aware Minimization (ASAM) [@kwon2021asam] have been proposed to define a scale-invariant geometric measure of a minimum's size. By validating the Flat Minima Hypothesis for Muon's solutions, we investigate whether there exist sharpness-hacking reparametrizations beyond scale invariance that a novel optimizer like Muon might inadvertently favor.
 
 ## Sharpness
@@ -34,7 +38,7 @@ Starting with highly optimized architectures and hyperparameters lends weight to
 
 We train each run for 16 epochs to ensure convergence. After the final epoch, we report per-optimizer mean validation accuracy, generalization gap, and both raw and adaptive sharpness. For each optimizer, we compute correlation between the sharpness and the generalization gap.
 
-%%figure:sharpness%% Per-optimizer correlation of raw/adaptive sharpness with generalization gap. Toggle between the fixed learning rate and the Linear Decay Scheduler (LDS), scrub through training epochs, and click the legend to include or exclude optimizers. Hover a point for that run's details; Reset restores the paper's configuration (fixed LR, epoch 16).
+%%figure:sharpness%% Per-optimizer correlation of raw/adaptive sharpness with generalization gap. Use the toggles to pick the learning-rate schedule and the sharpness measure on the x-axis, scrub through training epochs, and click the legend to include or exclude optimizers. Hover a point for that run's details; Reset restores the paper's configuration (fixed LR, raw sharpness, epoch 16).
 
 ## Generalization Benchmark Results
 

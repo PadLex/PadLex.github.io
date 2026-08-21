@@ -1,5 +1,7 @@
-"""Compute figure-data.json, sharpness.svg (static fallback) and results.html (Table 1)
-from the W&B exports of the sharpness benchmark.
+"""Compute figure-data.json, the static fallback SVGs (one per figure variant
+embedded in post.md) and results.html (Table 1) from the W&B exports of the
+sharpness benchmark. Without the CSV exports, refits the trend lines from the
+points already checked into figure-data.json and rebuilds the SVGs.
 
 Replicates post_process/print_table from ~/projects/DL-project/sharpness_plots.py:
 epoch > 0, drop runs with any null sam_sharpness, rename optimizers, epoch-16 stats.
@@ -100,16 +102,60 @@ def pearson_p(r, n):
     return _betai(df / 2, 0.5, df / (df + t2))
 
 
+# Residual-trim threshold for outlier exclusion in fit(), in robust standard
+# deviations (1.4826 x MAD) of the vertical distance from the trend line.
+TRIM = 3.3
+
+
+def _ols(pts):
+    """(slope, intercept) of the least-squares line through pts."""
+    mx = statistics.fmean(p[0] for p in pts)
+    my = statistics.fmean(p[1] for p in pts)
+    slope = (sum((x - mx) * (y - my) for x, y in pts)
+             / sum((x - mx) ** 2 for x, _ in pts))
+    return slope, my - slope * mx
+
+
 def fit(xs, ys):
-    """OLS + Pearson: [slope, intercept, r, p] (None when degenerate)."""
+    """OLS + Pearson on inliers: [slope, intercept, r, p, cutoff] (None when
+    degenerate). Outliers are defined relative to the trend, not the axes (fencing
+    either axis keeps on-trend extreme runs out and off-trend freaks in): starting
+    from an OLS fit on all points, points whose |residual| exceeds TRIM x the
+    robust residual scale (1.4826 x MAD) are dropped and the line refit, iterating
+    to a fixed point. The reported r/p describe the same inlier set the line is
+    fit to. cutoff is the final residual threshold (None if nothing was trimmed),
+    so renderers can re-derive the inlier mask against the reported line."""
+    if len(xs) < 3 or len(set(xs)) < 2 or len(set(ys)) < 2:
+        return None
+    pts = list(zip(xs, ys))
+    mask = [True] * len(pts)
+    cutoff = None
+    if len(pts) >= 8:  # residual scale is meaningless on tiny samples
+        for _ in range(20):
+            slope, intercept = _ols([p for p, m in zip(pts, mask) if m])
+            res = [abs(y - (slope * x + intercept)) for x, y in pts]
+            scale = 1.4826 * statistics.median(r for r, m in zip(res, mask) if m)
+            if scale == 0:
+                break
+            new = [r <= TRIM * scale for r in res]
+            if sum(new) < 3:
+                break
+            cutoff = TRIM * scale  # matches the accepted mask below
+            if new == mask:
+                break
+            mask = new
+    if all(mask):
+        cutoff = None  # nothing trimmed; don't let renderers reclassify
+    xs, ys = zip(*(p for p, m in zip(pts, mask) if m))
     n = len(xs)
-    if n < 3 or len(set(xs)) < 2 or len(set(ys)) < 2:
+    if len(set(xs)) < 2 or len(set(ys)) < 2:
         return None
     r = statistics.correlation(xs, ys)
     mx, my = statistics.fmean(xs), statistics.fmean(ys)
     slope = sum((x - mx) * (y - my) for x, y in zip(xs, ys)) / sum((x - mx) ** 2 for x in xs)
     return [float(f"{slope:.5g}"), float(f"{my - slope * mx:.5g}"),
-            round(r, 3), float(f"{pearson_p(r, n):.3g}")]
+            round(r, 3), float(f"{pearson_p(r, n):.3g}"),
+            float(f"{cutoff:.4g}") if cutoff is not None else None]
 
 
 METRIC_COL = {"raw": "hessian", "adaptive": "adaptive_sharpness"}
@@ -189,16 +235,27 @@ def build_table(data):
     )
 
 
-# ---- static fallback SVG: the default view (fixed LR, raw sharpness, epoch 16) ----
+# ---- static fallback SVGs: each embed's default view at epoch 16 ----
+# One file per %%figure:name%% directive in post.md; must stay in sync with the
+# VARIANTS map in figure.js, which mounts the interactive plot over these.
+VARIANTS = {"sharpness-lds": ("lds", "raw"),
+            "sharpness-fixed": ("fixed", "raw"),
+            "sharpness-adaptive": ("fixed", "adaptive")}
 
-def build_svg(fig):
+# hidden in every embed's default view (see DEFAULT_HIDDEN in figure.js):
+# Decoupled Muon matches canonical Muon; Normalized Muon is airbench-specific
+DEFAULT_HIDDEN = {"Normalized Muon"}
+
+
+def build_svg(fig, schedule, metric):
     W, H, PAD_L, PAD_R, PAD_T, PAD_B = 640, 400, 48, 14, 34, 42
     panel_w = W - PAD_L - PAD_R
     panel_h = H - PAD_T - PAD_B
-    metric = "raw"
     y_lo, y_hi = fig["axes"]["y"]
     x_lo, x_hi = fig["axes"]["x"][metric]
-    sched = fig["schedules"]["fixed"]
+    sched = fig["schedules"][schedule]
+    mi = 0 if metric == "raw" else 1
+    sched_label = "fixed LR" if schedule == "fixed" else "linear-decay LR"
 
     def X(v):
         return PAD_L + (min(v, x_hi) - x_lo) / (x_hi - x_lo) * panel_w
@@ -219,30 +276,38 @@ def build_svg(fig):
         parts.append(f"<text x='{PAD_L - 8}' y='{Y(yv) + 4:.1f}' text-anchor='end' "
                      f"fill='#9a9ea3'>{yv:g}</text>")
     parts.append(f"<text x='{PAD_L + panel_w / 2:.1f}' y='{H - 8}' text-anchor='middle' "
-                 f"fill='#565B60'>{fig['metricLabels'][metric]} (fixed LR, epoch 16)</text>")
+                 f"fill='#565B60'>{fig['metricLabels'][metric]} ({sched_label}, epoch 16)</text>")
     parts.append(f"<text x='14' y='{PAD_T + panel_h / 2:.1f}' fill='#565B60' "
                  f"transform='rotate(-90 14 {PAD_T + panel_h / 2:.1f})' "
                  f"text-anchor='middle'>Generalization Gap</text>")
 
     stats_y = PAD_T + 12
     for opt in fig["optimizers"]:
-        for run in sched["points"][opt]:
-            parts.append(f"<circle cx='{X(run[15][0]):.1f}' cy='{Y(run[15][2]):.1f}' r='3.4' "
-                         f"fill='{FILL[opt]}' fill-opacity='0.75' stroke='{STRONG[opt]}' "
-                         f"stroke-width='0.8'/>")
+        if opt in DEFAULT_HIDDEN:
+            continue
         f16 = sched["fits"][metric][15][opt]
+        cut = f16[4] if f16 else None
+        for run in sched["points"][opt]:
+            x, gap = run[15][mi], run[15][2]
+            # trimmed outliers are drawn without an outline, matching figure.js
+            outlier = cut is not None and abs(gap - (f16[0] * x + f16[1])) > cut * 1.001
+            stroke = "" if outlier else f" stroke='{STRONG[opt]}' stroke-width='0.8'"
+            parts.append(f"<circle cx='{X(x):.1f}' cy='{Y(gap):.1f}' r='3.4' "
+                         f"fill='{FILL[opt]}' fill-opacity='0.75'{stroke}/>")
         if f16:
-            slope, intercept, r, _ = f16
+            slope, intercept, r = f16[0], f16[1], f16[2]
             parts.append(f"<line x1='{X(x_lo):.1f}' y1='{Y(slope * x_lo + intercept):.1f}' "
                          f"x2='{X(x_hi):.1f}' y2='{Y(slope * x_hi + intercept):.1f}' "
-                         f"stroke='{STRONG[opt]}' stroke-width='1.6' opacity='0.85'/>")
+                         f"stroke='{STRONG[opt]}' stroke-width='1.6' opacity='0.85' "
+                         f"stroke-dasharray='6 4'/>")
             parts.append(f"<text x='{PAD_L + 8}' y='{stats_y}' fill='{STRONG[opt]}'>"
                          f"{opt}: R={r:.2f}</text>")
             stats_y += 15
 
     # legend row across the top
-    lx = W / 2 - 230
-    for opt in fig["optimizers"]:
+    shown = [opt for opt in fig["optimizers"] if opt not in DEFAULT_HIDDEN]
+    lx = W / 2 - 60 * len(shown)
+    for opt in shown:
         parts.append(f"<circle cx='{lx}' cy='16' r='5' fill='{FILL[opt]}' stroke='{STRONG[opt]}'/>")
         parts.append(f"<text x='{lx + 10}' y='20' fill='#565B60'>{opt}</text>")
         lx += 120
@@ -250,14 +315,43 @@ def build_svg(fig):
     return "".join(parts)
 
 
+def refit(fig):
+    """Recompute all fits from the (rounded) points already in figure-data.json,
+    for machines without the CSV exports. A full CSV rebuild is exact; this one
+    inherits the 4-significant-digit rounding of the stored points."""
+    for sched in fig["schedules"].values():
+        fits = {}
+        for metric, mi in (("raw", 0), ("adaptive", 1)):
+            fits[metric] = [
+                {opt: fit([run[e][mi] for run in sched["points"][opt]],
+                          [run[e][2] for run in sched["points"][opt]])
+                 for opt in fig["optimizers"]}
+                for e in range(fig["epochs"])
+            ]
+        sched["fits"] = fits
+
+
+def write_svgs(fig):
+    for name, (schedule, metric) in VARIANTS.items():
+        (HERE / f"{name}.svg").write_text(build_svg(fig, schedule, metric))
+    print(f"wrote {', '.join(f'{name}.svg' for name in VARIANTS)}")
+
+
 def main():
+    if not CSV_DIR.exists():
+        print(f"{CSV_DIR} not found; refitting from figure-data.json's points")
+        fig = json.loads((HERE / "figure-data.json").read_text())
+        refit(fig)
+        (HERE / "figure-data.json").write_text(json.dumps(fig, separators=(",", ":")))
+        write_svgs(fig)
+        return
     data = {sched: load(sched) for sched in SCHEDULES}
     fig = build_json(data)
     (HERE / "figure-data.json").write_text(json.dumps(fig, separators=(",", ":")))
     print(f"figure-data.json: {(HERE / 'figure-data.json').stat().st_size / 1024:.0f} KB")
     (HERE / "results.html").write_text(build_table(data))
-    (HERE / "sharpness.svg").write_text(build_svg(fig))
-    print("wrote results.html, sharpness.svg")
+    write_svgs(fig)
+    print("wrote results.html")
     # sanity: epoch-16 fixed-LR pearson r per paper: raw 0.27–0.49, adaptive 0.45–0.69
     for metric in ("raw", "adaptive"):
         rs = {o: (f[2] if (f := fig["schedules"]["fixed"]["fits"][metric][15][o]) else None)

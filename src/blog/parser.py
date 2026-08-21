@@ -6,14 +6,16 @@ Processing order is load-bearing:
      very end, and the body is infilled into the page template after that — which is
      also why $$...$$ math can coexist with the template's $$key$$ placeholders.
   2. Pastel markers  ***{cN}(text)***  /  **{cN}(text)**  (same syntax as the resume).
-  3. Bold **text** (negative lookahead keeps it off marker syntax).
-  4. Citations [@key] / [@a; @b], numbered by first appearance; %%references%% block.
+  3. Bold **text** (negative lookahead keeps it off marker syntax), then *italic*.
+  4. Citations, numbered by first appearance; %%references%% block. Two forms:
+     [@key] / [@a; @b] -> [1, 2], and bare @key -> "Keskar et al. [1]" (textual,
+     \\citet-style; @key's keeps the possessive on the author label).
   5. Links [text](url)  (target=_blank only for external urls).
 Blocks: '# ' title, '## ' section, blank-line paragraphs, and %%directive%% lines.
 """
 import re
 
-from bib import format_entry, hover_text
+from bib import citet_label, format_entry, hover_text
 from markers import COLORS
 
 MATH_TOKEN = "\x00M{}\x00"
@@ -43,18 +45,23 @@ def parse(md, resolve_directive, bib_entries, render_math):
             raise ValueError(f"marker text must be plain (no links/math/html): {context!r}")
         return text
 
+    def cite_link(key):
+        if key not in bib_entries:
+            raise KeyError(f"citation key not in bibliography: {key}")
+        if key not in cite_keys:
+            cite_keys.append(key)
+        n = cite_keys.index(key) + 1
+        return f"<a class='cite' href='#ref-{key}' title=\"{hover_text(bib_entries[key])}\">{n}</a>"
+
     def cite(m):
-        links = []
-        for key in (k.strip().lstrip("@") for k in m.group(1).split(";")):
-            if key not in bib_entries:
-                raise KeyError(f"citation key not in bibliography: {key}")
-            if key not in cite_keys:
-                cite_keys.append(key)
-            n = cite_keys.index(key) + 1
-            links.append(
-                f"<a class='cite' href='#ref-{key}' title=\"{hover_text(bib_entries[key])}\">{n}</a>"
-            )
+        links = [cite_link(k.strip().lstrip("@")) for k in m.group(1).split(";")]
         return f"<span class='cite-group'>[{', '.join(links)}]</span>"
+
+    def citet(m):
+        key = m.group(1)
+        link = cite_link(key)
+        label = citet_label(bib_entries[key]) + (m.group(2) or "")
+        return f"{label} <span class='cite-group'>[{link}]</span>"
 
     def link(m):
         target = " target='_blank'" if m.group(2).startswith("http") else ""
@@ -72,7 +79,9 @@ def parse(md, resolve_directive, bib_entries, render_math):
         text = re.sub(r"\*\*\*\{(c[1-5])\}\((.*?)\)\*\*\*", highlight, text)
         text = re.sub(r"\*\*\{(c[1-5])\}\((.*?)\)\*\*", underline, text)
         text = re.sub(r"\*\*(?!\{)(.+?)\*\*", r"<strong>\1</strong>", text)
+        text = re.sub(r"\*([^*]+)\*", r"<em>\1</em>", text)
         text = re.sub(r"\[(@[^\]]+)\]", cite, text)
+        text = re.sub(r"@([A-Za-z][\w-]*)('s)?", citet, text)
         text = re.sub(r"\[([^\]@][^\]]*)\]\(([^)]+)\)", link, text)
         return text
 

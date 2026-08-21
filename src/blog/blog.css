@@ -153,9 +153,7 @@
     max-width: 640px;
     margin: 10px auto 0;
     padding: 13px 16px;
-    background: transparent; /* same ground as the page; the border alone groups it */
-    border: 1px solid #e0ddd7;
-    border-radius: 10px;
+    background: transparent; /* same ground as the page; proximity alone groups it */
     display: flex;
     flex-direction: column;
     gap: 9px;

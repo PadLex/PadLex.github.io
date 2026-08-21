@@ -1,28 +1,57 @@
 /* Interactive sharpness-vs-generalization figure (single panel).
    All numbers are precomputed in figure_data.py; this file only draws.
-   Controls live in a Fig.panel between the plot and the caption:
-     Optimizers    | clickable legend chips (include/exclude)
-     Epoch         | play + ticked slider + readout
-     Learning Rate | Fixed · Linear Decay
-     X Axis        | Raw Sharpness · Adaptive Sharpness    [Reset top-right]
-   Axes are fixed (per metric on x, global on y) so no toggle ever rescales them.
-   Reset restores the paper's configuration: fixed LR, raw sharpness, epoch 16. */
+   The post embeds the same interactive plot several times; each embed is a named
+   variant whose default view (and Reset target) tells that section's story, and
+   which declares the controls it exposes — later embeds progressively reveal more:
+     optimizers | clickable legend chips (include/exclude)
+     epoch      | play + ticked slider + readout
+     schedule   | Fixed · Linear Decay
+     metric     | Raw Sharpness · Adaptive Sharpness
+   Declared controls live in a Fig.panel between plot and caption; a Reset button
+   docks to the panel's corner only while the view differs from the preset. An
+   undeclared control's state stays pinned to the variant's preset. Axes are
+   fixed (per metric on x, global on y) so no toggle ever rescales them. */
 (function () {
     "use strict";
 
-    const figure = document.querySelector("figure[data-figure='sharpness']");
-    if (!figure || !window.Fig) return;
-    const mount = figure.querySelector(".fig-mount");
+    /* Variant name = the %%figure:name%% directive in post.md; static fallbacks
+       come from figure_data.py's VARIANTS, which must stay in sync with this. */
+    const VARIANTS = {
+        "sharpness-lds": {
+            preset: { schedule: "lds", metric: "raw", epoch: 16 },
+            controls: ["optimizers"],
+        },
+        "sharpness-fixed": {
+            preset: { schedule: "fixed", metric: "raw", epoch: 16 },
+            controls: ["optimizers", "schedule"],
+        },
+        "sharpness-adaptive": {
+            preset: { schedule: "fixed", metric: "adaptive", epoch: 16 },
+            controls: ["optimizers", "epoch", "schedule", "metric"],
+        },
+    };
+
+    /* Decoupled Muon matches the canonical Muon (Newton-Schulz + decoupled weight
+       decay); Normalized Muon is airbench's speedrun-specific variant, so every
+       embed hides it by default — its legend chip brings it back, Reset re-hides. */
+    const DEFAULT_HIDDEN = ["Normalized Muon"];
+
+    const figures = [...document.querySelectorAll("figure[data-figure]")]
+        .filter((f) => VARIANTS[f.dataset.figure]);
+    if (!figures.length || !window.Fig) return;
 
     fetch("figure-data.json")
         .then((r) => r.json())
-        .then(init)
-        .catch((err) => console.error("figure: keeping static fallback —", err));
+        .then((data) => figures.forEach((f) => init(f, data)))
+        .catch((err) => console.error("figure: keeping static fallbacks —", err));
 
-    const DEFAULTS = { schedule: "fixed", metric: "raw", epoch: 16 };
     const PANEL = { w: 640, h: 380, left: 48, right: 14, top: 14, bottom: 42 };
 
-    function init(data) {
+    function init(figure, data) {
+        const name = figure.dataset.figure;
+        const { preset, controls } = VARIANTS[name];
+        const has = (c) => controls.includes(c);
+        const mount = figure.querySelector(".fig-mount");
         const css = getComputedStyle(document.documentElement);
         const color = {};
         data.optimizers.forEach((opt, i) => {
@@ -32,7 +61,7 @@
             };
         });
 
-        const state = { ...DEFAULTS, hidden: new Set() };
+        const state = { ...preset, hidden: new Set(DEFAULT_HIDDEN) };
 
         // plot first, control panel below it (the figcaption follows outside the mount)
         mount.innerHTML = "";
@@ -45,42 +74,54 @@
 
         const panel = Fig.panel(mount);
 
-        const legend = Fig.legend(panel.row("Optimizers"), data.optimizers.map((opt) => ({
-            name: opt, fill: color[opt].fill, strong: color[opt].strong,
-        })), (opt) => {
-            state.hidden.has(opt) ? state.hidden.delete(opt) : state.hidden.add(opt);
-            render();
-        });
+        const legend = !has("optimizers") ? null :
+            Fig.legend(panel.row("Optimizers"), data.optimizers.map((opt) => ({
+                name: opt, fill: color[opt].fill, strong: color[opt].strong,
+            })), (opt) => {
+                state.hidden.has(opt) ? state.hidden.delete(opt) : state.hidden.add(opt);
+                render();
+            });
 
-        const epoch = Fig.slider(panel.row("Epoch"), {
+        const epoch = !has("epoch") ? null : Fig.slider(panel.row("Epoch"), {
             label: "epoch", min: 1, max: data.epochs, initial: state.epoch, playMs: 400,
             format: (v) => `${v} / ${data.epochs}`,
             onChange: (v) => { state.epoch = v; render(); },
         });
 
-        const schedule = Fig.toggleGroup(panel.row("Learning Rate"), null,
+        const schedule = !has("schedule") ? null : Fig.toggleGroup(panel.row("Learning Rate"), null,
             [{ value: "fixed", label: "Fixed" }, { value: "lds", label: "Linear Decay" }],
             state.schedule, (v) => { state.schedule = v; render(); });
 
-        const metric = Fig.toggleGroup(panel.row("X Axis"), null,
+        const metric = !has("metric") ? null : Fig.toggleGroup(panel.row("X Axis"), null,
             [{ value: "raw", label: "Raw Sharpness" }, { value: "adaptive", label: "Adaptive Sharpness" }],
             state.metric, (v) => { state.metric = v; render(); });
 
-        Fig.button(panel.root, "Reset", () => {
-            epoch.stop();
-            Object.assign(state, DEFAULTS);
-            state.hidden.clear();
-            schedule.set(state.schedule);
-            metric.set(state.metric);
-            epoch.set(state.epoch);
+        const reset = Fig.button(panel.root, "Reset", () => {
+            if (epoch) epoch.stop();
+            Object.assign(state, preset);
+            state.hidden = new Set(DEFAULT_HIDDEN);
+            if (schedule) schedule.set(state.schedule);
+            if (metric) metric.set(state.metric);
+            if (epoch) epoch.set(state.epoch);
             render();
-        }).className = "reset";
+        });
+        reset.className = "reset";
+
+        // Reset only appears once something differs from this variant's default view
+        function isDirty() {
+            return state.schedule !== preset.schedule
+                || state.metric !== preset.metric
+                || state.epoch !== preset.epoch
+                || state.hidden.size !== DEFAULT_HIDDEN.length
+                || DEFAULT_HIDDEN.some((opt) => !state.hidden.has(opt));
+        }
 
         Fig.tooltip(panelWrap, "circle[data-run]", (c) => {
-            const [opt, raw, adaptive, gap, val] = c.dataset.run.split("|");
+            const [opt, raw, adaptive, gap, val, outlier] = c.dataset.run.split("|");
             return `<strong>${opt}</strong> — epoch ${state.epoch}<br>` +
                 `gap ${gap} &middot; val acc ${val}<br>` +
-                `raw ${raw} &middot; adaptive ${adaptive}`;
+                `raw ${raw} &middot; adaptive ${adaptive}` +
+                (outlier === "1" ? "<br><em>outlier — excluded from the fit</em>" : "");
         });
 
         function render() {
@@ -93,7 +134,7 @@
             const Y = (v) => PANEL.top + ih - ((Math.min(v, yHi) - yLo) / (yHi - yLo)) * ih;
             const mi = state.metric === "raw" ? 0 : 1;
 
-            let s = `<clipPath id="fig-clip"><rect x="${PANEL.left}" y="${PANEL.top}" width="${iw}" height="${ih}"/></clipPath>`;
+            let s = `<clipPath id="clip-${name}"><rect x="${PANEL.left}" y="${PANEL.top}" width="${iw}" height="${ih}"/></clipPath>`;
 
             s += `<line x1="${PANEL.left}" y1="${PANEL.top + ih}" x2="${PANEL.left + iw}" y2="${PANEL.top + ih}" stroke="#c9c9c9"/>`;
             s += `<line x1="${PANEL.left}" y1="${PANEL.top}" x2="${PANEL.left}" y2="${PANEL.top + ih}" stroke="#c9c9c9"/>`;
@@ -107,17 +148,22 @@
             s += `<text x="${PANEL.left + iw / 2}" y="${PANEL.h - 6}" text-anchor="middle" fill="#565B60" font-size="11.5">${data.metricLabels[state.metric]}</text>`;
             s += `<text x="12" y="${PANEL.top + ih / 2}" fill="#565B60" font-size="11.5" text-anchor="middle" transform="rotate(-90 12 ${PANEL.top + ih / 2})">Generalization Gap</text>`;
 
-            s += `<g clip-path="url(#fig-clip)">`;
+            s += `<g clip-path="url(#clip-${name})">`;
             for (const opt of data.optimizers) {
                 if (state.hidden.has(opt)) continue;
                 const f = sched.fits[state.metric][state.epoch - 1][opt];
                 if (f) {
                     const [slope, intercept] = f;
-                    s += `<line x1="${X(xLo)}" y1="${Y(slope * xLo + intercept)}" x2="${X(xHi)}" y2="${Y(slope * xHi + intercept)}" stroke="${color[opt].strong}" stroke-width="1.6" opacity="0.85"/>`;
+                    s += `<line x1="${X(xLo)}" y1="${Y(slope * xLo + intercept)}" x2="${X(xHi)}" y2="${Y(slope * xHi + intercept)}" stroke="${color[opt].strong}" stroke-width="1.6" opacity="0.85" stroke-dasharray="6 4"/>`;
                 }
+                const cut = f && f[4] != null ? f[4] : null;
                 for (const run of sched.points[opt]) {
                     const [raw, adaptive, gap, val] = run[state.epoch - 1];
-                    s += `<circle cx="${X(run[state.epoch - 1][mi]).toFixed(1)}" cy="${Y(gap).toFixed(1)}" r="3.4" fill="${color[opt].fill}" stroke="${color[opt].strong}" stroke-width="0.8" data-run="${opt}|${raw}|${adaptive}|${gap}|${val}"/>`;
+                    const x = run[state.epoch - 1][mi];
+                    // runs the fit trimmed as outliers are drawn without an outline
+                    const outlier = cut !== null && Math.abs(gap - (f[0] * x + f[1])) > cut * 1.001;
+                    const stroke = outlier ? "" : ` stroke="${color[opt].strong}" stroke-width="0.8"`;
+                    s += `<circle cx="${X(x).toFixed(1)}" cy="${Y(gap).toFixed(1)}" r="3.4" fill="${color[opt].fill}"${stroke} data-run="${opt}|${raw}|${adaptive}|${gap}|${val}|${outlier ? 1 : 0}"/>`;
                 }
             }
             s += "</g>";
@@ -133,8 +179,9 @@
             }
 
             svg.innerHTML = s;
+            reset.hidden = !isDirty();
 
-            for (const opt of data.optimizers) {
+            if (legend) for (const opt of data.optimizers) {
                 legend.update(opt, { off: state.hidden.has(opt) });
             }
         }

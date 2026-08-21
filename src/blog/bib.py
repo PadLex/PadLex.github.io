@@ -56,6 +56,18 @@ def format_entry(fields):
     return ". ".join(parts) + "."
 
 
+def citet_label(fields):
+    """In-text author label for bare @key citations: 'Keskar et al.',
+    'Hochreiter and Schmidhuber', or a lone 'Jordan'."""
+    names = [a.strip() for a in fields.get("author", "").split(" and ") if a.strip()]
+    lasts = [n.split(",")[0].strip() if "," in n else n.split()[-1] for n in names]
+    if len(lasts) == 1:
+        return lasts[0]
+    if len(lasts) == 2:
+        return f"{lasts[0]} and {lasts[1]}"
+    return f"{lasts[0]} et al."
+
+
 def hover_text(fields):
     """Short text for the cite link's title attribute."""
     first = _authors(fields).split(",")[0].strip()

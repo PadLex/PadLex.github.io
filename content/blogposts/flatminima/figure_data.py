@@ -112,17 +112,12 @@ def fit(xs, ys):
             round(r, 3), float(f"{pearson_p(r, n):.3g}")]
 
 
-def nice_ceil(v):
-    if v <= 0:
-        return 1.0
-    mag = 10 ** math.floor(math.log10(v))
-    for mult in (1, 1.5, 2, 2.5, 3, 4, 5, 7.5, 10):
-        if mult * mag >= v:
-            return mult * mag
-    return 10 * mag
-
-
 METRIC_COL = {"raw": "hessian", "adaptive": "adaptive_sharpness"}
+
+# Fixed axis limits, ≈1.5× the paper's ranges, shared across schedules AND metrics'
+# respective toggles so that no toggle ever rescales the axes. Chosen to divide into
+# four clean ticks. p99 of the data is asserted to fit (see build_json).
+AXES = {"x": {"raw": [0, 320], "adaptive": [0, 0.12]}, "y": [0, 0.32]}
 
 
 def build_json(data):
@@ -130,8 +125,7 @@ def build_json(data):
         "optimizers": OPTIMIZERS,
         "metricLabels": {"raw": "Raw Sharpness", "adaptive": "Adaptive Sharpness"},
         "epochs": N_EPOCHS,
-        "axes": {"x": {"raw": {}, "adaptive": {}},
-                 "y": {"fixed": [0, 0.22], "lds": [0, 0.12]}},
+        "axes": AXES,
         "schedules": {},
     }
     for sched, by_opt in data.items():
@@ -156,14 +150,18 @@ def build_json(data):
                 fits[metric].append(per_opt)
         out["schedules"][sched] = {"points": points, "fits": fits}
 
-        # fixed x-axis per (metric, schedule): 99th percentile over ALL epochs, nicely rounded
+        # guard: the fixed limits must still cover the bulk of the data (p99 per axis)
         for metric, col in METRIC_COL.items():
             vals = sorted(
                 val(r["epochs"][e], col)
                 for opt in OPTIMIZERS for r in by_opt[opt] for e in range(1, N_EPOCHS + 1)
             )
             p99 = vals[min(len(vals) - 1, int(len(vals) * 0.99))]
-            out["axes"]["x"][metric][sched] = [0, nice_ceil(p99)]
+            assert p99 <= AXES["x"][metric][1], f"{sched}/{metric}: p99={p99} exceeds axis"
+        gaps = sorted(val(r["epochs"][e], "gap")
+                      for opt in OPTIMIZERS for r in by_opt[opt] for e in range(1, N_EPOCHS + 1))
+        p99g = gaps[min(len(gaps) - 1, int(len(gaps) * 0.99))]
+        assert p99g <= AXES["y"][1], f"{sched}: gap p99={p99g} exceeds y axis"
     return out
 
 
@@ -191,71 +189,63 @@ def build_table(data):
     )
 
 
-# ---- static fallback SVG: epoch 16, fixed LR, two panels ----
+# ---- static fallback SVG: the default view (fixed LR, raw sharpness, epoch 16) ----
 
 def build_svg(fig):
-    W, H, PAD_L, PAD_B, PAD_T, GAP = 880, 400, 52, 44, 30, 46
-    panel_w = (W - 2 * PAD_L - GAP) / 2
+    W, H, PAD_L, PAD_R, PAD_T, PAD_B = 640, 400, 48, 14, 34, 42
+    panel_w = W - PAD_L - PAD_R
     panel_h = H - PAD_T - PAD_B
-    y_lo, y_hi = fig["axes"]["y"]["fixed"]
+    metric = "raw"
+    y_lo, y_hi = fig["axes"]["y"]
+    x_lo, x_hi = fig["axes"]["x"][metric]
     sched = fig["schedules"]["fixed"]
+
+    def X(v):
+        return PAD_L + (min(v, x_hi) - x_lo) / (x_hi - x_lo) * panel_w
+
+    def Y(v):
+        return PAD_T + panel_h - (min(v, y_hi) - y_lo) / (y_hi - y_lo) * panel_h
+
     parts = [f"<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 {W} {H}' "
              f"font-family='Lato, sans-serif' font-size='11'>"]
+    parts.append(f"<line x1='{PAD_L}' y1='{PAD_T + panel_h}' x2='{PAD_L + panel_w}' "
+                 f"y2='{PAD_T + panel_h}' stroke='#c9c9c9'/>")
+    parts.append(f"<line x1='{PAD_L}' y1='{PAD_T}' x2='{PAD_L}' y2='{PAD_T + panel_h}' stroke='#c9c9c9'/>")
+    for t in range(5):
+        xv = x_lo + t * (x_hi - x_lo) / 4
+        yv = y_lo + t * (y_hi - y_lo) / 4
+        parts.append(f"<text x='{X(xv):.1f}' y='{PAD_T + panel_h + 16}' text-anchor='middle' "
+                     f"fill='#9a9ea3'>{xv:g}</text>")
+        parts.append(f"<text x='{PAD_L - 8}' y='{Y(yv) + 4:.1f}' text-anchor='end' "
+                     f"fill='#9a9ea3'>{yv:g}</text>")
+    parts.append(f"<text x='{PAD_L + panel_w / 2:.1f}' y='{H - 8}' text-anchor='middle' "
+                 f"fill='#565B60'>{fig['metricLabels'][metric]} (fixed LR, epoch 16)</text>")
+    parts.append(f"<text x='14' y='{PAD_T + panel_h / 2:.1f}' fill='#565B60' "
+                 f"transform='rotate(-90 14 {PAD_T + panel_h / 2:.1f})' "
+                 f"text-anchor='middle'>Generalization Gap</text>")
 
-    for pi, metric in enumerate(("raw", "adaptive")):
-        x_lo, x_hi = fig["axes"]["x"][metric]["fixed"]
-        ox = PAD_L + pi * (panel_w + GAP + PAD_L)
+    stats_y = PAD_T + 12
+    for opt in fig["optimizers"]:
+        for run in sched["points"][opt]:
+            parts.append(f"<circle cx='{X(run[15][0]):.1f}' cy='{Y(run[15][2]):.1f}' r='3.4' "
+                         f"fill='{FILL[opt]}' fill-opacity='0.75' stroke='{STRONG[opt]}' "
+                         f"stroke-width='0.8'/>")
+        f16 = sched["fits"][metric][15][opt]
+        if f16:
+            slope, intercept, r, _ = f16
+            parts.append(f"<line x1='{X(x_lo):.1f}' y1='{Y(slope * x_lo + intercept):.1f}' "
+                         f"x2='{X(x_hi):.1f}' y2='{Y(slope * x_hi + intercept):.1f}' "
+                         f"stroke='{STRONG[opt]}' stroke-width='1.6' opacity='0.85'/>")
+            parts.append(f"<text x='{PAD_L + 8}' y='{stats_y}' fill='{STRONG[opt]}'>"
+                         f"{opt}: R={r:.2f}</text>")
+            stats_y += 15
 
-        def X(v):
-            return ox + (min(v, x_hi) - x_lo) / (x_hi - x_lo) * panel_w
-
-        def Y(v):
-            return PAD_T + panel_h - (min(v, y_hi) - y_lo) / (y_hi - y_lo) * panel_h
-
-        parts.append(f"<line x1='{ox}' y1='{PAD_T + panel_h}' x2='{ox + panel_w}' "
-                     f"y2='{PAD_T + panel_h}' stroke='#c9c9c9'/>")
-        parts.append(f"<line x1='{ox}' y1='{PAD_T}' x2='{ox}' y2='{PAD_T + panel_h}' stroke='#c9c9c9'/>")
-        for t in range(5):
-            xv = x_lo + t * (x_hi - x_lo) / 4
-            yv = y_lo + t * (y_hi - y_lo) / 4
-            parts.append(f"<text x='{X(xv):.1f}' y='{PAD_T + panel_h + 16}' text-anchor='middle' "
-                         f"fill='#9a9ea3'>{xv:g}</text>")
-            if pi == 0:
-                parts.append(f"<text x='{ox - 8}' y='{Y(yv) + 4:.1f}' text-anchor='end' "
-                             f"fill='#9a9ea3'>{yv:g}</text>")
-        parts.append(f"<text x='{ox + panel_w / 2:.1f}' y='{H - 8}' text-anchor='middle' "
-                     f"fill='#565B60'>{fig['metricLabels'][metric]}</text>")
-        if pi == 0:
-            parts.append(f"<text x='14' y='{PAD_T + panel_h / 2:.1f}' fill='#565B60' "
-                         f"transform='rotate(-90 14 {PAD_T + panel_h / 2:.1f})' "
-                         f"text-anchor='middle'>Generalization Gap</text>")
-
-        mi = 0 if metric == "raw" else 1
-        stats_y = PAD_T + 12
-        for opt in fig["optimizers"]:
-            for run in sched["points"][opt]:
-                x, _, gap, _ = run[15][0], run[15][1], run[15][2], run[15][3]
-                v = run[15][mi]
-                parts.append(f"<circle cx='{X(v):.1f}' cy='{Y(gap):.1f}' r='3' "
-                             f"fill='{FILL[opt]}' fill-opacity='0.75' stroke='{STRONG[opt]}' "
-                             f"stroke-width='0.8'/>")
-            f16 = sched["fits"][metric][15][opt]
-            if f16:
-                slope, intercept, r, _ = f16
-                x1, x2 = x_lo, x_hi
-                parts.append(f"<line x1='{X(x1):.1f}' y1='{Y(slope * x1 + intercept):.1f}' "
-                             f"x2='{X(x2):.1f}' y2='{Y(slope * x2 + intercept):.1f}' "
-                             f"stroke='{STRONG[opt]}' stroke-width='1.6' opacity='0.85'/>")
-                parts.append(f"<text x='{ox + 8}' y='{stats_y}' fill='{STRONG[opt]}'>"
-                             f"{opt}: R={r:.2f}</text>")
-                stats_y += 15
-
-    # legend
-    lx = W / 2 - 220
+    # legend row across the top
+    lx = W / 2 - 230
     for opt in fig["optimizers"]:
         parts.append(f"<circle cx='{lx}' cy='16' r='5' fill='{FILL[opt]}' stroke='{STRONG[opt]}'/>")
         parts.append(f"<text x='{lx + 10}' y='20' fill='#565B60'>{opt}</text>")
-        lx += 118
+        lx += 120
     parts.append("</svg>")
     return "".join(parts)
 

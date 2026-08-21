@@ -81,6 +81,8 @@ def build_post(post_dir, author, template):
             scripts.append(f"<script src=\"{f.name}\" defer></script>")
         elif f.suffix == ".json" and f.name != "post.json":
             shutil.copyfile(f, out_dir / f.name)
+    if scripts:  # shared figure helpers load before any post figure script
+        scripts.insert(0, "<script src=\"../fig.js\" defer></script>")
 
     page = template
     for key, value in {
@@ -105,6 +107,7 @@ def main():
 
     OUT.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(BLOG_SRC / "blog.css", OUT / "blog.css")
+    shutil.copyfile(BLOG_SRC / "fig.js", OUT / "fig.js")
 
     for post_dir in sorted(CONTENT.iterdir()):
         if post_dir.is_dir() and (post_dir / "post.json").exists():

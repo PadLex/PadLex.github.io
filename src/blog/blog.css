@@ -75,6 +75,7 @@
 .post h2 {
     margin-top: 2.2em;
     margin-bottom: 0.9em;
+    letter-spacing: normal; /* undo theme.css's resume-style 0.289rem tracking */
 }
 
 /* ---- math ---- */

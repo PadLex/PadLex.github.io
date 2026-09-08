@@ -1,12 +1,10 @@
-# Questioning the Flat Minima Hypothesis
-The Flat Minima Hypothesis states that models that converge to a flatter basin tend to generalize better to unseen data.
-
-[TODO explain why we should care about it. Why did @hochreiter1997flat first pose the hypothesis? The premise that we could infer a model's robustness based soley on local info about the geometry of the loss landscape is worth expanding on. Why did it not catch on untill @keskar2017large? Explain the simplifactions they made to make it usable. Explain what's the exciting promise that keskar2017large make.]
+# Why does the Flat Minima Hypothesis only hold under a fixed learning rate?
+The Flat Minima Hypothesis states that models that converge to a flatter basin tend to generalize better to unseen data. However, [TODO: catchy premise]
 
 <!-- When I first learned of it, I wondered if it could be a useful framework for understanding the Muon optimizer. Perhaps it performs so well by implicitly minimizing sharpness. This blog is about why  **{c2}(such a question is fundamentally ill-posed)**, why existing formulations of the hypothesis are underspecified, and why the hypothesis still offers a useful perspective that has ***{c1}(withstood the test of time)***. -->
 
 ## The Promise
-[TODO explain why we should care. Essentially, explain why @hochreiter1997flat was motivated to come up with their formulation. The reason why nobody cared. And then why everyone cared about it after @keskar2017large.]
+[TODO explain why we should care. Essentially, explain why @hochreiter1997flat was motivated to come up with their formulation. The reason why nobody cared. And then why everyone cared about it after @keskar2017large. The premise that we could infer a model's robustness based soley on local info about the geometry of the loss landscape is worth expanding on. Why did it not catch on untill @keskar2017large? Explain the simplifactions they made to make it usable. Explain what's the exciting promise that keskar2017large make.]
 
 The Flat Minima Hypothesis relies on the intuition that the validation loss landscape can be approximated as a stochastically perturbed version of the training landscape. If a model converges to a wider/flatter basin in the training landscape, it feels intuitive that it would be more likely to stay within that same basin if the validation-loss landscape were slightly shifted. [TODO: we should add a home made 2D figure to demonstrate this idea: we could have a 2D loss landscape with two valleys and a whole bunch of points converged inside of them, if the validation loss where to shift slightly then it should].
 
@@ -30,7 +28,7 @@ Well shoot. Sharpness seems to be completely uncorrelated with generalization. (
 ## Optimizer researchers make some funny assumptions
 So what are we doing differently from @keskar2017large?
 
-Well, it turns out that the field of optimization research [TODO is that the most specific field name?] makes some unconventional assumptions. Chief among them, @keskar2017large use a small *fixed* learning rate. Learning rate schedulers, which have become ubiquitous in every other corner of the ML community, are seen as confounding variables when studying optimizers.
+Well, it turns out that the field of optimization research [TODO is that the most specific field name?] makes some unconventional assumptions. Chief among them, @keskar2017large use a small *fixed* learning rate. Learning rate schedulers, which have become ubiquitous in every other corner of the ML community, [TODO: explain why Optimizer research has defaulted to fixed lr. Are schedulers seen as confounding variables when studying optimizers?]
 
 %%figure:sharpness-fixed%% Raw sharpness vs. generalization gap at epoch 16, trained with a fixed learning rate — the setting studied by @keskar2017large. Use the toggle to compare the two learning-rate schedules.
 
@@ -52,7 +50,11 @@ where $T_w$ is a normalization operator depending on the current parameters. Thi
 This looks much better now! Runs from the different optimizers land on similar adaptive sharpness values and adaptive sharpness correlates even mode strongly with the generalization gap.
 
 ## Questioning the Hypothesis utility / field's assumptions
-Why does the hypothesis only hold with a fixed learning rate though? [TODO could it be that we're just reading tealeaves? Like sure, maybe the hypothesis is correct, but in practive modern models are very overparametrized, thus all basins really are connected by a low-loss bazien path. So really, it's more that if you fully converge that correlates with better generalization? Could I design experiments to prrove or disprove this based on the wandb data alone? Maybe we could treat the final training loss as a confounder as see how strong the correlation between sharpness and generalization is after accounting for it?] 
+Why does the hypothesis only hold with a fixed learning rate though?
+
+[TODO does this really follow from edge of stability research? i.e. I know that under a fixed lr optimizers deterministically converge to a given sharpness bound, but then why would it follow that generalization only correlates when using a fixed lr? What's going on?]
+
+[TODO could it be that we're just reading tealeaves? Like sure, maybe the hypothesis is correct, but in practive modern models are very overparametrized, thus all basins really are connected by a low-loss bazien path. So really, it's more that if you fully converge that correlates with better generalization? Could I design experiments to prove or disprove this based on the wandb data alone? Maybe we could treat the final training loss as a confounder as see how strong the correlation between sharpness and generalization is after accounting for it?] 
 
 <!-- ## Could there be any good measure of flatness?
 [TODO reconsider the original formulation from @hochreiter1997flat, explain why it's inpractical, talk about what other measures are computable at the scale of modern models] -->

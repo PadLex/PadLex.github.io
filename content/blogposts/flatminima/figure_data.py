@@ -158,6 +158,32 @@ def fit(xs, ys):
             float(f"{cutoff:.4g}") if cutoff is not None else None]
 
 
+def print_confounder_stats(fig):
+    """Numbers quoted in the 'Questioning' section of post.md: per-optimizer gap
+    spread, r(sharpness, gap) at the final epoch, and the same correlation after
+    partialling out train accuracy (recovered as gap + val_acc; loss isn't logged).
+    Rerun and update the prose whenever the data changes."""
+    e = fig["epochs"] - 1
+
+    def pcorr(xs, ys, zs):
+        rxy, rxz, ryz = (statistics.correlation(a, b)
+                         for a, b in ((xs, ys), (xs, zs), (ys, zs)))
+        return (rxy - rxz * ryz) / math.sqrt((1 - rxz ** 2) * (1 - ryz ** 2))
+
+    for sched, s in fig["schedules"].items():
+        print(f"--- {sched}, epoch {fig['epochs']}")
+        for opt in fig["optimizers"]:
+            runs = s["points"][opt]
+            gaps = [r[e][2] for r in runs]
+            train = [r[e][2] + r[e][3] for r in runs]
+            line = f"{opt:16s} gap std {statistics.stdev(gaps):.4f}"
+            for mi, name in ((0, "raw"), (1, "adaptive")):
+                xs = [r[e][mi] for r in runs]
+                line += (f"   {name} r {statistics.correlation(xs, gaps):+.2f}"
+                         f" | train_acc {pcorr(xs, gaps, train):+.2f}")
+            print(line)
+
+
 METRIC_COL = {"raw": "hessian", "adaptive": "adaptive_sharpness"}
 
 # Fixed axis limits, ≈1.5× the paper's ranges, shared across schedules AND metrics'
@@ -344,6 +370,7 @@ def main():
         refit(fig)
         (HERE / "figure-data.json").write_text(json.dumps(fig, separators=(",", ":")))
         write_svgs(fig)
+        print_confounder_stats(fig)
         return
     data = {sched: load(sched) for sched in SCHEDULES}
     fig = build_json(data)
@@ -352,6 +379,7 @@ def main():
     (HERE / "results.html").write_text(build_table(data))
     write_svgs(fig)
     print("wrote results.html")
+    print_confounder_stats(fig)
     # sanity: epoch-16 fixed-LR pearson r per paper: raw 0.27–0.49, adaptive 0.45–0.69
     for metric in ("raw", "adaptive"):
         rs = {o: (f[2] if (f := fig["schedules"]["fixed"]["fits"][metric][15][o]) else None)

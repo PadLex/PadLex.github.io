@@ -14,6 +14,7 @@
     --post-ink: #565B60;
     --post-muted: #9a9ea3;
     --post-hairline: #e8e6e3;
+    --post-pad: 50px; /* article side padding; folds break out of it to span the paper */
 }
 
 /* ---- header ---- */
@@ -51,7 +52,7 @@
 
 .post {
     display: block;
-    padding: 28px 50px 44px;
+    padding: 28px var(--post-pad) 44px;
     font-size: 15.5px;
     line-height: 1.7;
     color: var(--post-ink);
@@ -389,8 +390,9 @@
 /* ---- mobile (mirrors theme.css breakpoint) ---- */
 
 @media only screen and (max-width: 210mm) {
+    :root { --post-pad: 25px; }
     .post-header { padding-left: 25px; padding-right: 25px; }
-    .post { padding: 20px 25px 32px; font-size: 14px; }
+    .post { padding: 20px var(--post-pad) 32px; font-size: 14px; }
     .post-header h1 { font-size: 18px; }
 
     /* control panel: labels stack above their row content */

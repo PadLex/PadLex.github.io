@@ -108,6 +108,8 @@ def main():
     OUT.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(BLOG_SRC / "blog.css", OUT / "blog.css")
     shutil.copyfile(BLOG_SRC / "fig.js", OUT / "fig.js")
+    shutil.copyfile(BLOG_SRC / "fold.js", OUT / "fold.js")
+    shutil.copyfile(BLOG_SRC / "fold.css", OUT / "fold.css")
 
     for post_dir in sorted(CONTENT.iterdir()):
         if post_dir.is_dir() and (post_dir / "post.json").exists():

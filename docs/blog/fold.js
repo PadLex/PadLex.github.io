@@ -1,0 +1,210 @@
+/* Paper-fold sections. Styling and every tunable live in fold.css; this file only
+ * measures, mirrors, and animates.
+ *
+ * Markup (from parser.py):
+ *   section.fold > div.fold-body > div.fold-panel.fold-panel-lead > div.fold-content
+ *                                > span.fold-crease (top, mid, bottom)
+ *               > button.fold-toggle
+ *
+ * The content sits in the lead panel, flat and unclipped when open. Closed, it is cut at
+ * two places. --fold-lead is the first: everything above it stays flat on the page. With
+ * a mid-paragraph %%startfold%% that cut falls part-way down the letters of the line the
+ * marker landed on, so the fold runs straight through the text — glyph tops flat, glyph
+ * bottoms tilting away on the flap below, meeting on the hinge. Which line that is
+ * depends on how the text wrapped, so it is measured here and re-measured on reflow. The strip below is split at its midpoint into two flaps that hinge
+ * backwards, meeting at the middle crease (a Z-fold); each is a clone of the content
+ * shifted up to its own slice and clipped to it. A single value t in [0, 1] (0 flat
+ * shut, 1 open) goes out as --fold-t plus --fold-deg / --fold-cos / --fold-sin, which
+ * fold.css turns into geometry and shading.
+ *
+ * A closed fold rests at --fold-rest, not at 0, so the buckled paper always shows as a
+ * preview. That resting geometry is fixed: nothing here runs while you scroll. The only
+ * things that move it are a click (which opens it fully, or folds it back to rest) and,
+ * with a mouse, hovering it, which eases in --fold-hover-bonus on top.
+ */
+(function () {
+    "use strict";
+
+    const canHover = window.matchMedia("(hover: hover)").matches;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    const easeInOut = p => (p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2);
+
+    const folds = Array.from(document.querySelectorAll(".fold"));
+
+    // Lay the folds out flat until DOMContentLoaded so the template's marker-breaking pass
+    // (which needs untransformed line boxes) sees normal geometry.
+    folds.forEach(fold => fold.classList.add("is-measuring"));
+
+    document.addEventListener("DOMContentLoaded", () => folds.forEach(init));
+
+    function readKnobs(fold) {
+        const cs = getComputedStyle(fold);
+        const num = (name, fallback) => {
+            const v = parseFloat(cs.getPropertyValue(name));
+            return Number.isFinite(v) ? v : fallback;
+        };
+        return {
+            rest: Math.min(1, Math.max(0, num("--fold-rest", 0.1))),
+            liftAt: num("--fold-lift-at", 0.5),
+            hoverBonus: num("--fold-hover-bonus", 0.05),
+            hoverLag: num("--fold-hover-lag", 90),
+            openMs: num("--fold-open-ms", 720),
+            closeMs: num("--fold-close-ms", 560),
+        };
+    }
+
+    function init(fold) {
+        const button = fold.querySelector(".fold-toggle");
+        const body = fold.querySelector(".fold-body");
+        const leadPanel = fold.querySelector(".fold-panel-lead");
+        const content = leadPanel && leadPanel.querySelector(".fold-content");
+        if (!button || !body || !content) return;
+
+        let knobs = readKnobs(fold);   // re-read on every measure; see measure()
+
+        // The two flaps are clones of the content, each shifted up to its own slice and
+        // clipped to it (CSS). Inserted before the creases so those keep painting on top.
+        const flaps = ["fold-panel-top", "fold-panel-bottom"].map(role => {
+            const flap = document.createElement("div");
+            flap.className = "fold-panel " + role;
+            flap.setAttribute("aria-hidden", "true");
+            flap.inert = true;
+            const copy = content.cloneNode(true);
+            copy.querySelectorAll("[id]").forEach(el => el.removeAttribute("id"));
+            copy.querySelectorAll("mark").forEach(m => m.classList.add("animate-highlight"));
+            flap.appendChild(copy);
+            body.insertBefore(flap, body.querySelector(".fold-crease"));
+            return flap;
+        });
+
+        // A mid-paragraph %%startfold%%; absent for a fold that starts at a block edge.
+        const lift = content.querySelector(".fold-lift");
+        fold.classList.toggle("has-lead", !!lift);
+
+        const state = {
+            t: knobs.rest,   // current fold amount, 0 flat shut .. 1 open
+            open: false,     // the clicked state
+            hover: 0,        // eased hover contribution, 0 .. --fold-hover-bonus
+            hoverTo: 0,      // where it is headed: the bonus while the cursor is on it
+            tween: null,     // {from, to, start, dur} while a click animation runs
+            raf: 0,
+            last: 0,
+        };
+
+        // Where a closed fold sits: its resting peek, plus whatever the cursor has added.
+        const resting = () => Math.min(1, knobs.rest + state.hover);
+
+        // Where the paper bends, as an offset down the content. The marker picks a line;
+        // the crease then runs straight across it, part-way down the letters. The lead
+        // panel is clipped there and the flap below shows the very same content shifted
+        // up by the same amount, so each glyph's top half stays flat on the page while
+        // its bottom half tilts away, the two meeting exactly on the hinge.
+        //
+        // The marker is an empty inline, so its own box is the font's content area at
+        // that spot: top at the ascenders, bottom under the descenders. Cutting a
+        // fraction of the way down that box is what --fold-lift-at picks.
+        function measureLead() {
+            if (!lift) return 0;
+            let line = lift.getBoundingClientRect();
+            if (!line.height) {
+                // no box of its own (rare); fall back to the text following it
+                const range = document.createRange();
+                range.setStartAfter(lift);
+                range.setEnd(content, content.childNodes.length);
+                line = Array.from(range.getClientRects()).find(r => r.height > 0);
+                if (!line) return 0;
+            }
+            const y = line.top + line.height * knobs.liftAt;
+            return Math.max(0, y - content.getBoundingClientRect().top);
+        }
+
+        function measure() {
+            // The knobs come back here rather than being read once, so the geometry ones
+            // (--fold-rest, --fold-lift-at) can be tuned by eye against a live page.
+            knobs = readKnobs(fold);
+            fold.style.setProperty("--fold-h", content.offsetHeight + "px");
+            fold.style.setProperty("--fold-lead", measureLead().toFixed(2) + "px");
+            if (!state.open && !state.tween) set(resting());
+        }
+
+        function set(t) {
+            state.t = t;
+            const deg = (1 - t) * 90;
+            const rad = deg * Math.PI / 180;
+            fold.style.setProperty("--fold-t", t.toFixed(5));
+            fold.style.setProperty("--fold-deg", deg.toFixed(3) + "deg");
+            fold.style.setProperty("--fold-cos", Math.cos(rad).toFixed(5));
+            fold.style.setProperty("--fold-sin", Math.sin(rad).toFixed(5));
+            fold.classList.toggle("is-open", t >= 1);
+            body.inert = t < 1;
+        }
+
+        // Runs only for a click animation and to ease the hover bonus in and out;
+        // at rest, and while scrolling, nothing here is scheduled at all.
+        function frame(now) {
+            state.raf = 0;
+            const dt = state.last ? Math.min(100, now - state.last) : 16;
+            state.last = now;
+
+            if (state.tween) {
+                const tw = state.tween;
+                const p = Math.max(0, Math.min(1, (now - tw.start) / tw.dur));
+                set(tw.from + (tw.to - tw.from) * easeInOut(p));
+                if (p >= 1) state.tween = null;
+            } else if (state.hover !== state.hoverTo) {
+                const d = state.hoverTo - state.hover;
+                state.hover = Math.abs(d) < 0.0005
+                    ? state.hoverTo
+                    : state.hover + d * (1 - Math.exp(-dt / Math.max(1, knobs.hoverLag)));
+                if (!state.open) set(resting());
+            }
+
+            if (state.tween || state.hover !== state.hoverTo) wake();
+            else state.last = 0;
+        }
+
+        function wake() {
+            if (!state.raf) state.raf = requestAnimationFrame(frame);
+        }
+
+        function toggle() {
+            state.open = !state.open;
+            button.setAttribute("aria-expanded", String(state.open));
+            button.setAttribute("aria-label", state.open ? "Fold section" : "Unfold section");
+            const to = state.open ? 1 : resting();
+            if (reduceMotion) { state.tween = null; set(to); return; }
+            state.tween = {
+                from: state.t, to,
+                start: performance.now(),
+                dur: state.open ? knobs.openMs : knobs.closeMs,
+            };
+            wake();
+        }
+
+        // Mouse only: resting on the preview opens it a touch further.
+        if (canHover && !reduceMotion && knobs.hoverBonus) {
+            const aim = to => { state.hoverTo = to; wake(); };
+            fold.addEventListener("mouseenter", () => aim(knobs.hoverBonus));
+            fold.addEventListener("mouseleave", () => aim(0));
+        }
+
+        // Closed: the whole section (the preview and its grip) opens it.
+        // Open: only the hint folds it, so links in the content stay clickable.
+        fold.addEventListener("click", e => {
+            if (state.open && !button.contains(e.target)) return;
+            toggle();
+        });
+
+        // Keep the measurements in sync with reflow. A narrower viewport rewraps the
+        // paragraph, which moves the marker onto a different line, so the lead has to be
+        // taken again — and a rewrap can leave the height unchanged, which the observer
+        // would not report, hence the resize listener too.
+        if (window.ResizeObserver) new ResizeObserver(measure).observe(content);
+        window.addEventListener("resize", measure);
+
+        measure();
+        fold.classList.remove("is-measuring");
+        set(knobs.rest);
+    }
+})();

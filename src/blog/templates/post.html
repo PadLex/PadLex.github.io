@@ -7,6 +7,7 @@
     <meta name="description" content="$$description$$">
     <link rel="stylesheet" href="../../theme.css">
     <link rel="stylesheet" href="../blog.css">
+    <link rel="stylesheet" href="../fold.css">
     <link rel="stylesheet" href="markers.css">
     <link rel="stylesheet" href="../../assets/katex/katex.min.css">
 </head>
@@ -23,7 +24,12 @@ $$body$$
     </article>
 </div>
 
-<noscript><style>mark::before { clip-path: inset(0 0 0 0) !important; }</style></noscript>
+<noscript><style>
+    mark::before { clip-path: inset(0 0 0 0) !important; }
+    .fold-body { height: auto !important; }
+    .fold-panel-lead { position: static !important; height: auto !important; overflow: visible !important; }
+    .fold-panel::after, .fold-crease, .fold-hint { display: none !important; }
+</style></noscript>
 
 <script>
     /* Marker animation — copied from src/index.html so the resume build stays frozen. */
@@ -78,6 +84,7 @@ $$body$$
         animateMarkers();
     });
 </script>
+<script src="../fold.js" defer></script>
 $$scripts$$
 </body>
 </html>

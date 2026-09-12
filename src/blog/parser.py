@@ -12,12 +12,23 @@ Processing order is load-bearing:
      \\citet-style; @key's keeps the possessive on the author label).
   5. Links [text](url)  (target=_blank only for external urls).
 Blocks: '# ' title, '## ' section, blank-line paragraphs, and %%directive%% lines.
+
+%%startfold%% ... %%endfold%% wraps the blocks between the two markers in a collapsible
+paper fold (see fold.js / fold.css). The markers stand alone — they are not tied to a
+heading, so a fold can start a paragraph or two into a section.
+
+%%startfold%% may also sit *inside* a paragraph, mid-sentence. The paragraph then goes
+into the fold whole, and the lines above the marker's own line are left lying flat as a
+lead-in, so the reader gets a few real lines before the paper bends away. Which line
+that is depends on how the text wraps, so it is measured in the browser (fold.js) and
+re-measured whenever the text reflows; all this file does is drop a marker span there.
 """
 import re
 
 from bib import citet_label, format_entry, hover_text
 from markers import COLORS
 
+FOLD_MARKER = "%%startfold%%"
 MATH_TOKEN = "\x00M{}\x00"
 REFS_TOKEN = "\x00REFS\x00"
 
@@ -88,6 +99,41 @@ def parse(md, resolve_directive, bib_entries, render_math):
     title = None
     blocks = []
     para = []
+    fold = False  # inside %%startfold%% ... %%endfold%%
+    fold_count = 0
+
+    def open_fold():
+        nonlocal fold, fold_count
+        if fold:
+            raise ValueError("%%startfold%% inside a fold; close the first one with %%endfold%%")
+        fold = True
+        fold_count += 1
+        blocks.append(
+            "<section class='fold'>\n"
+            f"<div class='fold-body' id='fold-{fold_count}'>"
+            "<div class='fold-panel fold-panel-lead'><div class='fold-content'>"
+        )
+
+    def close_fold():
+        nonlocal fold
+        if not fold:
+            raise ValueError("%%endfold%% without a matching %%startfold%%")
+        fold = False
+        blocks.append(
+            "</div></div>"  # content, lead panel
+            "<span class='fold-crease fold-crease-top'></span>"
+            "<span class='fold-crease fold-crease-mid'></span>"
+            "<span class='fold-crease fold-crease-bottom'></span>"
+            "</div>"  # body
+            f"<button class='fold-toggle' type='button' aria-expanded='false' "
+            f"aria-controls='fold-{fold_count}' aria-label='Unfold section'>"
+            "<span class='fold-hint' aria-hidden='true'></span></button>"
+            "</section>"
+        )
+
+    def require_flat(what):
+        if fold:
+            raise ValueError(f"{what} while a fold is open; close it with %%endfold%%")
 
     def flush():
         if not para:
@@ -98,8 +144,16 @@ def parse(md, resolve_directive, bib_entries, render_math):
             return
         if re.fullmatch(r"\x00M\d+\x00", text):
             blocks.append(text)  # display equation stands alone, no <p>
-        else:
-            blocks.append(f"<p>{inline(text)}</p>")
+            return
+        # A %%startfold%% mid-paragraph opens the fold before this paragraph and leaves a
+        # marker where it stood; fold.js turns that into the line the paper bends on.
+        found = text.count(FOLD_MARKER)
+        if found > 1:
+            raise ValueError(f"{found} %%startfold%% markers in one paragraph; use one")
+        if found:
+            open_fold()
+        html = inline(text).replace(FOLD_MARKER, "<span class='fold-lift'></span>")
+        blocks.append(f"<p>{html}</p>")
 
     for line in md.split("\n"):
         s = line.strip()
@@ -111,8 +165,15 @@ def parse(md, resolve_directive, bib_entries, render_math):
         elif s.startswith("## "):
             flush()
             blocks.append(f"<h2>{inline(s[3:].strip())}</h2>")
+        elif s == FOLD_MARKER:
+            flush()
+            open_fold()
+        elif s == "%%endfold%%":
+            flush()
+            close_fold()
         elif s == "%%references%%":
             flush()
+            require_flat("%%references%%")
             blocks.append(REFS_TOKEN)
         elif m := re.fullmatch(r"%%(figure|table):([\w-]+)%%\s*(.*)", s):
             flush()
@@ -120,6 +181,7 @@ def parse(md, resolve_directive, bib_entries, render_math):
         else:
             para.append(line)
     flush()
+    require_flat("end of the post")
 
     body = "\n".join(blocks)
 

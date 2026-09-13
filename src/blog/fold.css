@@ -27,8 +27,8 @@
 
     --fold-top-pad: 0.9em;            /* top crease  ->  first line of the strip */
     --fold-bottom-pad: 0.9em;         /* last line   ->  bottom crease */
-    --fold-after: 1.1em;              /* bottom crease  ->  whatever follows */
-    --fold-grip: 26px;                /* height of the click target sitting on the top crease */
+    --fold-after: 1.1em;              /* label strip  ->  whatever follows */
+    --fold-grip: 26px;                /* height of the label strip under the bottom crease */
 
     --fold-perspective: 1400px;       /* smaller = stronger perspective on the flaps */
 
@@ -110,15 +110,19 @@
 
 
     /* -- resting state (read by fold.js) ---------------------------------
-       A closed fold does not lie flat: it rests --fold-rest of the way open, so
-       the buckled paper is always on show as a preview. That resting geometry is
-       fixed — nothing tracks the scroll, so scrolling the page costs nothing and
-       the paper never moves under you.
+       A closed fold sits at --fold-rest, shut flat by default: the strip is folded
+       right back, the two outer creases meet, and all that is left on the page is
+       the seam. That resting geometry is fixed — nothing tracks the scroll, so
+       scrolling the page costs nothing and the paper never moves under you.
 
-       With a mouse, hovering it adds --fold-hover-bonus on top, eased in over
-       --fold-hover-lag, the way a button grows a little under the cursor. Set the
-       bonus to 0 to drop that too and leave the fold completely still. */
-    --fold-rest: 0.1;                 /* how far open a closed fold sits (0..1 of fully open) */
+       With a mouse, hovering it adds --fold-hover-bonus on top, so the seam opens
+       into a peek of the buckled paper and shuts again when the cursor leaves. The
+       bonus is eased in and out on a sine, not a straight ramp: it leaves and
+       arrives slowly and moves quickest in between, which reads as paper being
+       lifted rather than a value being set. Raise --fold-rest to leave that peek
+       permanently on show, or set the bonus to 0 to leave the fold completely
+       still. Clicking is what opens it the whole way. */
+    --fold-rest: 0.0;                 /* how far open a closed fold sits (0..1 of fully open) */
 
     /* A mid-paragraph %%startfold%% picks a line; the crease then runs straight
        across it, cutting the letters in two — their tops stay flat on the page,
@@ -127,8 +131,9 @@
        the descenders. Above 1 it drops clear of the text into the leading. */
     --fold-lift-at: 0.5;
 
-    --fold-hover-bonus: 0.0;         /* mouse only: extra while the cursor is on it */
-    --fold-hover-lag: 90ms;           /* how lazily that bonus follows the cursor */
+    --fold-hover-bonus: 0.5;          /* mouse only: extra while the cursor is on it */
+    --fold-hover-ms: 520;             /* hover: how long the bonus takes to ease in */
+    --fold-unhover-ms: 420;           /* and to ease back out again */
 
     --fold-open-ms: 720;              /* click: unfold duration */
     --fold-close-ms: 560;             /* click: fold duration */
@@ -143,39 +148,32 @@
 
     position: relative;
     display: block;
-    margin-bottom: var(--fold-after);
+    /* the label hangs in the margin below the bottom crease, so the gap to whatever
+       follows has to make room for it as well */
+    margin-bottom: calc(var(--fold-grip) + var(--fold-after));
 }
 
 /* ======================= MECHANICS ======================================= */
 
 .fold:not(.is-open) { cursor: pointer; }
 
-/* the click target: a strip lying across the top crease, with the hint at its
-   right-hand end. Once open only the hint itself takes clicks, so the text
-   underneath stays selectable. */
+/* the label: a strip hanging just under the bottom crease, hint centred in it. It
+   never lies over the text — not the lead above the top crease, not the content when
+   the section is open — so it can keep taking clicks in both states, on a phone as
+   much as on a desktop, and nothing underneath has to give up its own. */
 .fold-toggle {
     all: unset;
     position: absolute;
-    top: 0;
+    top: 100%;
     left: 0;
     right: 0;
-    max-width: 620px;      /* line up the hint with the text measure set in blog.css */
-    margin-inline: auto;
     height: var(--fold-grip);
-    transform: translateY(-50%);
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: center;
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
 }
-
-/* With a lead the top crease runs between two justified lines, where a label would
-   land on the text; put it on the bottom crease instead, under the preview. */
-.fold.has-lead .fold-toggle { top: 100%; }
-
-.fold.is-open .fold-toggle { pointer-events: none; }
-.fold.is-open .fold-hint { pointer-events: auto; }
 
 .fold-toggle:focus-visible {
     outline: 1px dashed var(--post-muted);
@@ -198,6 +196,11 @@
 .fold.is-open .fold-hint { opacity: 0.55; }
 .fold.is-open .fold-toggle:hover .fold-hint { opacity: 1; }
 
+/* Open, the creases fold it back too: they are pointer-events: none, so the reader can
+   still select the text under them and follow its links, and fold.js hit-tests their
+   bands by hand. This is the cursor for that, since the band itself cannot carry one. */
+.fold.is-on-crease { cursor: pointer; }
+
 /* the cut-out in the page: full paper width, page-ground coloured, holds the flaps */
 .fold-body {
     /* the strip that actually folds runs from the top crease to the bottom of the
@@ -209,7 +212,13 @@
     margin: 0 calc(-1 * var(--post-pad));
     height: calc(var(--fold-lead) + var(--fold-drop));
     perspective: var(--fold-perspective);
-    perspective-origin: 50% 50%;
+    /* The vanishing point sits on the middle crease. Both flaps' free edges are
+       at the same depth, so from here they project straight onto the line the
+       crease is drawn on; from anywhere else perspective drags the seam toward
+       the origin and the crease shading lands beside the real fold. (With no
+       lead the body's centre *is* the crease, which is why this only showed
+       once a mid-paragraph %%startfold%% moved the two apart.) */
+    perspective-origin: 50% calc(var(--fold-lead) + var(--fold-drop) / 2);
     background: var(--fold-ground);
 }
 

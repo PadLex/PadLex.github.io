@@ -7,6 +7,9 @@
      epoch      | play + ticked slider + readout
      schedule   | Fixed · Linear Decay
      metric     | Raw Sharpness · Adaptive Sharpness
+   Every embed rests on the final epoch; a variant may also set autoplay, which
+   cycles epoch 1 → 16 (holding on 16 between passes) from the moment it first
+   scrolls into view, until the reader pauses it (skipped under reduced motion).
    Declared controls live in a Fig.panel between plot and caption; a Reset button
    docks to the panel's corner only while the view differs from the preset. An
    undeclared control's state stays pinned to the variant's preset. Axes are
@@ -19,11 +22,12 @@
     const VARIANTS = {
         "sharpness-lds": {
             preset: { schedule: "lds", metric: "raw", epoch: 16 },
-            controls: ["optimizers"],
+            controls: ["optimizers", "epoch"],
+            autoplay: true,
         },
         "sharpness-fixed": {
             preset: { schedule: "fixed", metric: "raw", epoch: 16 },
-            controls: ["optimizers", "schedule"],
+            controls: ["optimizers", "epoch", "schedule"],
         },
         "sharpness-adaptive": {
             preset: { schedule: "fixed", metric: "adaptive", epoch: 16 },
@@ -49,7 +53,7 @@
 
     function init(figure, data) {
         const name = figure.dataset.figure;
-        const { preset, controls } = VARIANTS[name];
+        const { preset, controls, autoplay } = VARIANTS[name];
         const has = (c) => controls.includes(c);
         const mount = figure.querySelector(".fig-mount");
         const css = getComputedStyle(document.documentElement);
@@ -84,6 +88,7 @@
 
         const epoch = !has("epoch") ? null : Fig.slider(panel.row("Epoch"), {
             label: "epoch", min: 1, max: data.epochs, initial: state.epoch, playMs: 400,
+            loop: !!autoplay,   // only the self-playing embed cycles; the rest stop at 16
             format: (v) => `${v} / ${data.epochs}`,
             onChange: (v) => { state.epoch = v; render(); },
         });
@@ -111,7 +116,7 @@
         function isDirty() {
             return state.schedule !== preset.schedule
                 || state.metric !== preset.metric
-                || state.epoch !== preset.epoch
+                || (state.epoch !== preset.epoch && !(epoch && epoch.playing))
                 || state.hidden.size !== DEFAULT_HIDDEN.length
                 || DEFAULT_HIDDEN.some((opt) => !state.hidden.has(opt));
         }
@@ -187,5 +192,19 @@
         }
 
         render();
+
+        /* An autoplay variant rests on the preset epoch, but sweeps the whole run
+           once, the first time the reader reaches it, so the story plays itself. */
+        if (epoch && autoplay && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+            const observer = new IntersectionObserver((entries) => {
+                if (!entries.some((e) => e.isIntersecting)) return;
+                observer.disconnect();
+                state.epoch = 1;
+                epoch.set(1);
+                epoch.play();   // before the draw, so Reset stays hidden for the sweep
+                render();
+            }, { threshold: 0.4 });
+            observer.observe(figure);
+        }
     }
 })();

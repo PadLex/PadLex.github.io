@@ -58,7 +58,11 @@ window.Fig = (function () {
 
     /* Discrete slider with an optional play button (hidden under prefers-reduced-
        motion) and a tick mark per step. slider(row, {label, min, max, initial,
-       playMs, format, onChange}) -> {value, set(v), stop()} */
+       playMs, loop, holdMs, format, onChange})
+       -> {value, playing, set(v), play(), stop()}.
+       play() drives the same run as the button, so a figure can start itself.
+       A run stops on the last step unless loop is set, in which case it holds
+       there for holdMs (three steps by default) and starts over. */
     function slider(parent, opts) {
         const wrap = el(parent, "span", "ctl-group ctl-slider");
         let timer = null;
@@ -74,35 +78,45 @@ window.Fig = (function () {
         for (let i = 0; i < n; i++) el(ticks, "span", "tick");
         const labelEl = el(wrap, "span", "slider-value");
         const format = opts.format || ((v) => `${v}`);
+        const holdMs = opts.holdMs || opts.playMs * 3;
         const api = {
             value: opts.initial,
+            playing: false,
             set(v) {
                 api.value = v;
                 range.value = v;
                 labelEl.textContent = format(v);
             },
+            play() {
+                if (timer) return;
+                api.playing = true;
+                if (play) play.innerHTML = "&#10074;&#10074;";
+                timer = setTimeout(advance, opts.playMs);
+            },
             stop() {
-                clearInterval(timer);
+                clearTimeout(timer);
                 timer = null;
+                api.playing = false;
                 if (play) play.innerHTML = "&#9654;";
             },
         };
+
+        // one step per tick, wrapping past the end; stop() before onChange so the
+        // caller's redraw already sees the run as finished on its last frame
+        function advance() {
+            api.set(api.value >= opts.max ? opts.min : api.value + 1);
+            const end = api.value >= opts.max;
+            if (end && !opts.loop) api.stop();
+            else timer = setTimeout(advance, end ? holdMs : opts.playMs);
+            opts.onChange(api.value);
+        }
         range.setAttribute("aria-label", opts.label);
         range.addEventListener("input", () => { api.stop(); api.set(+range.value); opts.onChange(api.value); });
         if (play) {
             play.type = "button";
             play.setAttribute("aria-label", `play through ${opts.label}s`);
             if (matchMedia("(prefers-reduced-motion: reduce)").matches) play.style.display = "none";
-            play.addEventListener("click", () => {
-                if (timer) return api.stop();
-                play.innerHTML = "&#10074;&#10074;";
-                if (api.value >= opts.max) api.set(opts.min - 1);
-                timer = setInterval(() => {
-                    api.set(api.value + 1);
-                    if (api.value >= opts.max) api.stop();
-                    opts.onChange(api.value);
-                }, opts.playMs);
-            });
+            play.addEventListener("click", () => (timer ? api.stop() : api.play()));
         }
         api.set(opts.initial);
         return api;

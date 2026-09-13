@@ -11,16 +11,18 @@
  * a mid-paragraph %%startfold%% that cut falls part-way down the letters of the line the
  * marker landed on, so the fold runs straight through the text — glyph tops flat, glyph
  * bottoms tilting away on the flap below, meeting on the hinge. Which line that is
- * depends on how the text wrapped, so it is measured here and re-measured on reflow. The strip below is split at its midpoint into two flaps that hinge
+ * depends on how the text wrapped, so it is measured here and re-measured on reflow.
+ *
+ * The strip below the lead is split at its midpoint into two flaps that hinge
  * backwards, meeting at the middle crease (a Z-fold); each is a clone of the content
  * shifted up to its own slice and clipped to it. A single value t in [0, 1] (0 flat
  * shut, 1 open) goes out as --fold-t plus --fold-deg / --fold-cos / --fold-sin, which
  * fold.css turns into geometry and shading.
  *
- * A closed fold rests at --fold-rest, not at 0, so the buckled paper always shows as a
- * preview. That resting geometry is fixed: nothing here runs while you scroll. The only
- * things that move it are a click (which opens it fully, or folds it back to rest) and,
- * with a mouse, hovering it, which eases in --fold-hover-bonus on top.
+ * A closed fold rests at --fold-rest, shut flat by default. That resting geometry is
+ * fixed: nothing here runs while you scroll. The only things that move it are a click
+ * (which opens it fully, or folds it back to rest) and, with a mouse, hovering it, which
+ * eases --fold-hover-bonus in on a sine so the seam swells into a peek of the paper.
  */
 (function () {
     "use strict";
@@ -29,6 +31,12 @@
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     const easeInOut = p => (p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2);
+
+    // The hover peek rides this instead: a half cosine, so it pulls away from rest and
+    // settles into the peek with zero speed at both ends and its quickest move in the
+    // middle. Reversed part-way — cursor out before it has arrived — it keeps whatever
+    // speed it had, because the same curve is read backwards from wherever it got to.
+    const easeSine = p => 0.5 - 0.5 * Math.cos(Math.PI * p);
 
     const folds = Array.from(document.querySelectorAll(".fold"));
 
@@ -47,8 +55,9 @@
         return {
             rest: Math.min(1, Math.max(0, num("--fold-rest", 0.1))),
             liftAt: num("--fold-lift-at", 0.5),
-            hoverBonus: num("--fold-hover-bonus", 0.05),
-            hoverLag: num("--fold-hover-lag", 90),
+            hoverBonus: num("--fold-hover-bonus", 0.5),
+            hoverMs: num("--fold-hover-ms", 520),
+            unhoverMs: num("--fold-unhover-ms", 420),
             openMs: num("--fold-open-ms", 720),
             closeMs: num("--fold-close-ms", 560),
         };
@@ -85,15 +94,17 @@
         const state = {
             t: knobs.rest,   // current fold amount, 0 flat shut .. 1 open
             open: false,     // the clicked state
-            hover: 0,        // eased hover contribution, 0 .. --fold-hover-bonus
-            hoverTo: 0,      // where it is headed: the bonus while the cursor is on it
+            hoverP: 0,       // raw hover progress, 0 off .. 1 fully peeked
+            hoverTo: 0,      // where it is headed: 1 while the cursor is on it
             tween: null,     // {from, to, start, dur} while a click animation runs
             raf: 0,
             last: 0,
         };
 
-        // Where a closed fold sits: its resting peek, plus whatever the cursor has added.
-        const resting = () => Math.min(1, knobs.rest + state.hover);
+        // Where a closed fold sits: its resting amount, plus whatever the cursor has
+        // added. The raw progress is what gets animated; the sine shapes it on the way out.
+        const resting = () =>
+            Math.min(1, knobs.rest + knobs.hoverBonus * easeSine(state.hoverP));
 
         // Where the paper bends, as an offset down the content. The marker picks a line;
         // the crease then runs straight across it, part-way down the letters. The lead
@@ -152,15 +163,19 @@
                 const p = Math.max(0, Math.min(1, (now - tw.start) / tw.dur));
                 set(tw.from + (tw.to - tw.from) * easeInOut(p));
                 if (p >= 1) state.tween = null;
-            } else if (state.hover !== state.hoverTo) {
-                const d = state.hoverTo - state.hover;
-                state.hover = Math.abs(d) < 0.0005
-                    ? state.hoverTo
-                    : state.hover + d * (1 - Math.exp(-dt / Math.max(1, knobs.hoverLag)));
+            } else if (state.hoverP !== state.hoverTo) {
+                // The progress moves at a constant rate, so a peek from shut takes the
+                // whole --fold-hover-ms and one the cursor turns around on takes only
+                // the share of it that is left to travel.
+                const dur = Math.max(1, state.hoverTo ? knobs.hoverMs : knobs.unhoverMs);
+                const step = dt / dur;
+                state.hoverP = state.hoverTo > state.hoverP
+                    ? Math.min(state.hoverTo, state.hoverP + step)
+                    : Math.max(state.hoverTo, state.hoverP - step);
                 if (!state.open) set(resting());
             }
 
-            if (state.tween || state.hover !== state.hoverTo) wake();
+            if (state.tween || state.hoverP !== state.hoverTo) wake();
             else state.last = 0;
         }
 
@@ -172,7 +187,17 @@
             state.open = !state.open;
             button.setAttribute("aria-expanded", String(state.open));
             button.setAttribute("aria-label", state.open ? "Fold section" : "Unfold section");
-            const to = state.open ? 1 : resting();
+            // Shutting goes the whole way back to --fold-rest, not to resting(): the
+            // cursor is on the label at the moment of the click, so resting() is the
+            // hovered peek, and stopping there shut the paper in two goes — one tween
+            // down to the peek, then a wait for the pointer to fall off the shrinking
+            // section, then the peek easing out on its own. Dropping the preview here
+            // makes it one move. It stays off until the cursor leaves and comes back:
+            // nothing re-aims it, and aim() turns down anything that arrives while the
+            // paper is still shutting, so it cannot swell straight back up under a
+            // pointer that has not moved.
+            const to = state.open ? 1 : knobs.rest;
+            if (!state.open) { state.hoverP = 0; state.hoverTo = 0; }
             if (reduceMotion) { state.tween = null; set(to); return; }
             state.tween = {
                 from: state.t, to,
@@ -182,19 +207,54 @@
             wake();
         }
 
-        // Mouse only: resting on the preview opens it a touch further.
-        if (canHover && !reduceMotion && knobs.hoverBonus) {
-            const aim = to => { state.hoverTo = to; wake(); };
-            fold.addEventListener("mouseenter", () => aim(knobs.hoverBonus));
+        // Mouse only: resting on the seam swells it open by --fold-hover-bonus.
+        // Always wired, and the bonus is applied in resting() from whatever measure()
+        // last read, not captured here, so setting it to 0 (or back) in fold.css takes
+        // effect without a reload like every other knob. A bonus of 0 leaves resting()
+        // at --fold-rest whatever the progress does, so the fold simply never moves.
+        if (canHover && !reduceMotion) {
+            const shutting = () => state.tween && !state.open;
+            const aim = to => {
+                if (to && shutting()) return;
+                state.hoverTo = to;
+                wake();
+            };
+            fold.addEventListener("mouseenter", () => aim(1));
             fold.addEventListener("mouseleave", () => aim(0));
         }
 
-        // Closed: the whole section (the preview and its grip) opens it.
-        // Open: only the hint folds it, so links in the content stay clickable.
+        // Is the pointer over one of the three creases? The bands are pointer-events:
+        // none and stay that way, so the text under them keeps its selection and its
+        // links; their boxes are hit-tested here instead. That is what lets a crease
+        // fold the paper shut without the band swallowing everything else the reader
+        // might want to do with the line it happens to cross.
+        const creases = Array.from(body.querySelectorAll(".fold-crease"));
+        const onCrease = e => creases.some(c => {
+            const r = c.getBoundingClientRect();
+            return e.clientY >= r.top && e.clientY <= r.bottom
+                && e.clientX >= r.left && e.clientX <= r.right;
+        });
+
+        // Closed: the whole section (the seam and its label) opens it.
+        // Open: the label folds it back, and so does any of the three creases — but
+        // only on a plain click on the paper, so a link still follows and the click
+        // that ends a drag across the text does not fold the page away mid-sentence.
         fold.addEventListener("click", e => {
-            if (state.open && !button.contains(e.target)) return;
+            if (!state.open || button.contains(e.target)) return toggle();
+            if (!onCrease(e) || e.target.closest("a, button, input, textarea, select, label")) return;
+            const sel = window.getSelection();
+            if (sel && !sel.isCollapsed) return;
             toggle();
         });
+
+        // ...and the cursor for it, which has to go on the section because the band
+        // taking no pointer events cannot carry one of its own.
+        if (canHover) {
+            fold.addEventListener("mousemove", e => {
+                fold.classList.toggle("is-on-crease", state.open && onCrease(e));
+            });
+            fold.addEventListener("mouseleave", () => fold.classList.remove("is-on-crease"));
+        }
 
         // Keep the measurements in sync with reflow. A narrower viewport rewraps the
         // paragraph, which moves the marker onto a different line, so the lead has to be
@@ -205,6 +265,6 @@
 
         measure();
         fold.classList.remove("is-measuring");
-        set(knobs.rest);
+        set(resting());
     }
 })();

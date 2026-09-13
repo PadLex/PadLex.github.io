@@ -403,6 +403,14 @@
 /* ---- print ---- */
 
 @media print {
-    .fig-ctl-panel { display: none; }
+    /* Controls are dead ink on paper — all but the legend, which the plot still
+       needs to be readable. Its row keeps the aligned label; the panel collapses
+       around it, and a panel without a legend goes away entirely. */
+    .fig-ctl-panel { padding: 2px 16px 0; }
+    .fig-ctl-panel:not(:has(.fig-legend)) { display: none; }
+    .fig-ctl-panel .ctl-row:not(:has(.fig-legend)) { display: none; }
+    .fig-ctl-panel .reset { display: none; }
+    .fig-legend .chip { cursor: default; }
+    .fig-legend .chip .dot { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     .post-home { display: none; }
 }

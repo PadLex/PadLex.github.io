@@ -84,7 +84,7 @@ Two details stand out. First, Muon is the most robust to losing the scheduler: s
 
 
 ## Implementation Details
-All training runs used a fork of Airbench [@jordan2024airbench], an optimized script that trains a VGG-like CNN to 94% accuracy on the CIFAR-10 [@cifar10] image classification dataset.
+%%startfold%%All training runs used a fork of Airbench [@jordan2024airbench], an optimized script that trains a VGG-like CNN to 94% accuracy on the CIFAR-10 [@cifar10] image classification dataset.
 
 We only modified the original Airbench script by (i) adding a callback function called after each epoch to measure sharpness, (ii) supporting training with a fixed learning rate in addition to the original Linear Decay Scheduler (LDS), and (iii) implementing DecoupledMuon, CoupledAdam, and CoupledSGD in addition to the NormalizedMuon implementation from the original script.
 
@@ -96,6 +96,8 @@ For each optimizer, we first perform an extensive hyperparameter sweep using Bay
 For completeness, we report the means and standard deviations of the aforementioned accuracy and sharpness measures in [Table 1](#tbl-results).
 
 %%table:results%%
+
+%%endfold%%
 
 %%references%%
 

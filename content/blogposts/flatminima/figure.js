@@ -13,7 +13,9 @@
    Declared controls live in a Fig.panel between plot and caption; a Reset button
    docks to the panel's corner only while the view differs from the preset. An
    undeclared control's state stays pinned to the variant's preset. Axes are
-   fixed (per metric on x, global on y) so no toggle ever rescales them. */
+   fixed (per metric on x, global on y) so no toggle ever rescales them.
+   In print only the legend row survives (blog.css), so the paper copy shows the
+   view the reader left behind — a sweep in progress prints at the preset epoch. */
 (function () {
     "use strict";
 
@@ -89,6 +91,7 @@
         const epoch = !has("epoch") ? null : Fig.slider(panel.row("Epoch"), {
             label: "epoch", min: 1, max: data.epochs, initial: state.epoch, playMs: 400,
             loop: !!autoplay,   // only the self-playing embed cycles; the rest stop at 16
+            printValue: preset.epoch,   // a sweep in progress prints at the resting epoch
             format: (v) => `${v} / ${data.epochs}`,
             onChange: (v) => { state.epoch = v; render(); },
         });

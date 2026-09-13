@@ -58,7 +58,7 @@ window.Fig = (function () {
 
     /* Discrete slider with an optional play button (hidden under prefers-reduced-
        motion) and a tick mark per step. slider(row, {label, min, max, initial,
-       playMs, loop, holdMs, format, onChange})
+       playMs, loop, holdMs, format, printValue, onChange})
        -> {value, playing, set(v), play(), stop()}.
        play() drives the same run as the button, so a figure can start itself.
        A run stops on the last step unless loop is set, in which case it holds
@@ -118,6 +118,27 @@ window.Fig = (function () {
             if (matchMedia("(prefers-reduced-motion: reduce)").matches) play.style.display = "none";
             play.addEventListener("click", () => (timer ? api.stop() : api.play()));
         }
+        /* Printing keeps whatever step the reader chose — except mid-run, which
+           would land on an arbitrary frame of the sweep; that prints at
+           printValue (the figure's resting step) and picks the run back up. */
+        if (opts.printValue != null) {
+            let resume = null;
+            addEventListener("beforeprint", () => {
+                if (!api.playing) return;
+                resume = api.value;
+                api.stop();
+                api.set(opts.printValue);
+                opts.onChange(api.value);
+            });
+            addEventListener("afterprint", () => {
+                if (resume === null) return;
+                api.set(resume);
+                resume = null;
+                opts.onChange(api.value);
+                api.play();
+            });
+        }
+
         api.set(opts.initial);
         return api;
     }

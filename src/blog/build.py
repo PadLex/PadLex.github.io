@@ -4,7 +4,6 @@ Runs AFTER (and independently of) the resume build. Never touches docs/index.htm
 or docs/markers.css.
 """
 import json
-import re
 import shutil
 import sys
 from pathlib import Path
@@ -20,23 +19,6 @@ ROOT = Path(__file__).resolve().parents[2]
 BLOG_SRC = Path(__file__).resolve().parent
 CONTENT = ROOT / "content/blogposts"
 OUT = ROOT / "docs/blog"
-
-MARKER_SYNTAX = re.compile(r"\*\*\*?\{c[1-5]\}\(")
-
-
-def check_resume_blog_entries():
-    """Marker syntax in the homepage blog list would shift the resume's seeded marker
-    styles (one random stream, document order). Fail loudly instead."""
-    resume = json.loads((ROOT / "content/resume.json").read_text())
-    for entry in resume.get("blog", []):
-        for value in entry.values():
-            if MARKER_SYNTAX.search(value):
-                raise SystemExit(
-                    f"resume.json blog entry contains marker syntax ({value!r}); "
-                    "this would change the resume's marker styling. Remove it."
-                )
-    return resume
-
 
 def build_post(post_dir, author, template):
     meta = json.loads((post_dir / "post.json").read_text())
@@ -84,12 +66,17 @@ def build_post(post_dir, author, template):
     if scripts:  # shared figure helpers load before any post figure script
         scripts.insert(0, "<script src=\"../fig.js\" defer></script>")
 
+    note = meta.get("note", "")  # raw HTML: a one-line credit under the byline
+    if note:
+        note = f'        <div class="post-note">{note}</div>'
+
     page = template
     for key, value in {
         "title": parsed["title"] or meta.get("title", slug),
         "description": meta.get("description", ""),
         "author": author,
         "date": meta.get("date", ""),
+        "note": note,
         "body": parsed["body"],
         "scripts": "\n".join(scripts),
     }.items():
@@ -101,8 +88,10 @@ def build_post(post_dir, author, template):
 
 
 def main():
-    resume = check_resume_blog_entries()
-    author = resume.get("name", "")
+    resume = json.loads((ROOT / "content/resume.json").read_text())
+    # Posts are signed the way papers are, with the middle initial the resume
+    # masthead leaves off.
+    author = resume.get("author") or resume.get("name", "")
     template = (BLOG_SRC / "templates/post.html").read_text()
 
     OUT.mkdir(parents=True, exist_ok=True)

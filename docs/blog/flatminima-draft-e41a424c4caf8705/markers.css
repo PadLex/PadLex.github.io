@@ -1,0 +1,147 @@
+
+/* START OF MARKER marker0 */
+.marker0 {
+    margin: 0;
+    padding: 0;
+    border-radius: 0.7em 0.30000000000000004em;
+    position: relative;
+    background: transparent;
+    display: inline;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+    z-index: 0;
+}
+
+.marker0::before {
+    content: "";
+    position: absolute;
+    inset: -0.1em -0.4em;
+    top: -0.1em;
+    left: -0.4em;
+    right: -0.4em;
+    bottom: -0.1em;
+    border-radius: 0.7em 0.30000000000000004em;
+    background-image: linear-gradient(
+    to right,
+    rgba(250, 223, 161, 0.3),
+    rgba(250, 223, 161, 0.9) 3%,
+    rgba(250, 223, 161, 0.3) 97%,
+    rgba(250, 223, 161, 0.7)
+    );
+    clip-path: inset(0 100% 0 0);
+    transition: clip-path 0s;
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Fallback for printing */
+@media print {
+    .marker0::before {
+        background-image: none;
+        background-color: rgba(250, 223, 161, 0.4);
+    }
+}
+
+.marker0.animate-highlight::before {
+  clip-path: inset(0 0 0 0);
+  transition: clip-path 0.7s ease-in-out;
+}
+/* END OF MARKER marker0 */
+
+/* START OF MARKER marker1 */
+.marker1 {
+    margin: 0;
+    padding: 0;
+    border-radius: 0.8em 0.09999999999999995em;
+    position: relative;
+    background: transparent;
+    display: inline;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+    z-index: 0;
+}
+
+.marker1::before {
+    content: "";
+    position: absolute;
+    inset: -0.1em -0.4em;
+    top: -0.1em;
+    left: -0.4em;
+    right: -0.4em;
+    bottom: -0.1em;
+    border-radius: 0.8em 0.09999999999999995em;
+    background-image: linear-gradient(
+    to right,
+    rgba(242, 198, 223, 0.3),
+    rgba(242, 198, 223, 0.6) 4%,
+    rgba(242, 198, 223, 0.3) 100%,
+    rgba(242, 198, 223, 0.7)
+    );
+    clip-path: inset(0 100% 0 0);
+    transition: clip-path 0s;
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Fallback for printing */
+@media print {
+    .marker1::before {
+        background-image: none;
+        background-color: rgba(242, 198, 223, 0.3);
+    }
+}
+
+.marker1.animate-highlight::before {
+  clip-path: inset(0 0 0 0);
+  transition: clip-path 0.6s ease-in-out;
+}
+/* END OF MARKER marker1 */
+
+/* START OF MARKER marker2 */
+.marker2 {
+    margin: 0;
+    padding: 0;
+    border-radius: 0.3em 0.7em;
+    position: relative;
+    background: transparent;
+    display: inline;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+    z-index: 0;
+}
+
+.marker2::before {
+    content: "";
+    position: absolute;
+    inset: -0.1em -0.4em;
+    top: -0.1em;
+    left: -0.4em;
+    right: -0.4em;
+    bottom: -0.1em;
+    border-radius: 0.3em 0.7em;
+    background-image: linear-gradient(
+    to right,
+    rgba(175, 211, 240, 0.2),
+    rgba(175, 211, 240, 0.8) 3%,
+    rgba(175, 211, 240, 0.3) 98%,
+    rgba(175, 211, 240, 0.7)
+    );
+    clip-path: inset(0 100% 0 0);
+    transition: clip-path 0s;
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Fallback for printing */
+@media print {
+    .marker2::before {
+        background-image: none;
+        background-color: rgba(175, 211, 240, 0.3);
+    }
+}
+
+.marker2.animate-highlight::before {
+  clip-path: inset(0 0 0 0);
+  transition: clip-path 0.5s ease-in-out;
+}
+/* END OF MARKER marker2 */

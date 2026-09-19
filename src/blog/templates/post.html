@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>$$title$$</title>
+    <meta name="description" content="$$description$$">
+    $$robots$$
+    <link rel="stylesheet" href="../../theme.css">
+    <link rel="stylesheet" href="../blog.css">
+    <link rel="stylesheet" href="../fold.css">
+    <link rel="stylesheet" href="markers.css">
+    <link rel="stylesheet" href="../../assets/katex/katex.min.css">
+</head>
+<body>
+<div class="container">
+    <div class="header post-header">
+        <a class="post-home" href="/">
+            <svg class="post-home-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M3 10.5 12 3l9 7.5"/>
+                <path d="M5.5 9.5V20h13V9.5"/>
+                <path d="M9.75 20v-5.5h4.5V20"/>
+            </svg>Home Page</a>
+        <h1>$$title$$</h1>
+$$note$$
+        <div class="post-byline small_margin">$$author$$ · $$date$$</div>
+    </div>
+
+    <article class="post">
+$$body$$
+    </article>
+</div>
+
+<noscript><style>
+    mark::before { clip-path: inset(0 0 0 0) !important; }
+    .fold-body { height: auto !important; }
+    .fold-panel-lead { position: static !important; height: auto !important; overflow: visible !important; }
+    .fold-panel::after, .fold-crease, .fold-hint { display: none !important; }
+</style></noscript>
+
+<script>
+    /* Marker animation — copied from src/index.html so the resume build stays frozen. */
+    async function animateMarkers() {
+        const markers = document.querySelectorAll("mark");
+
+        for (const marker of markers) {
+            marker.classList.add("animate-highlight");
+            await new Promise(resolve => setTimeout(resolve, Math.random() * 500));
+        }
+    }
+
+    function breakMarkers() {
+        let isDone = false;
+        while (!isDone) {
+            isDone = true;
+
+            document.querySelectorAll('mark').forEach(mark => {
+                const rects = mark.getClientRects();
+
+                if (rects.length > 1) {
+                    isDone = false;
+
+                    let firstChar = -1;
+                    const firstLineTop = rects[0].top;
+                    const text = mark.textContent;
+
+                    for (let i = 0; i < text.length; i++) {
+                        const range = document.createRange();
+                        range.setStart(mark.firstChild, i);
+                        range.setEnd(mark.firstChild, i + 1);
+                        const charRect = range.getBoundingClientRect();
+
+                        if (Math.abs(charRect.top - firstLineTop) < 2) {
+                            firstChar = i + 1;
+                        }
+                    }
+
+                    const clone = mark.cloneNode(true);
+                    clone.textContent = text.substring(firstChar);
+                    mark.textContent = text.substring(0, firstChar);
+
+                    mark.parentNode.insertBefore(clone, mark.nextSibling);
+                    mark.parentNode.insertBefore(document.createElement('br'), clone);
+                }
+            });
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        breakMarkers();
+        animateMarkers();
+    });
+</script>
+<script src="../fold.js" defer></script>
+$$scripts$$
+</body>
+</html>

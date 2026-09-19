@@ -1,0 +1,357 @@
+/* ============================================================================
+   Paper-fold sections
+
+   In post.md:
+
+       %%startfold%%
+       ...any blocks...
+       %%endfold%%
+
+   Two standalone markers. Whatever sits between them becomes a strip of paper
+   that buckles: it lifts off the page at the top crease, bends back down at a
+   middle crease exactly halfway along, and lands on the page again at the
+   bottom crease, so the two outer creases meet when the section is shut.
+
+   The SHADING block is meant to be edited by hand; MECHANICS turns it into
+   geometry and should not need touching. fold.js reads the "response" knobs at
+   load time and writes back --fold-t (0 shut .. 1 open), --fold-h, --fold-deg,
+   --fold-cos and --fold-sin.
+   ============================================================================ */
+
+.fold {
+    /* ======================= LAYOUT ====================================== */
+
+    --fold-paper: #ffffff;            /* the paper itself */
+    --fold-ground: #f4f4f4;           /* what shows beside the tilted flaps: the page background */
+    --fold-ink: 70, 60, 48;           /* r, g, b for the shading below; warm so it reads as paper */
+
+    --fold-top-pad: 0.9em;            /* top crease  ->  first line of the strip */
+    --fold-bottom-pad: 0.9em;         /* last line   ->  bottom crease */
+    --fold-after: 1.1em;              /* label strip  ->  whatever follows */
+    --fold-grip: 26px;                /* height of the label strip under the bottom crease */
+
+    --fold-perspective: 1400px;       /* smaller = stronger perspective on the flaps */
+
+
+    /* ======================= SHADING ===================================== *
+     *                                                                      *
+     *  Everything the fold draws is below, and it is all plain CSS          *
+     *  backgrounds — gradients, stacked layers, a flat colour, or `none`.   *
+     *                                                                      *
+     *  CREASES. Each crease is a band --fold-crease-band tall, centred on   *
+     *  its fold line. In its gradients:                                     *
+     *                                                                      *
+     *        0%  = half a band ABOVE the line                              *
+     *       50%  = exactly ON the line                                      *
+     *      100%  = half a band BELOW the line                               *
+     *                                                                      *
+     *  Every crease is written twice: how it looks with the section lying   *
+     *  open and flat, and how it looks folded shut. fold.js cross-fades the *
+     *  two with --fold-t, so what you see at any moment is                  *
+     *                                                                      *
+     *      closed × (1 - t)  +  open × t                                    *
+     *                                                                      *
+     *  The top and bottom creases sit on top of each other when the section *
+     *  is shut, so by default only the bottom one draws the shut fold and   *
+     *  --fold-crease-top-closed is `none`. The middle crease is in mid-air  *
+     *  while folding, where the flap shading already carries it, so its     *
+     *  shut look is `none` too.                                             *
+     * ---------------------------------------------------------------------*/
+
+    --fold-crease-band: 28px;
+
+    --fold-crease-top-closed: none;
+
+    --fold-crease-top-open: linear-gradient(to bottom,
+        rgba(var(--fold-ink), 0)     46%,
+        rgba(var(--fold-ink), 0.05)  50%,
+        rgba(var(--fold-ink), 0.03)  55%,
+        rgba(var(--fold-ink), 0)     68%);
+
+    --fold-crease-mid-closed: none;
+
+    --fold-crease-mid-open: linear-gradient(to bottom,
+        rgba(var(--fold-ink), 0)     32%,
+        rgba(var(--fold-ink), 0.035) 48%,
+        rgba(var(--fold-ink), 0.02)  50%,
+        rgba(var(--fold-ink), 0)     56%);
+
+    --fold-crease-bottom-closed: linear-gradient(to bottom,
+        rgba(var(--fold-ink), 0)     38%,
+        rgba(var(--fold-ink), 0.07)  50%,
+        rgba(var(--fold-ink), 0.05)  56%,
+        rgba(var(--fold-ink), 0)     76%);
+
+    --fold-crease-bottom-open: linear-gradient(to bottom,
+        rgba(var(--fold-ink), 0)     46%,
+        rgba(var(--fold-ink), 0.05)  50%,
+        rgba(var(--fold-ink), 0.03)  55%,
+        rgba(var(--fold-ink), 0)     68%);
+
+    /* ---------------------------------------------------------------------*
+     *  FLAPS: the tilted paper between the creases. These have no open      *
+     *  look — flat paper cannot catch a tilt — so instead of a cross-fade   *
+     *  they fade in with the sine of the fold angle: invisible lying open,  *
+     *  strongest when the paper stands upright. In their gradients:         *
+     *                                                                      *
+     *        0%  = at the hinge (the crease the flap turns on)             *
+     *      100%  = at the flap's free edge, deep in the fold                *
+     * ---------------------------------------------------------------------*/
+
+    --fold-flap-top: linear-gradient(to bottom,
+        rgba(var(--fold-ink), 0.1)   35%,
+        rgba(var(--fold-ink), 0.11)  100%);
+
+    --fold-flap-bottom: linear-gradient(to top,
+        rgba(var(--fold-ink), 0.035) 0%,
+        rgba(var(--fold-ink), 0.22)  100%);
+
+    /* ======================= end of SHADING ============================== */
+
+
+    /* -- resting state (read by fold.js) ---------------------------------
+       A closed fold sits at --fold-rest, shut flat by default: the strip is folded
+       right back, the two outer creases meet, and all that is left on the page is
+       the seam. That resting geometry is fixed — nothing tracks the scroll, so
+       scrolling the page costs nothing and the paper never moves under you.
+
+       With a mouse, hovering it adds --fold-hover-bonus on top, so the seam opens
+       into a peek of the buckled paper and shuts again when the cursor leaves. The
+       bonus is eased in and out on a sine, not a straight ramp: it leaves and
+       arrives slowly and moves quickest in between, which reads as paper being
+       lifted rather than a value being set. Raise --fold-rest to leave that peek
+       permanently on show, or set the bonus to 0 to leave the fold completely
+       still. Clicking is what opens it the whole way. */
+    --fold-rest: 0.0;                 /* how far open a closed fold sits (0..1 of fully open) */
+
+    /* A mid-paragraph %%startfold%% picks a line; the crease then runs straight
+       across it, cutting the letters in two — their tops stay flat on the page,
+       their bottoms tilt away. This is how far down that line's glyphs the cut
+       falls: 0 at the ascenders, 0.5 halfway through the letters, 1 just under
+       the descenders. Above 1 it drops clear of the text into the leading. */
+    --fold-lift-at: 0.5;
+
+    --fold-hover-bonus: 0.5;          /* mouse only: extra while the cursor is on it */
+    --fold-hover-ms: 520;             /* hover: how long the bonus takes to ease in */
+    --fold-unhover-ms: 420;           /* and to ease back out again */
+
+    --fold-open-ms: 720;              /* click: unfold duration */
+    --fold-close-ms: 560;             /* click: fold duration */
+
+    /* driven by fold.js */
+    --fold-t: 0;
+    --fold-h: 0px;
+    --fold-deg: 90deg;
+    --fold-cos: 0;
+    --fold-sin: 1;
+    --fold-lead: 0px;                 /* content above the top crease; see %%startfold%% */
+
+    position: relative;
+    display: block;
+    /* the label hangs in the margin below the bottom crease, so the gap to whatever
+       follows has to make room for it as well */
+    margin-bottom: calc(var(--fold-grip) + var(--fold-after));
+}
+
+/* ======================= MECHANICS ======================================= */
+
+.fold:not(.is-open) { cursor: pointer; }
+
+/* the label: a strip hanging just under the bottom crease, hint centred in it. It
+   never lies over the text — not the lead above the top crease, not the content when
+   the section is open — so it can keep taking clicks in both states, on a phone as
+   much as on a desktop, and nothing underneath has to give up its own. */
+.fold-toggle {
+    all: unset;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    width: max-content;
+    transform: translateX(-50%);
+    height: var(--fold-grip);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.fold-toggle:focus-visible {
+    outline: 1px dashed var(--post-muted);
+    outline-offset: 4px;
+}
+
+.fold-hint {
+    font-family: 'Lato', sans-serif;
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--post-muted);
+    white-space: nowrap;
+    transition: opacity 0.3s;
+}
+
+.fold-hint::after { content: "unfold"; }
+.fold.is-open .fold-hint::after { content: "fold"; }
+.fold.is-open .fold-hint { opacity: 0.55; }
+.fold.is-open .fold-toggle:hover .fold-hint { opacity: 1; }
+
+/* Open, the creases fold it back too: they are pointer-events: none, so the reader can
+   still select the text under them and follow its links, and fold.js hit-tests their
+   bands by hand. This is the cursor for that, since the band itself cannot carry one. */
+.fold.is-on-crease { cursor: pointer; }
+
+/* the cut-out in the page: full paper width, page-ground coloured, holds the flaps */
+.fold-body {
+    /* the strip that actually folds runs from the top crease to the bottom of the
+       content; --fold-drop is how tall it looks once it has buckled */
+    --fold-strip: calc(var(--fold-h) - var(--fold-lead));
+    --fold-drop: calc(var(--fold-strip) * var(--fold-cos));
+
+    position: relative;
+    margin: 0 calc(-1 * var(--post-pad));
+    height: calc(var(--fold-lead) + var(--fold-drop));
+    perspective: var(--fold-perspective);
+    /* The vanishing point sits on the middle crease. Both flaps' free edges are
+       at the same depth, so from here they project straight onto the line the
+       crease is drawn on; from anywhere else perspective drags the seam toward
+       the origin and the crease shading lands beside the real fold. (With no
+       lead the body's centre *is* the crease, which is why this only showed
+       once a mid-paragraph %%startfold%% moved the two apart.) */
+    perspective-origin: 50% calc(var(--fold-lead) + var(--fold-drop) / 2);
+    background: var(--fold-ground);
+}
+
+.fold-panel {
+    position: absolute;
+    left: 0;
+    right: 0;
+    overflow: hidden;
+    background: var(--fold-paper);
+    backface-visibility: hidden;
+}
+
+/* The lead: everything above the top crease, lying flat on the page. This is the
+   panel holding the real content, so what the reader can actually read is real
+   text. It is the whole section's height when the fold is open. */
+.fold-panel-lead {
+    top: 0;
+    height: var(--fold-lead);
+}
+
+/* the two halves of the folded strip: the first hinges on the top crease, the
+   second on the bottom crease, and they meet at the middle crease */
+.fold-panel-top,
+.fold-panel-bottom {
+    height: calc(var(--fold-strip) / 2);
+    will-change: transform;
+}
+
+.fold-panel-top {
+    top: var(--fold-lead);
+    transform-origin: 50% 0;
+    transform: rotateX(calc(-1 * var(--fold-deg)));
+}
+
+.fold-panel-top .fold-content { margin-top: calc(-1 * var(--fold-lead)); }
+
+.fold-panel-bottom {
+    bottom: 0;
+    transform-origin: 50% 100%;
+    transform: rotateX(var(--fold-deg));
+}
+
+.fold-panel-bottom .fold-content {
+    margin-top: calc(-1 * (var(--fold-lead) + var(--fold-strip) / 2));
+}
+
+.fold-content {
+    display: flow-root; /* contains child margins so offsetHeight is the true height */
+    padding: var(--fold-top-pad) var(--post-pad) var(--fold-bottom-pad);
+}
+
+/* With a lead the top crease falls between two lines of running text, so there is
+   no room for padding there — the text just carries on onto the tilting paper. */
+.fold.has-lead .fold-content { padding-top: 0; }
+
+/* the %%startfold%% marker itself: an empty inline, no layout of its own.
+   fold.js reads which line box it landed on. */
+.fold-lift { display: inline; }
+
+.fold-content > :last-child { margin-bottom: 0; }
+
+/* flap shading, strongest with the paper upright */
+.fold-panel::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: var(--fold-sin);
+}
+
+.fold-panel-top::after { background: var(--fold-flap-top); }
+.fold-panel-bottom::after { background: var(--fold-flap-bottom); }
+
+/* creases: a band centred on the fold line, holding the shut look and the open
+   look stacked, cross-faded by --fold-t */
+.fold-crease {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: var(--fold-crease-band);
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+.fold-crease::before,
+.fold-crease::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+}
+
+.fold-crease::before { opacity: calc(1 - var(--fold-t)); }
+.fold-crease::after { opacity: var(--fold-t); }
+
+.fold-crease-top { top: var(--fold-lead); }
+.fold-crease-top::before { background: var(--fold-crease-top-closed); }
+.fold-crease-top::after { background: var(--fold-crease-top-open); }
+
+.fold-crease-mid { top: calc(var(--fold-lead) + var(--fold-drop) / 2); }
+.fold-crease-mid::before { background: var(--fold-crease-mid-closed); }
+.fold-crease-mid::after { background: var(--fold-crease-mid-open); }
+
+.fold-crease-bottom { top: 100%; }
+.fold-crease-bottom::before { background: var(--fold-crease-bottom-closed); }
+.fold-crease-bottom::after { background: var(--fold-crease-bottom-open); }
+
+/* fully open (or being measured before JS folds it): static layout, no 3D, no mirror copy */
+.fold.is-open .fold-body,
+.fold.is-measuring .fold-body {
+    height: auto;
+    perspective: none;
+}
+
+.fold.is-open .fold-panel-lead,
+.fold.is-measuring .fold-panel-lead {
+    position: static;
+    height: auto;
+    overflow: visible;
+}
+
+.fold.is-open .fold-panel-top,
+.fold.is-open .fold-panel-bottom,
+.fold.is-measuring .fold-panel-top,
+.fold.is-measuring .fold-panel-bottom { display: none; }
+
+.fold.is-measuring .fold-panel::after,
+.fold.is-measuring .fold-crease { display: none; }
+
+@media print {
+    .fold-hint { display: none; }
+    .fold-body { height: auto !important; perspective: none; background: none; }
+    .fold-panel-lead { position: static; height: auto; overflow: visible; }
+    .fold-panel-top, .fold-panel-bottom { display: none; }
+    .fold-panel::after, .fold-crease { display: none; }
+}

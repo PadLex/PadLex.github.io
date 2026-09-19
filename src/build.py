@@ -2,8 +2,14 @@ import os
 import json
 import re
 import random
+from pathlib import Path
 
 random.seed(42)
+
+CONTENT = Path("content/blogposts")
+# Marker syntax in anything the homepage renders would shift the resume's own
+# seeded marker styles (one random stream, document order).
+MARKER_SYNTAX = re.compile(r"\*\*\*?\{c[1-5]\}\(")
 
 ## TODOS:
 # - Underline animations for highlighted elements in a pastel color that looks good in grayscale
@@ -13,6 +19,32 @@ random.seed(42)
 ## Load the resume data
 with open("content/resume.json", "r") as file:
     resume = json.load(file)
+
+## resume.json's "blog" is just a list of post ids; every field the homepage shows
+## is read back out of that post's post.json, so a title or blurb is written once.
+def load_blog_entries(post_ids):
+    entries = []
+    for post_id in post_ids:
+        meta_path = CONTENT / post_id / "post.json"
+        if not meta_path.exists():
+            raise SystemExit(f"resume.json lists blog post {post_id!r}, but {meta_path} does not exist")
+        meta = json.loads(meta_path.read_text())
+
+        for field in ("title", "description"):
+            if MARKER_SYNTAX.search(meta.get(field, "")):
+                raise SystemExit(
+                    f"{meta_path} has marker syntax in {field!r}; the homepage renders it, "
+                    "which would change the resume's marker styling. Remove it."
+                )
+
+        entries.append({
+            "title": f"[{meta['title']}](/blog/{meta.get('slug', post_id)}/)",
+            "date": meta.get("date", ""),
+            "description": meta.get("description", ""),
+        })
+    return entries
+
+resume["blog"] = load_blog_entries(resume.get("blog", []))
 
 ## Load the index template
 with open("src/index.html", "r") as file:

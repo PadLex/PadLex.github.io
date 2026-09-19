@@ -31,14 +31,55 @@
     text-wrap: balance;
 }
 
+/* Home link: lifted out of the header flow so the title leads the page, and
+   rendered the same way at every width — plain left-aligned text, never a button.
+   Up to the wide breakpoint it sits in the grey strip above the paper (the card
+   gains a top margin to open that strip up); past it, the gutter is wide enough
+   to hold it beside the card instead. */
+.container {
+    margin-top: 52px; /* opens the strip the home link sits in */
+}
+
 .post-home {
-    display: inline-block;
+    position: absolute; /* relative to the A4 card, which is the positioned ancestor */
+    top: -34px;
+    left: 50px; /* aligns with the header's content edge */
+    z-index: 30;
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
     font-family: 'Lato', sans-serif;
-    font-size: 11px;
-    letter-spacing: 0.2em;
+    font-size: 13px;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
     color: #9a9ea3;
-    margin-bottom: 14px;
+    transition: color 0.15s ease;
+}
+
+.post-home:hover {
+    color: var(--post-ink);
+    text-decoration: none;
+}
+
+.post-home-icon {
+    width: 15px;
+    height: 15px;
+    /* the cap-height sits a touch above the baseline of uppercase Lato */
+    margin-top: -1px;
+    flex: none;
+}
+
+/* Once the gutter can hold the label (A4 card + ~190px a side) it moves out
+   beside the card, pinned to the left of the viewport and fixed, so it stays
+   reachable the whole way down a long post. */
+@media only screen and (min-width: 1180px) {
+    .container { margin-top: 0; }
+
+    .post-home {
+        position: fixed;
+        top: 30px;
+        left: 44px;
+    }
 }
 
 .post-byline {
@@ -46,6 +87,34 @@
     font-size: 12px;
     letter-spacing: 0.08em;
     color: #9a9ea3;
+}
+
+/* Second line under the byline: the provenance credit. Quieter than the byline
+   so the two greys read as a hierarchy rather than a pair. */
+.post-note {
+    max-width: 34em;
+    margin: 5px auto 0;
+    font-family: 'Lato', sans-serif;
+    font-size: 11px;
+    line-height: 1.5;
+    letter-spacing: 0.04em;
+    color: #b0b4b8;
+    text-wrap: balance;
+}
+
+.post-note em {
+    font-style: italic;
+    color: #9a9ea3;
+}
+
+.post-note a {
+    text-decoration: underline;
+    text-decoration-color: #d8dade;
+    text-underline-offset: 3px;
+}
+
+.post-note a:hover {
+    text-decoration-color: #706F6F;
 }
 
 /* ---- article ---- */
@@ -392,6 +461,7 @@
 @media only screen and (max-width: 210mm) {
     :root { --post-pad: 25px; }
     .post-header { padding-left: 25px; padding-right: 25px; }
+    .post-home { left: 25px; } /* follows the narrower header padding */
     .post { padding: 20px var(--post-pad) 32px; font-size: 14px; }
     .post-header h1 { font-size: 18px; }
 

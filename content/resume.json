@@ -1,5 +1,6 @@
 {
-  "name": "Alexander George Padula",
+  "name": "Alexander Padula",
+  "author": "Alexander G. Padula",
   "info": [
     {
       "icon": "icons/mail.svg",
@@ -12,6 +13,10 @@
     {
       "icon": "icons/linkedin.svg",
       "text": "[alex-padula](https://www.linkedin.com/in/alex-padula/)"
+    },
+    {
+      "icon": "icons/scholar.svg",
+      "text": "[Google Scholar](https://scholar.google.com/citations?hl=en&amp;user=R-Al8aEAAAAJ)"
     },
     {
       "icon": "icons/passport.svg",
@@ -65,11 +70,7 @@
     }
   ],
   "blog": [
-    {
-      "title": "[Questioning the Flat Minima Hypothesis](/blog/flatminima/)",
-      "date": "Aug 2026",
-      "description": "Validating the Flat Minima Hypothesis for Muon: raw vs adaptive sharpness, and an interactive look at 512 CIFAR-10 runs."
-    }
+    "flatminima"
   ],
   "experience": [
     {

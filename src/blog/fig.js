@@ -150,7 +150,7 @@ window.Fig = (function () {
         return b;
     }
 
-    /* Clickable legend chips. items: [{name, fill, strong}]; onToggle(name).
+    /* Clickable legend chips. items: [{name, label?, fill, strong}]; onToggle(name).
        -> { update(name, {off, extra}) } */
     function legend(parent, items, onToggle) {
         const box = el(parent, "div", "fig-legend");
@@ -160,7 +160,7 @@ window.Fig = (function () {
             chip.type = "button";
             chip.innerHTML =
                 `<span class="dot" style="background:${item.fill};box-shadow:inset 0 0 0 1.5px ${item.strong}"></span>` +
-                `<span>${item.name}</span> <span class="r-val"></span>`;
+                `<span>${item.label || item.name}</span> <span class="r-val"></span>`;
             chip.addEventListener("click", () => onToggle(item.name));
             chips[item.name] = chip;
         }

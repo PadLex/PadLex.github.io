@@ -273,6 +273,10 @@ VARIANTS = {"sharpness-lds": ("lds", "raw"),
 DEFAULT_HIDDEN = {"Normalized Muon"}
 
 
+def optimizer_label(name):
+    return name.removeprefix("Coupled ").removeprefix("Decoupled ")
+
+
 def build_svg(fig, schedule, metric):
     W, H, PAD_L, PAD_R, PAD_T, PAD_B = 640, 400, 48, 14, 34, 42
     panel_w = W - PAD_L - PAD_R
@@ -327,7 +331,7 @@ def build_svg(fig, schedule, metric):
                          f"stroke='{STRONG[opt]}' stroke-width='1.6' opacity='0.85' "
                          f"stroke-dasharray='6 4'/>")
             parts.append(f"<text x='{PAD_L + 8}' y='{stats_y}' fill='{STRONG[opt]}'>"
-                         f"{opt}: R={r:.2f}</text>")
+                         f"{optimizer_label(opt)}: R={r:.2f}</text>")
             stats_y += 15
 
     # legend row across the top
@@ -335,7 +339,7 @@ def build_svg(fig, schedule, metric):
     lx = W / 2 - 60 * len(shown)
     for opt in shown:
         parts.append(f"<circle cx='{lx}' cy='16' r='5' fill='{FILL[opt]}' stroke='{STRONG[opt]}'/>")
-        parts.append(f"<text x='{lx + 10}' y='20' fill='#565B60'>{opt}</text>")
+        parts.append(f"<text x='{lx + 10}' y='20' fill='#565B60'>{optimizer_label(opt)}</text>")
         lx += 120
     parts.append("</svg>")
     return "".join(parts)

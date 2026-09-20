@@ -41,6 +41,7 @@
        decay); Normalized Muon is airbench's speedrun-specific variant, so every
        embed hides it by default — its legend chip brings it back, Reset re-hides. */
     const DEFAULT_HIDDEN = ["Normalized Muon"];
+    const optimizerLabel = (name) => name.replace(/^(Coupled|Decoupled) /, "");
 
     const figures = [...document.querySelectorAll("figure[data-figure]")]
         .filter((f) => VARIANTS[f.dataset.figure]);
@@ -82,7 +83,7 @@
 
         const legend = !has("optimizers") ? null :
             Fig.legend(panel.row("Optimizers"), data.optimizers.map((opt) => ({
-                name: opt, fill: color[opt].fill, strong: color[opt].strong,
+                name: opt, label: optimizerLabel(opt), fill: color[opt].fill, strong: color[opt].strong,
             })), (opt) => {
                 state.hidden.has(opt) ? state.hidden.delete(opt) : state.hidden.add(opt);
                 render();
@@ -126,7 +127,7 @@
 
         Fig.tooltip(panelWrap, "circle[data-run]", (c) => {
             const [opt, raw, adaptive, gap, val, outlier] = c.dataset.run.split("|");
-            return `<strong>${opt}</strong> — epoch ${state.epoch}<br>` +
+            return `<strong>${optimizerLabel(opt)}</strong> — epoch ${state.epoch}<br>` +
                 `gap ${gap} &middot; val acc ${val}<br>` +
                 `raw ${raw} &middot; adaptive ${adaptive}` +
                 (outlier === "1" ? "<br><em>outlier — excluded from the fit</em>" : "");

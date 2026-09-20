@@ -165,8 +165,9 @@
     all: unset;
     position: absolute;
     top: 100%;
-    left: 0;
-    right: 0;
+    left: 50%;
+    width: max-content;
+    transform: translateX(-50%);
     height: var(--fold-grip);
     display: flex;
     align-items: center;

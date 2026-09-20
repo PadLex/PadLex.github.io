@@ -20,7 +20,7 @@ page="${1:-}"
 port="${PORT:-8000}"
 url="http://127.0.0.1:${port}/${page#/}"
 
-python3 src/dev_server.py --port "${port}" &
+uv run python src/dev_server.py --port "${port}" &
 server=$!
 trap 'kill "${server}" 2>/dev/null' EXIT INT TERM
 

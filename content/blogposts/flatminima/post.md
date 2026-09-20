@@ -40,18 +40,20 @@ Well, shoot. At convergence, sharpness seems to be completely uncorrelated with 
 ## Optimizer researchers make some funny assumptions
 So what are we doing differently from @keskar2017large?
 
-People in optimization research often use simplified training setups to reduce confounders. In particular, learning rate schedulers, which have become ubiquitous in every other corner of the ML community, are often avoided. @keskar2017large never state whether they use one, but follow-up work on the edge of stability explicitly mentions using a small *fixed* learning rate [TODO insert citations]. Let's give that a shot.
+People in optimization research often use simplified training setups to reduce confounders. In particular, learning rate schedulers, which have become ubiquitous in every other corner of the ML community, are often avoided. Like us, @keskar2017large report using Adam and training until the loss stops improving (Section 2.2), but they don't mention what learning rate schedule they use. Their accompanying [example code](https://github.com/keskarnitish/large-batch-training/blob/master/plot_parametric_plot.py), however, uses a *fixed* learning rate.
 
-%%figure:sharpness-fixed%% Raw sharpness vs. generalization gap at epoch 16, trained with a fixed learning rate — the setting studied by @keskar2017large. Use the toggle to compare the two learning-rate schedules.
+%%figure:sharpness-fixed%% Raw sharpness vs. generalization gap at epoch 16, trained with a fixed learning rate. Use the toggle to compare the two learning-rate schedules.
 
-And in fact, if we fix the learning rate, we see that among samples trained with SGD, sharpness is clearly correlated with a large generalization gap ($r = 0.49$). This matches @keskar2017large's original results.
+And in fact, if we fix the learning rate, we see that among samples trained with SGD, sharpness is clearly correlated with a larger generalization gap ($r = 0.49$). This is finally consistent with @keskar2017large's observation that sharper minima tend not to generalize as well.
 
 ## Sharpness is Brittle
 But wait a second, why do runs trained with Adam or Muon still form distinct clusters? Shouldn't our hypothesis only be about the geometry of the loss landscape near the model? Why would optimizers affect that?
 
-Most neural network architectures have symmetries along which you can reparameterize the model without affecting its behavior. Some symmetries, like rescaling between layers, also affect sharpness. If we halve the weights of one ReLU layer and double the weights of the next, the network computes exactly the same function, but the curvature along the halved layer's directions quadruples. @dinh2017sharp showed that any minimum can be reparameterized to be arbitrarily sharp without changing how the model generalizes. In this light, the hypothesis, as formulated by @keskar2017large, is false. Perhaps the clustering we saw then simply shows that SGD, Adam, and Muon each have a different bias toward parameter scale.
+Most neural network architectures have symmetries along which you can reparameterize the model without affecting its behavior. Some symmetries, like rescaling between layers, also affect sharpness. If we halve the weights of one ReLU layer and double the weights of the next, the network computes exactly the same function, but the curvature along the halved layer's directions quadruples. @dinh2017sharp showed that any minimum can be reparameterized to be arbitrarily sharp without changing how the model generalizes. In this light, the hypothesis, as formulated by @keskar2017large, is false.
 
-**Adaptive sharpness:** @kwon2021asam have tried to solve the rescaling problem by proposing adaptive sharpness.
+@kwon2021asam have tried to solve the rescaling problem by proposing adaptive sharpness. It's alternative measure of sharpness that is invariant to the parameters' scale.
+
+**Adaptive sharpness:** [TODO insert rigoroulsy correct intuitive explenation for what adpetive sharpenss computes and why that would be scale invariant.]
 
 $$\mathcal S_{\text{adapt}}(w) := \max_{\|T_w^{-1}\epsilon\|\le\rho} \big[\mathcal{L}(w+\epsilon)-\mathcal{L}(w)\big],$$
 
@@ -59,7 +61,7 @@ where $T_w$ is a normalization operator depending on the current parameters. Thi
 
 %%figure:sharpness-adaptive%% Adaptive sharpness vs. generalization gap at epoch 16, trained with a fixed learning rate.
 
-This looks much better now! Runs from the different optimizers have far more similar adaptive sharpness values (Muon's still sit about 2× lower than those of SGD and Adam before accounting for generalization), and adaptive sharpness correlates even more strongly with the generalization gap than raw sharpness ($r = 0.45$–$0.69$, versus $0.27$–$0.49$).
+This looks much better now! Runs from the different optimizers have far more similar adaptive sharpness values, and adaptive sharpness correlates even more strongly with the generalization gap than raw sharpness ($r = 0.45$–$0.69$, versus $0.27$–$0.49$). It seems like the clustering we saw eariler simply showed that SGD, Adam, and Muon each have a different bias toward parameter scale.
 
 ## Questioning the Hypothesis
 Why does the hypothesis only hold with a fixed learning rate, though?

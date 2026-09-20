@@ -91,7 +91,7 @@
 
 /* Provenance credit between the title and byline, sharing the title's width. */
 .post-note {
-    max-width: 100%;
+    max-width: 80%;
     margin: 5px auto 0;
     font-family: 'Lato', sans-serif;
     font-size: 11px;

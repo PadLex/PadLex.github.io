@@ -159,7 +159,7 @@
       "extended": "This is a test"
     },
     {
-      "title": "[Muon Operates Beyond the Edge of Stability](https://drive.google.com/uc?export=download&id=1XWJ-XB_DStsGB63pfO315E1fOjE74P-m) - potential publication",
+      "title": "[Muon Operates Beyond the Edge of Stability](/blog/static/Deep_Learning_Project.pdf) - potential publication",
       "location": "Zurich, CH",
       "years": "Oct 2025 - Jan 2026",
       "description": "**{c4}(We derived [Muon](https://kellerjordan.github.io/posts/muon/)'s preconditioner and found that Muon operates beyond the classical edge of stability.)** We also empirically validated that the flat minima hypothesis holds for Muon’s solutions in a realistic setting."

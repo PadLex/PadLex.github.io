@@ -99,6 +99,9 @@ def main():
     shutil.copyfile(BLOG_SRC / "fig.js", OUT / "fig.js")
     shutil.copyfile(BLOG_SRC / "fold.js", OUT / "fold.js")
     shutil.copyfile(BLOG_SRC / "fold.css", OUT / "fold.css")
+    static_dir = BLOG_SRC / "static"
+    if static_dir.exists():
+        shutil.copytree(static_dir, OUT / "static", dirs_exist_ok=True)
 
     for post_dir in sorted(CONTENT.iterdir()):
         if post_dir.is_dir() and (post_dir / "post.json").exists():

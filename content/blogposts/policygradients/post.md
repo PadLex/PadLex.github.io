@@ -1,1 +1,1 @@
-build your own policy graident method.
+Build your own policy gradient method.

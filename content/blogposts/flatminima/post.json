@@ -1,9 +1,9 @@
 {
     "title": "Questioning the Flat Minima Hypothesis",
     "slug": "flatminima",
-    "date": "Aug 2026",
+    "date": "Sep 2026",
     "note": "Grew out of <a href=\"https://drive.google.com/uc?export=download&amp;id=1XWJ-XB_DStsGB63pfO315E1fOjE74P-m\"><em>Muon Operates Beyond the Edge of Stability</em></a>, a joint work with Niko Čović, Baraq Lipshitz and Stefan Višnjić at ETH Zürich.",
     "seed": 1337,
-    "bib": "../Deep Learning 2025-latex/main.bib",
+    "bib": "main.bib",
     "description": "Validating the Flat Minima Hypothesis for Muon: raw vs adaptive sharpness, and an interactive look at 512 CIFAR-10 runs."
 }

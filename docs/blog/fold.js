@@ -216,10 +216,22 @@
             const shutting = () => state.tween && !state.open;
             const aim = to => {
                 if (to && shutting()) return;
+                if (state.hoverTo === to) return;
                 state.hoverTo = to;
                 wake();
             };
-            fold.addEventListener("mouseenter", () => aim(1));
+            // Only the folded paper and its label invite a preview. The flat lead
+            // paragraph above the crease is outside the hover target. Keep a small
+            // band around the seam so a fully shut fold is still easy to point at.
+            const previewAt = e => {
+                const rect = body.getBoundingClientRect();
+                const lead = parseFloat(fold.style.getPropertyValue("--fold-lead")) || 0;
+                const onPaper = e.clientX >= rect.left && e.clientX <= rect.right
+                    && e.clientY >= rect.top + lead - 4 && e.clientY <= rect.bottom + 4;
+                aim(!state.open && (onPaper || button.contains(e.target)) ? 1 : 0);
+            };
+            fold.addEventListener("mouseenter", previewAt);
+            fold.addEventListener("mousemove", previewAt);
             fold.addEventListener("mouseleave", () => aim(0));
         }
 

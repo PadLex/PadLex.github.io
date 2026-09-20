@@ -66,7 +66,7 @@ def build_post(post_dir, author, template):
     if scripts:  # shared figure helpers load before any post figure script
         scripts.insert(0, "<script src=\"../fig.js\" defer></script>")
 
-    note = meta.get("note", "")  # raw HTML: a one-line credit under the byline
+    note = meta.get("note", "")  # raw HTML: a credit between the title and byline
     if note:
         note = f'        <div class="post-note">{note}</div>'
 

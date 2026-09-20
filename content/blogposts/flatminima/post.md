@@ -84,9 +84,9 @@ Two details stand out. First, Muon is the most robust to losing the scheduler: s
 
 
 ## Implementation Details
-%%startfold%%All training runs used a fork of Airbench [@jordan2024airbench], an optimized script that trains a VGG-like CNN to 94% accuracy on the CIFAR-10 [@cifar10] image classification dataset.
+All training runs used a fork of Airbench [@jordan2024airbench], an optimized script that trains a VGG-like CNN to 94% accuracy on the CIFAR-10 [@cifar10] image classification dataset.
 
-We only modified the original Airbench script by (i) adding a callback function called after each epoch to measure sharpness, (ii) supporting training with a fixed learning rate in addition to the original Linear Decay Scheduler (LDS), and (iii) implementing DecoupledMuon, CoupledAdam, and CoupledSGD in addition to the NormalizedMuon implementation from the original script.
+%%startfold%%We only modified the original Airbench script by (i) adding a callback function called after each epoch to measure sharpness, (ii) supporting training with a fixed learning rate in addition to the original Linear Decay Scheduler (LDS), and (iii) implementing DecoupledMuon, CoupledAdam, and CoupledSGD in addition to the NormalizedMuon implementation from the original script.
 
 **A note on optimizer naming:** Vanilla Muon [@jordan2024muon] orthogonalizes each weight matrix's momentum with a Newton-Schulz iteration before applying the update. Decoupled Muon adds decoupled (AdamW-style) weight decay, matching Muon's reference implementation and the variant used to train LLMs at scale [@liu2025muonscalableLLM] — this is the canonical Muon, so our figures show it by default. Normalized Muon is Airbench's speedrun-specific variant [@jordan2024airbench], which additionally rescales each weight matrix to a fixed Frobenius norm before every update; it is hidden by default in the figures above, and clicking its legend chip brings it back. Coupled, by contrast, refers to classical weight decay, where the penalty is added to the gradient as L2 regularization rather than applied directly to the weights: Coupled SGD and Coupled Adam are the textbook SGD and Adam updates.
 

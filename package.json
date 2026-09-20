@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "python3 src/build.py && python3 src/blog/build.py",
+    "build": "uv run python src/build.py && uv run python src/blog/build.py",
     "dev": "./serve.sh"
   },
   "private": true,

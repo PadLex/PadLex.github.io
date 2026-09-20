@@ -62,7 +62,7 @@ Here, $w$ denotes the current weights, $\mathcal{L}$ is the training loss, and $
 
 %%figure:sharpness-adaptive%% Adaptive sharpness vs. generalization gap at epoch 16, trained with a fixed learning rate.
 
-This looks much better now! Runs from the different optimizers have far more similar adaptive sharpness values, and adaptive sharpness correlates even more strongly with the generalization gap than raw sharpness ($r = 0.45$–$0.69$, versus $0.27$–$0.49$). It seems like the clustering we saw eariler simply showed that SGD, Adam, and Muon each have a different bias toward parameter scale.
+This looks much better now! Runs from the different optimizers have far more similar adaptive sharpness values, and adaptive sharpness correlates even more strongly with the generalization gap than raw sharpness ($r = 0.45$–$0.69$, versus $0.27$–$0.49$). It seems like the clustering we saw eariler largely showed that SGD, Adam, and Muon each have a different scale bias.
 
 ## Questioning the Hypothesis
 Why does the hypothesis only hold with a fixed learning rate, though?

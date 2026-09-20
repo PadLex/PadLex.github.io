@@ -279,8 +279,8 @@
 
 .fig-ctl-panel .seg button.active {
     background: #efece7;
-    border-color: var(--post-muted);
-    font-weight: 700;
+    border-color: #efece7;
+    font-weight: 500;
 }
 
 .fig-ctl-panel .reset {

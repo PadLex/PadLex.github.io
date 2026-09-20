@@ -1,23 +1,22 @@
 # Questioning the Flat Minima Hypothesis
 The Flat Minima Hypothesis states that models that converge to a flatter basin tend to generalize better to unseen data. As we try to empirically verify the hypothesis for ourselves, we'll find that current formulations of it are still incomplete. Yet, the evidence genuinely hints at a powerful connection between the geometry of the loss landscape during training and how a model ends up performing in the real world.
 
-<!-- [TODO: catchy premise]. Why does the Flat Minima Hypothesis only hold under a fixed learning rate? -->
-
- <!-- Maybe we could even use it to design an optimizer that seeks out flatter minima and trains better models. Why hasn't such an optimiers already suplanted Adam? -->
-
-<!-- When I first learned of it, I wondered if it could be a useful framework for understanding the Muon optimizer. Perhaps it performs so well by implicitly minimizing sharpness. This blog is about why  **{c2}(such a question is fundamentally ill-posed)**, why existing formulations of the hypothesis are underspecified, and why the hypothesis still offers a useful perspective that has ***{c1}(withstood the test of time)***. -->
-
 ## Intuition
 A common intuition for the Flat Minima Hypothesis is that the validation loss landscape can be approximated as a stochastically perturbed version of the training landscape. If a model converges to a wider basin in the training loss, it feels intuitive that it would be more likely to stay within that same basin if the loss landscape were shifted slightly.
 
 %%figure:two-valleys%% The intuition, on a toy one-dimensional loss landscape (after Figure 1 of @keskar2017large). The validation landscape (dashed) is the training landscape (solid) shifted by a small offset. Each point is a run that converged into one of the two valleys. Toggle the validation loss on to lift every run to its loss on the shifted landscape; the vertical trace it leaves behind is its generalization gap. Runs in the sharp valley get pushed up its wall, while runs in the flat valley barely move.
 
+<!-- Editorial note for later: distinguish the sharpness definitions and their purposes.
+Keskar discusses Hessian eigenvalues but measures worst-case loss increases in a weight-dependent box (Metric 2.1), with a +1 floor and loss normalization; also evaluates random subspaces. https://arxiv.org/pdf/1609.04836#page=5
+Kwon explicitly connects this to adaptive sharpness with an infinity-norm constraint. Exact scale invariance requires the normalization operator to transform appropriately; fixed additive stabilizers generally break exact invariance. https://arxiv.org/pdf/2102.11600#page=3
+Dinh's scaling argument also applies to Keskar's full-space metric, but that argument does not establish the same result for the random-subspace metric. https://arxiv.org/pdf/1703.04933#page=7
+Cohen uses the largest Hessian eigenvalue to study optimization stability and explicitly disclaims a generalization claim (footnote 2). Frame our experiment as testing whether this standard optimization measure also predicts generalization; revisit the claim that Keskar's formulation is false. https://arxiv.org/pdf/2103.00065#page=2
+-->
+
 ## Interesting Background
 The original formulation of the Flat Minima Hypothesis is often (incorrectly?) credited to a 1997 paper by @hochreiter1997flat (the conference version is from 1994 [@hochreiter1994simplifying]). They proposed a training algorithm which converges to flatter minima and, crucially, argued that flat minima are "fat maxima" of the Bayesian posterior. However, the view that larger minima generalize better actually predates their work. %%startfold%% Bayesians already preferred posterior maxima with more probability mass [@buntine1991bayesian], and @hinton1993keeping had already argued in 1993 that a network whose parameters tolerate more noise is simpler as it can be written down with fewer bits, and simpler models should generalize better [@wallace1968information; @rissanen1978modeling]. Even though the Flat Minima Hypothesis does not have a clear-cut formulation or a single first proponent, we can still broadly decompose it into three statements: (1) some models are simpler than others in the information-theoretic sense, (2) we can measure how simple they are from the geometry of the loss landscape around them, and (3) these simpler models should generalize better.
 
-Initially, the idea didn't catch on; the 1997 paper only drew a handful of citations a year for two decades. This was in large part because Hochreiter and Schmidhuber put forward a training algorithm rather than a measure. They based it on a non-local definition of wide minima as a "large connected region in weight-space where the error remains approximately constant". While intuitive, this definition is computationally intractable and fundamentally ill-posed for modern models, where, due to overparameterization, all the minima you converge to tend to be connected by low-loss paths [@garipov2018loss; @draxler2018essentially]. Even in their own training algorithm, they had to compute a local approximation based on [TODO finsih explenation].
-
-The hypothesis only got a second life 20 years later, when @keskar2017large picked it up (crediting @hochreiter1997flat) while trying to explain why small training batches tend to generalize better than large ones. However, before they could make that connection, they had to propose a new definition of flatness. They coined a local measure of curvature called sharpness. Typically, it's defined as the largest eigenvalue of the Hessian matrix of the model's loss. Sometimes in the literature, people use the mean of the eigenvalues rather than their maximum. Intuitively, either measure of curvature will be smaller if the model converges at the center of a wide, flat minimum and larger in a sharp minimum. Using this measure, Keskar et al. empirically found that larger batches converge to sharper minima. They also observed that sharpness is inversely correlated with generalization, and thus argued that the Flat Minima Hypothesis could explain why large batch sizes generalize poorly.
+Initially, the idea didn't catch on; the 1997 paper only drew a handful of citations. The hypothesis only got a second life 20 years later, when @keskar2017large picked it up while trying to explain why small training batches tend to generalize better than large ones. However, before they could make that connection, they had to propose a new definition of flatness. They coined a local measure of curvature called sharpness. Typically, it's defined as the largest eigenvalue of the Hessian matrix of the model's loss. Sometimes in the literature, people use the mean of the eigenvalues rather than their maximum. Intuitively, either measure of curvature will be smaller if the model converges at the center of a wide, flat minimum and larger in a sharp minimum. Using this measure, Keskar et al. empirically found that larger batches converge to sharper minima. They also observed that sharpness is inversely correlated with generalization, and thus argued that the Flat Minima Hypothesis could explain why large batch sizes generalize poorly.
 %%endfold%%
 
 ## Let's Test It
@@ -53,13 +52,13 @@ But wait a second, why do runs trained with Adam or Muon still form distinct clu
 
 Most neural network architectures have symmetries along which you can reparameterize the model without affecting its behavior. Some symmetries, like rescaling between layers, also affect sharpness. If we halve the weights of one ReLU layer and double the weights of the next, the network computes exactly the same function, but the curvature along the halved layer's directions quadruples. @dinh2017sharp showed that any minimum can be reparameterized to be arbitrarily sharp without changing how the model generalizes. In this light, the hypothesis, as formulated by @keskar2017large, is false.
 
-@kwon2021asam have tried to solve the rescaling problem by proposing adaptive sharpness. It's alternative measure of sharpness that is invariant to the parameters' scale.
+@kwon2021asam have tried to solve the rescaling problem by proposing adaptive sharpness.
 
-**Adaptive sharpness:** [TODO insert rigoroulsy correct intuitive explenation for what adpetive sharpenss computes and why that would be scale invariant.]
+**Adaptive sharpness:** Adaptive sharpness measures the largest increase in training loss within a small ellipsoid around the current weights, whose axes adapt to the weights' scale. When we rescale the weights without changing the network's function, the ellipsoid rescales with them, keeping the measure unchanged.
 
-$$\mathcal S_{\text{adapt}}(w) := \max_{\|T_w^{-1}\epsilon\|\le\rho} \big[\mathcal{L}(w+\epsilon)-\mathcal{L}(w)\big],$$
+$$\mathcal S_{\text{adapt}}(w) := \max_{\|T_w^{-1}\epsilon\|_2\le\rho} \big[\mathcal{L}(w+\epsilon)-\mathcal{L}(w)\big],$$
 
-where $T_w$ is a normalization operator depending on the current parameters. This defines a perturbation set in scale-normalized space, making the measure invariant to loss-preserving parameter rescaling.
+Here, $w$ denotes the current weights, $\mathcal{L}$ is the training loss, and $\epsilon$ is a perturbation to the weights. The radius $\rho$ controls the neighborhood's size, while $T_w$ scales its axes according to the weights. The constraint $\|T_w^{-1}\epsilon\|_2\le\rho$ restricts the perturbation to this ellipsoid.
 
 %%figure:sharpness-adaptive%% Adaptive sharpness vs. generalization gap at epoch 16, trained with a fixed learning rate.
 
@@ -76,10 +75,13 @@ I haven't found a satisfying explanation for this. My best guess is an edge-of-s
 More recent work has also brought the hypothesis into question. @andriushchenko2023modern found that sharpness tracks training hyperparameters like the learning rate rather than generalization itself, and in some settings correlates negatively with out-of-distribution error.
 
 ## Promise
-[TODO: While it's not complete, the hypothesis clearly holds a lot of potential! In the fixed-learning-rate experiment, we're able to say something about how well a model would generalize to validation data based on the geometry of the training loss landscape alone! That's very powerful if someone can work out the kinks. Maybe flatness isn't it in all cases, and there's some more general geometric variable that could robustly track generalization in all cases? If you could find it, you might just have a breakthrough on your hands.]
+While it's incomplete, the hypothesis still holds a lot of potential. In our fixed-learning-rate experiments, we were able to say something about a model's generalization gap from the geometry of its training loss landscape alone. That's a powerful connection, even if we haven't worked out all the kinks.
 
-<!-- ## Could there be any good measure of flatness?
-[TODO reconsider the original formulation from @hochreiter1997flat, explain why it's impractical, talk about what other measures are computable at the scale of modern models] -->
+Maybe flatness isn't the right measure in every setting, and there's a more general geometric property that could reliably track generalization across optimizers and learning rate schedules. If you could find it, you might just have a breakthrough on your hands.
+
+<!-- ## What about non-local measures of flatness?
+@hochreiter1997flat originally described flat minima as a "large connected region in weight-space where the error remains approximately constant". It's an intuitive idea, but measuring the volume of such a region directly is computationally infeasable as the number of parameters increases. Even in their own training algorithm, they used a first-order local approximation of flatness. Modern models are also  overparameterized, which introduces another complication: nearly all minima you might converge to are actually connected by low-loss paths [@garipov2018loss; @draxler2018essentially]. If all solutions belong to the same connected low-loss region, we should probably stick to local measures of flattness. -->
+
 
 ## Bonus: Muon works great!
 Our results align with prior work: Muon variants consistently achieve higher validation accuracy. Under a linear decay schedule (LDS), Normalized Muon reaches 0.94 ± 0.002, outperforming SGD and Adam (both 0.92 ± 0.002). In contrast, fixed learning rates degrade performance for all optimizers (e.g., Normalized Muon: 0.94 → 0.90; SGD: 0.92 → 0.80).

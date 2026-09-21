@@ -19,6 +19,7 @@ ROOT = Path(__file__).resolve().parents[2]
 BLOG_SRC = Path(__file__).resolve().parent
 CONTENT = ROOT / "content/blogposts"
 OUT = ROOT / "docs/blog"
+SITE_URL = "https://padula.dev"
 
 def build_post(post_dir, author, template):
     meta = json.loads((post_dir / "post.json").read_text())
@@ -74,6 +75,7 @@ def build_post(post_dir, author, template):
     for key, value in {
         "title": parsed["title"] or meta.get("title", slug),
         "description": meta.get("description", ""),
+        "canonical_url": f"{SITE_URL}/blog/{slug}/",
         "author": author,
         "date": meta.get("date", ""),
         "note": note,
@@ -103,9 +105,26 @@ def main():
     if static_dir.exists():
         shutil.copytree(static_dir, OUT / "static", dirs_exist_ok=True)
 
+    post_urls = []
     for post_dir in sorted(CONTENT.iterdir()):
         if post_dir.is_dir() and (post_dir / "post.json").exists():
             build_post(post_dir, author, template)
+            meta = json.loads((post_dir / "post.json").read_text())
+            post_urls.append(f"{SITE_URL}/blog/{meta['slug']}/")
+
+    urls = [f"{SITE_URL}/", *post_urls]
+    sitemap_entries = "\n".join(f"  <url><loc>{url}</loc></url>" for url in urls)
+    (ROOT / "docs/sitemap.xml").write_text(
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+        f"{sitemap_entries}\n"
+        "</urlset>\n"
+    )
+    (ROOT / "docs/robots.txt").write_text(
+        "User-agent: *\n"
+        "Allow: /\n\n"
+        f"Sitemap: {SITE_URL}/sitemap.xml\n"
+    )
 
 
 if __name__ == "__main__":
